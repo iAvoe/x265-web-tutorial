@@ -1,6 +1,6 @@
 # 原创 x265 压制教程 HTML网页版
 
-## 于[iavoe.github.io/x265-tutorial-web](https://iavoe.github.io/x265-tutorial-web/)中，[点此打开](HTML/index.html)
+## 于[iavoe.github.io/x265-tutorial-web](https://iavoe.github.io/x265-web-tutorial/)中，[点此打开](HTML/index.html)
 
 - 建立于[x264-x265-QAAC-ffprobe-Ultimatetutorial]("https://github.com/iAvoe/x264-x265-QAAC-ffprobe-Ultimatetutorial")的 x265 教程 2024.60 版，并大幅改进了内容
 

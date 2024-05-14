@@ -44,6 +44,7 @@ x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2>分块</h2>
+            <p>尽可能组合帧内的像素为大的整体以冗余单个像素的帧间/帧内信息；且尽可能根据动静态，以及边缘的变化细分为足够小的区间，以精确分配量化的强度。</p>
             <p>HEVC 中，帧的下级结构按照分辨率大小分为<span class="text-blue-emph">帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss） → CTU 树单元 → CU 单元</span>。</p>
             <p>Coding Unit（CU），Coding Block（CB）是由同一帧的 CTU 通过动态搜索 ME 与运动补偿 MC 隔离分块得到。其中的 U/unit 代表 YCbCr 一体的结构，B/block 则单指 Y，Cb 或 Cr 块（用于特指亮度或色度）。IPCM-CU（Intra pulse code modulation CU）表示了跳过动态搜索与运动补偿 MEMC，直达环路滤波的「帧内编码 PCM 波形 CU」，因为“块”实际上只是一串像素值的波形，只是用元数据“换行”到了二维。</p>
             <div class="align-items-center">

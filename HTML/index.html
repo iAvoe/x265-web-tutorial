@@ -38,14 +38,14 @@ avs2pipemod 源.avs -y4mp | x265.exe --y4m - --output</code></pre>
             <h3 class="m-0">多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
             <code>ffmpeg -filter_complex "ass='F\:/字幕.ass'"滤镜</code>
             <h3 class="m-0">Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
-            <pre><code>
-x265.exe [命令行] 2>&1 | tee home\[用户名]\Desktop\报错.txt
+            
+            <pre><code>x265.exe [命令行] 2>&1 | tee home\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2>分块</h2>
             <p>HEVC 中，帧下结构按面积大小分为<span class="text-blue-emph">帧 → 瓦 tile → 条带 slice → 条带分段 ss → ctu 树单元 → cu 单元</span>。</p>
-            <p>cu，cb 由同帧的 ctu 经动态搜索 ME 与运动补偿 MC 隔离所得。其 U/unit 代表 YCbCr 整体块；B/block 则单指 Y，Cb 或 Cr 块，区分亮度色度。ipcm-cu 代表跳过 MEMC，直达环路滤波的「帧内编码 pcm 波形 cu」intra pulse code modulation cu，因为“块”是一串像素值的波形，只是用元数据“换行”到二维而已。</p>
+            <p>CU，CB 由同帧的 CTU 经动态搜索 ME 与运动补偿 MC 隔离所得。其 U/unit 代表 YCbCr 整体块，B/block 则单指 Y，Cb 或 Cr 块（区分亮度色度）。ipcm-cu（Intra pulse code modulation CU）代表跳过 MEMC，直达环路滤波的「帧内编码 pcm 波形 CU」，因为“块”是一串像素值的波形，只是用元数据“换行”到二维而已。</p>
             <div class="align-items-center">
                 <img src="files/image1.png" alt="Coding Tree Unit" class="img-medium" >
                 <p class="text-gray-side mt-0">图：Coding Tree Unit 以及其下 Coding Unit 的划分</p>
@@ -819,7 +819,7 @@ aq-strength偏给暗场的程度
 aq-strength-edge偏给暗场的程度</code></pre>
 
             <h2>模式决策</h2>
-            <p>Mode decision 整合帧间与帧内搜索所得的信息，宏观地定制分块参考量化等细分方案，率失真优化关时量化越高越好。注意片源含明显边缘失真时反而要减少决策优化</p>
+            <p>Mode decision 整合帧间与帧内搜索所得的信息，宏观地定制分块参考量化等细分方案，率失真优化关时量化越高越好。注意片源含明显边缘失真时反而要减少率失真优化的影响，因为此时“保画质”的意义不大。</p>
             <div class="align-items-center">
                 <img src="files/image24.png" alt="Mode Decision General" class="img-medium" >
             </div>

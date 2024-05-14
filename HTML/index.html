@@ -92,7 +92,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/image4.png" alt="Fourier Transform Phenomenons" id="LR-UD-002" class="img-medium img-right col-4 mb-auto" >
                 <div id="LR-UD-003" class="col-8">
                     <h3>二维离散余弦变换 2D Descrete Cosine Transform</h3>
-                    <p>用预制的二维波形模具，穷举加减列出各波形格子的使用次数，比 2DFT 更快。</p>
+                    <p>用预制的二维波形模具，穷举加减列出各波形格子的使用次数得到频域分布，比 2DFT 更快。</p>
                     <p class="text-gray-side mt-0">图：二维傅里叶变换的特性，背景特性以及可编辑性</p>
                 </div>
                 <img src="files/image5.png" alt="Fourier Transform Editing" id="LR-UD-004" class="img-medium img-right col-4 mb-auto" >
@@ -449,10 +449,15 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
     · 低成本动画片源，或播放设备配置或硬解兼容高的话可设在<span class="text-blue-emph">13</span>左右
 注：bframes大于8，同时keyint大于250会大增内存占用，但也取决于视频分辨率</code></pre>
 
-            <h2>帧内编码</h2>
+            <h2>帧内编码/单图冗余</h2>
             <div class="row">
                 <div id="LR-UD-013" class="col-8">
-                    <p>组成参考源（I 帧）+ 参考帧的帧间结构后，数据会集中到 I 帧/ I 块上。故先使用单图无损压缩——补偿参考源，平滑（3-tap/ss），和编码 PB（趋平/夹角/DC）三步。补偿解决 PB 位于边角，或等不到其它 CB 编码完成而缺失的参考源；平滑预处理即根据情况，选择 3-tap FIR 或强力平滑滤镜，卷积插值出「纯预测 PU」</p>
+                    <p>在帧间编码跑完，内容大部分重复的帧变成 P-B 参考帧后，它们所参考的数据最终都会对准 I 帧/I 块上。而这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。分为补偿参考源，平滑（3-tap/ss），和编码 PB 三步。</p>
+                    <ul>
+                        <li>补偿解决参考源（因为编码顺序等原因而）缺失的问题</li>
+                        <li>平滑预处理据情况选择 3-tap FIR 或强力平滑滤镜，卷积插值出「纯预测 PU」</li>
+                        <li>编码即根据特征使用趋平/夹角/DC 三种方案之一冗余 PB</li>
+                    </ul>
                     <p>以下图预测块 C 为例：缺编码块 B 处的参考源就用编码块 A 的最右存在参考源做副本，并如法炮制编码块 D 补充 A-B 两块参考源的逻辑；EDAB 四编码块皆缺，则拿编码块 F 的顶部参考源替代；否则参考源皆填像素中值</p>
                     <p class="text-gray-side mt-0">图：补充参考源的检查顺序。</p>
                 </div>
@@ -3863,8 +3868,8 @@ sao分析跳过视频右边和下边边界
     · 光强L的单位是candela×10000
     · SDR视频的L是1000,1. 压HDR视频前一定要看视频信息再设L，见上图
         · DCI-P3电影业内：	<span class="text-blue-emph">G(13250,34500)B(7500,3000)R(34000,16000)WP(15635,16450)L(?,1)</span>
-        · bt709：			<span class="text-blue-emph">G(15000,30000)B(7500,3000)R(32000,16500)WP(15635,16450)L(?,1)</span>
-        · bt2020超清：		<span class="text-blue-emph">G(8500,39850)B(6550,2300)R(35400,14600)WP(15635,16450)L(?,1)</span>
+        · bt709：		<span class="text-blue-emph">G(15000,30000)B(7500,3000)R(32000,16500)WP(15635,16450)L(?,1)</span>
+        · bt2020超清：	<span class="text-blue-emph">G(8500,39850)B(6550,2300)R(35400,14600)WP(15635,16450)L(?,1)</span>
     · RGB原信息(对照小数格式的视频信息，然后选择上面对应的参数):
         · DCI-P3：	<span class="text-blue-emph">G(x0.265,y0.690),B(x0.150,y0.060),R(x0.680,y0.320),WP(x0.3127,y0.329)</span>
         · bt709：	<span class="text-blue-emph">G(x0.30,y0.60),B(x0.150,y0.060),R(x0.640,y0.330),WP(x0.3127,y0.329)</span>
@@ -4081,6 +4086,7 @@ sao分析跳过视频右边和下边边界
                 </tbody>
             </table>
             <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
+            <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
 
             <pre class="mt-3"><code><b>--dolby-vision-profile</b>&lt;选择5/8.1（HDR10）/8.2（SDR）大于8.1需要写master-display和HDR10-opt
 <b>--dolby-vision-rpu</b>&lt;路径&gt;导入RPU二进制文件（.bin）

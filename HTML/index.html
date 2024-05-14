@@ -289,7 +289,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2>帧间 - 时域架网搜索</h2>
             <h3>一维小波变换 1D Wavelet Transform</h3>
-            <p>让短波像拉链一样划过一维信号，时间轴上根据短波波形选择，将与源信号匹配的程度变化记为频域信息（如使用低频 - 高频 - 低频的对称波形拆出音频热度图），支持更换波形以提取特征（如特征采样式音频降噪滤镜）。解决了傅里叶变换只有空间频域，无法描述信号随时间变化过程的原生缺陷，缺点是分辨率低。</p>
+            <p>让短波像拉链一样划过一维信号，短波所到的时间域与源信号匹配（波形重合）的程度会变化，而变化本身记为时间频域信息。支持更换波形以提取特征（如特征采样式音频降噪滤镜）。解决了傅里叶变换只有空间频域，无法描述信号随时间变化过程的原生缺陷，缺点是分辨率低。详见<a href="https://www.youtube.com/watch?v=jnxqHcObNK4">科普视频</a>。一般用于检测特征片段，如将小波本身塑性为需要的特征，然后划过源波形，得到这些特征的时间域分布和强度变化。</p>
+            <div class="align-items-center">
+                <img src="files/image13.png" alt="Wavelet Transform Example" class="img-small" >
+                <p class="text-gray-side mt-0">图：用蓝色小波划过红色信号的变换例子</p>
+            </div>
             
             <h3>基于提升式小波变换的时域动态补偿 lifting-scheme temporal MC</h3>
             <div class="row">
@@ -298,7 +302,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <p>继续在 L<sub>1</sub>→L<sub>n</sub> 的 1 层向右迭代，分离出所有的 L，H 带，如此实现迭代 n 次即分离 2<sup>n</sup> 帧动静态，以及所有的预测与补偿，故不像传统动态搜索一样受缩放性 scalability（分辨率 vs 搜索范围）限制。是 Scalable Video Codec - SVC 编码的核心算法之一。</p>
                     <p>迭代后的高低频用 LL<sub>1</sub> LL<sub>2</sub> LH<sub>1</sub> LH<sub>2</sub> 表示低到高频的顺序，字母位数代表迭代次数。</p>
                 </div>
-                <img src="files/image13.png" alt="Lifting Scheme Temporal Motion Compensation" id="LR-UD-010" class="img-right col-auto mb-auto" >
+                <img src="files/image14.png" alt="Lifting Scheme Temporal Motion Compensation" id="LR-UD-010" class="img-right col-auto mb-auto" >
             </div>
 
             <h3>高斯模糊 Gaussian blur</h3>
@@ -309,7 +313,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>和卷积滤镜一样用 n×n 的滤镜格子逐像素扫图，区别在于滤镜中心会被替换为旁像素的中值。如此一来在扫描窗口任意两端几乎一致的像素值会被识别为线段或边缘，中间的像素值会被同化，而平面上的噪点/颗粒就会被抹除，生成仅有平/斜面和完整线条边缘的“模糊”结果。见<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2%E5%99%A8">维基百科</a>。</p>
             <h3>双边滤镜 Bilateral filter</h3>
             <p>将中值滤镜输出作为（2D）高斯模糊的权重蒙版（通过矩阵点除实现动态干涉滤镜强度）；因此平面/斜面/线条本身会决定高斯模糊正态分布钟在对应位置被保留/干涉/隔断的程度</p>
-            <img src="files/image14.png" alt="Bilateral Filter" class="" >
+            <div class="align-items-center">
+                <img src="files/image15.png" alt="Bilateral Filter" class="" >
+            </div>
+            
 
             <pre><code><b>--mcstf</b> &lt;开关，默认关，<span class="text-red-emph">会关多线程</span>&gt;
 时域动态补偿滤镜mctf搭配双阈滤镜的自动降噪，理论上提高细节保真。关多线程会大幅削弱性能</code></pre>
@@ -332,7 +339,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="row">
                 <h3>并和搜索模式 Merge Mode</h3>
                 <p id="LR-UD-011" class="col-8">然后用相对简单含糊算法接手剩余块的向量：从帧间，帧内凑五个参选块 candidate，两个备选，少服从多地并和动态向量。（该模式会跳过 PU 的边缘及当前向量以提速）</p>
-                <img src="files/image15.png" alt="HEVC Merge Mode" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/image16.png" alt="HEVC Merge Mode" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
             </div>
 
             <pre><code><b>--max-merge</b> &lt;整数0~5，默认2&gt;
@@ -461,7 +468,7 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
                     <p>以下图预测块 C 为例：编码块 B 处缺少参考源就用编码块 A 的最右侧存在参考源做副本。编码块 D 补充 A-B 两块参考源的逻辑同上；若 EDAB 四个编码块都没有参考源，就用编码块 F 的顶部参考源替代；若 EDABF 五个编码块都没有参考源，则给所有参考源填像素中值。</p>
                     <p class="text-gray-side mt-0">图：补充参考源的检查顺序。</p>
                 </div>
-                <img src="files/image16.png" alt="HEVC Merge Mode" id="LR-UD-014" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/image17.png" alt="HEVC Merge Mode" id="LR-UD-014" class="img-medium img-right col-4 mb-auto" >
     
                 <div id="LR-UD-015" class="col-8">
                     <h3>强力平滑滤镜的启用条件</h3>
@@ -472,7 +479,7 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
                     </ol>
                     <p class="text-gray-side mt-0">图：强力平滑滤镜的启用条件。</p>
                 </div>
-                <img src="files/image17.png" alt="Strong Intra Smoothing Condition" id="LR-UD-016" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/image18.png" alt="Strong Intra Smoothing Condition" id="LR-UD-016" class="img-medium img-right col-4 mb-auto" >
                 
                 <div id="LR-UD-017" class="col-8">
                     <h3>强力平滑滤镜 Strong intra smoothing</h3>
@@ -482,7 +489,7 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
                     </ol>
                     <p class="text-gray-side mt-0">图：强力平滑滤镜。</p>
                 </div>
-                <img src="files/image18.png" alt="Strong Intra Smoothing Filter" id="LR-UD-018" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/image19.png" alt="Strong Intra Smoothing Filter" id="LR-UD-018" class="img-medium img-right col-4 mb-auto" >
                 
                 <div id="LR-UD-019" class="col-8">
                     <h3>3-tap 有限冲击响应 Finite Impulse Reponse 滤镜</h3>
@@ -490,9 +497,9 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
                     <p class="text-gray-side mt-0">图：3tap FIR 滤镜。</p>
                     <p>预处理后，用趋平，夹角，或 DC 模式初步编码 PB 到 CB。</p>
                 </div>
-                <img src="files/image19.png" alt="3tap FIR Filter" id="LR-UD-020" class="img-small img-right col-4 mb-auto" >
+                <img src="files/image20.png" alt="3tap FIR Filter" id="LR-UD-020" class="img-small img-right col-4 mb-auto" >
 
-                <h3>趋平模式 Planarr</h3>
+                <h3>趋平模式 Planar</h3>
                 <div id="LR-UD-021" class="col-8">
                     <p>
                         用双线性插值 Bi-lerp，让左 - 上过渡为右 - 下平面。由
@@ -513,16 +520,16 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
                     </p>
                     <p class="text-gray-side mt-0">图：得到一个平均预测像素 p(x,y) 的过程。</p>
                 </div>
-                <img src="files/image20.png" alt="Planar Intra Coding Mode" id="LR-UD-022" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/image21.png" alt="Planar Intra Coding Mode" id="LR-UD-022" class="img-medium img-right col-4 mb-auto" >
 
                 <h3>夹角模式 Direct（35 种）</h3>
                 <div id="LR-UD-023" class="col-10">
                     <p>将渐变（斜面）PB 无损压缩为编码块 CB 中全部画面与参考源共角的夹角<span class="text-blue-math">\(\theta\)</span>拓补结构。通过穷举所有<span class="text-blue-math">\(p(x,y)\)</span>的夹角以尝试对齐上方横向参考源<span class="text-blue-math">\(t(x)\)</span>，或左侧纵向参考源<span class="text-blue-math">\(l(y)\)</span>中差异最小的点<span class="text-blue-math">\(t(x\pm n)\)</span>或纵向的<span class="text-blue-math">\(l(y\pm n)\)</span>构成直角三角。用三角函数<span class="text-blue-math">\(\frac{opp}{adj} = \tan\theta\)</span>得预测像素<span class="text-blue-math">\(p\)</span>的夹角<span class="text-blue-math">\(\theta\)</span>
                 </div>
 
-                <img src="files/image21.png" alt="Directional Coding Modes" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
+                <img src="files/image22.png" alt="Directional Coding Modes" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
                 <div class="align-items-center">
-                    <img src="files/image22.png" alt="Directional Angle Algebra" class="img-small" >
+                    <img src="files/image23.png" alt="Directional Angle Algebra" class="img-small" >
                     <p class="text-gray-side mt-0">图：大体的精确夹角测算。见<a href="https://www.elecard.com/page/spatial_intra_prediction_in_hevc">Elecard 参考书</a></p>
                 </div>
             </div>
@@ -535,7 +542,7 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
             <h2>率控制 - 算出量化值 Quantization Parameter</h2>
             <p>人眼对明暗变化与画面细节程度的感知呈对数㏒状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
             <div class="align-items-center">
-                <img src="files/image23.png" alt="Logrithm QP to qScale" class="img-medium" >
+                <img src="files/image24.png" alt="Logrithm QP to qScale" class="img-medium" >
             </div>
             <p>由于当前帧此时还未编码（码率未知），故寻已编码前帧的量化失真程度（越高则后帧理应越复杂），做推演复杂度/模糊复杂度。CRF 越高则除进推演复杂度的分母越大/ABR 越低则分子越小，得到的推演复杂度越低，推演出的 qp 就越高。</p>
             
@@ -821,7 +828,7 @@ aq-strength-edge偏给暗场的程度</code></pre>
             <h2>模式决策</h2>
             <p>Mode decision 整合帧间与帧内搜索所得的信息，宏观地定制分块参考量化等细分方案，率失真优化关时量化越高越好。注意片源含明显边缘失真时反而要减少率失真优化的影响，因为此时“保画质”的意义不大。</p>
             <div class="align-items-center">
-                <img src="files/image24.png" alt="Mode Decision General" class="img-medium" >
+                <img src="files/image25.png" alt="Mode Decision General" class="img-medium" >
             </div>
 
             <pre><code><b>--rd</b> &lt;1/2/3/5，默认3，大则慢&gt;
@@ -846,7 +853,7 @@ aq-strength-edge偏给暗场的程度</code></pre>
     · 像素风：<span class="text-blue-emph">据像素变大的程度决定</span>。如分辨率宽÷2，分辨率高÷2会回到1x1像素大小，则使默认值乘以2以提速
     · 抗涂抹：<span class="text-blue-emph">rskip 2 rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比rskip 0快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</code></pre>
             <div class="align-items-center">
-                <img src="files/image25.png" alt="rSkip Edge Threshold" class="img-small" >
+                <img src="files/image26.png" alt="rSkip Edge Threshold" class="img-small" >
                 <p class="text-gray-side">图：影响 DCT 系子分布的块中像素，而 DCT 系子的密度影响 rskip-edge-threshold 的设置</p>
             </div>
 
@@ -862,10 +869,10 @@ aq-strength-edge偏给暗场的程度</code></pre>
                 <li><span class="text-blue-math">\(\lambda &gt; 0\)</span>则开销大于失真——保画质收益大于压缩收益，应该保画质</li>
             </ul>
             <div class="align-items-center">
-                <img src="files/image26.png" alt="x264 JM RDO Lambda" class="img-medium" >
-                <img src="files/image27.png" alt="RDO Lambda Slopes" class="img-medium" >
+                <img src="files/image27.png" alt="x264 JM RDO Lambda" class="img-medium" >
+                <img src="files/image28.png" alt="RDO Lambda Slopes" class="img-medium" >
                 <p class="text-gray-side">图：率失真优化中λ的斜度变化与效果</p>
-                <img src="files/image28.png" alt="RDO qStep Chart" class="img-medium" >
+                <img src="files/image29.png" alt="RDO qStep Chart" class="img-medium" >
                 <p class="text-gray-side">图：率 - 失真表格中不断调整并得到“×”的实际效果</p>
             </div>
 
@@ -906,7 +913,7 @@ psy参数改动qp的最大范围，宏观影响大，片源含明显边缘失真
 <b>--rd-refine</b> &lt;开关，<span class="text-red-emph">需rd 5，见下图斜面上出现的随机块失真</span>&gt;
 率失真优化分析完成帧内搜索cu的最佳量化和分块结果，耗时换压缩率和画质。x264中直接嵌入subme 8中，还多一个最优动态向量分析</code></pre>
             <div class="align-items-center">
-                <img src="files/image31.jpg" alt="RD Refine Random Distortion" class="img-medium" >
+                <img src="files/image30.jpg" alt="RD Refine Random Distortion" class="img-medium" >
             </div>
 
             <h3>优化量化</h3>
@@ -925,17 +932,17 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
 
             <h3>优化策略 - 随量化强度增加而增加</h3>
             <div class="align-items-center">
-                <img src="files/image29.jpg" alt="RDO Settings 1" class="" >
+                <img src="files/image31.jpg" alt="RDO Settings 1" class="" >
                 <p class="text-gray-side">图：左 1 源有微量边缘失真以及颗粒。2~4=高量化导致块失真，worm，蚊噪等。5 对应失真用 psy-rd(oq)，(limit)sao，deblock，aq，降 crf 抑制</p>
-                <img src="files/image30.png" alt="RDO Settings 2" class="img-medium" >
+                <img src="files/image32.png" alt="RDO Settings 2" class="img-medium" >
             </div>
 
             <h2>环路滤波</h2>
             <h3>去块滤镜</h3>
             <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
             <div class="align-items-center">
-                <img src="files/image32.png" alt="Deblock detection visualization" class="img-medium" >
-                <img src="files/image33.png" alt="Deblock edge visualization" class="img-medium" >
+                <img src="files/image33.png" alt="Deblock detection visualization" class="img-medium" >
+                <img src="files/image34.png" alt="Deblock edge visualization" class="img-medium" >
                 <p class="text-gray-side">图：取最小 8x8 范围（两个 4x4 CU）间的界线举例。</p>
             </div>
 
@@ -957,7 +964,7 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
             <h3>取样迁就偏移滤镜 Sample adaptive offset</h3>
             <div class="row">
                 <p id="LR-UD-025" class="col-10">逐 CTB 划分。界偏移 EO 缓解纹理边缘因「高频波形的遮盖因强量化或去块丢失」的问题。可能分以下几步。算法略像帧内搜索的趋平滤镜。适合修复纹理量化出振铃的损失。关闭则遮不住平面的蠕虫失真</p>
-                <img src="files/image34.jpg" alt="Sample Adaptive Offset Case" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
+                <img src="files/image35.jpg" alt="Sample Adaptive Offset Case" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
             </div>
 
             <ul class="text-gray-side">
@@ -991,15 +998,16 @@ sao分析跳过视频右边和下边边界
 从条带（横向的一组CTU）角度调整sao参数，1启用I条带sao，2增加P条带，3增加B条带，4所有条带。可直接控制sao，或搭配limit-sao的新方法</code></pre>
 
             <h2>熵编码/文本压缩</h2>
+            <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
             <div class="align-items-center">
-                <img src="files/image35.png" alt="CABAC Flow Chart" class="" >
+                <img src="files/image36.png" alt="CABAC Flow Chart" class="" >
                 <p class="text-gray-side">图：简化的上下文自适应二进制算数编码<a href="https://iphome.hhi.de/marpe/cabac.html">CABAC 流程</a>，分转二进制，出字概率统计和算数编码三步</p>
             </div>
 
             <h3>算数编码</h3>
             <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
             <div class="align-items-center">
-                <img src="files/image36.png" alt="Arithmetic Coding Demonstration" class="" >
+                <img src="files/image37.png" alt="Arithmetic Coding Demonstration" class="" >
                 <p class="text-gray-side">图：编码即逐字按出字概率缩窄概率条到最后一个字的出字概率，取上/下区间为编码结果，解码照概率位置（蓝线）的落点反推实现。</p>
             </div>
 
@@ -3189,16 +3197,16 @@ sao分析跳过视频右边和下边边界
             <h3>有限状态机 Finite-State Machine</h3>
             <div class="row">
                 <p id="LR-UD-027" class="col-10">以状态描述程序/机器。如 1~2 间可过渡出无限个数字，代表机械运动到位的中间过程；去掉过程后（如取整后）剩下圆圈数字表示的①↔②两种状态，就足以抽象地表示按动式圆珠笔；将两态联系起来的操作表示为箭头，即按下笔的按钮，而输出就是下一状态。若需要将笔伸出（需②）而笔已收拢则写作 ①→⓶；若需收拢而笔已伸出则 ②→⓵</p>
-                <img src="files/image37.png" alt="Double Action Ball Point Pen" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
+                <img src="files/image38.png" alt="Double Action Ball Point Pen" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
             </div>
             <div class="align-items-center">
-                <img src="files/image38.png" alt="Finite State Machine on Double Action Pen" class="img-medium" >
+                <img src="files/image39.png" alt="Finite State Machine on Double Action Pen" class="img-medium" >
             </div>
             
             <h3>上下文自适应 - 有限状态机推演法</h3>
             <p>BAC 下只有最大概符 Most-probable symbol MPS 和最小概符 Least-probable symbol LPS 两个变量。若大概符（超过 50%）为 1，则 LPS 变量为 0。若已知出 0 概率为 <span class="text-blue-math">\(p0\)</span>，则出 1 的概率就是 <span class="text-blue-math">\(1-p0\)</span>，这样只需要推演 LPS 一个变量的上下文就足以推演 0~1 概率区间的分布。具体分布由人工筛选，所以具体逻辑要看编码器源码，x264 中大体为输入 LPS 为 0/为 1 时的状态切换：若大于 0.5 则变成 MPS，LPS 最小为 0.01875；MPS 最大为 0.98125</p>
             <div class="align-items-center">
-                <img src="files/image39.png" alt="Finite State Machine Context Adaptation" class="img-medium" >
+                <img src="files/image40.png" alt="Finite State Machine Context Adaptation" class="img-medium" >
             </div>
 
             <h3>(低精度) 二进制算数编码 Binary Arithmetic Coding BAC</h3>
@@ -3251,8 +3259,8 @@ sao分析跳过视频右边和下边边界
                 </tbody>
             </table>
             
-            <h3>转二进制 - 伪哥伦布编码</h3>
-            <p>8bit 下，十进制 3 会转为浪费码率的 00000011——因为前后都挨着其它 8bit 数而不能删；所以添加清点有效位数的标记，共有 11 两位数而设标记 00，再转后缀为前缀，就得到相对可靠的 <span class="text-blue-math">\( (a=00,b=11) \)</span>；解码器识别出变量 a，b，为两位数的二进制 11 而还原</p>
+            <h3>转二进制 - 伪哥伦布编码（原理解析）</h3>
+            <p>十进制的 3 会转为浪费码率的二进制 8bit 00000011 而非 11，因为前后都挨着其它的数而不能删。解决方法是清点有效的位数，11 共有两位数，因此设置两位数的标记 00 作为 11 的前缀，就得到了相对可靠的 <span class="text-blue-math">\( (a=00,b=11) \)</span>。解码器检测到变量 a 和 b，算出无效位有<span class="text-blue-math">\( 8-2 \)</span>个，于是输出 000000，在输出 11，完成还原。</p>
 
             <h3>转二进制 - 一元码 Unary，截短二进制码 Truncated Binary</h3>
             <p>一元码如 2，3 即<span class="text-blue-math">110</span>，<span class="text-blue-math">1110</span>或<span class="text-blue-math">001</span>，<span class="text-blue-math">0001</span>，末尾分隔后续数，差在吃带宽。截短二进制如 8bit 的十进制 5 是二进制<span class="text-blue-math">00000101</span>。所以能截短到<span class="text-blue-math">101</span>，但问题是多个数字放一起就难以解码。</p>
@@ -3280,7 +3288,7 @@ sao分析跳过视频右边和下边边界
                 </li>
             </ol>
             <div class="align-items-center">
-                <img src="files/image40.png" alt="Golomb Rice Coding 2^K-M Variations" class="img-medium" >
+                <img src="files/image41.png" alt="Golomb Rice Coding 2^K-M Variations" class="img-medium" >
                 <p class="text-gray-side">图：M=1~32 时，<span class="text-blue-math">\(2^K - M\)</span> 的边界变化，见<a href="https://www.desmos.com/calculator/2gonwxfc1m">Desmos 例</a></p>
             </div>
 
@@ -3398,7 +3406,7 @@ sao分析跳过视频右边和下边边界
             <h3>游程/游标编码 Run-length/run-level coding</h3>
             <p></p>
             <div class="align-items-center">
-                <img src="files/image41.png" alt="Run Length Coding Demonstration" class="img-medium" >
+                <img src="files/image43.png" alt="Run Length Coding Demonstration" class="img-medium" >
             </div>
 
             <h3>Trellis</h3>
@@ -3413,7 +3421,7 @@ sao分析跳过视频右边和下边边界
             <h3>软判决率失真优化 CABAC 的再量化-SDQ trellis</h3>
             <p>算数编码行游标编码之倒序——先编码最大概率的 0，后编码低概的绝对值强度 absolute level（因为含负强度/DCT 系子波形的反相）。得从各个可能路线整合出 trellis 所有上下文可能性以及变更（如下图）。由于文本编码是动态程序（一次编一字），所以路线一次只能改一条，且会保持出字概率而得斜线。</p>
             <div class="align-items-center">
-                <img src="files/image42.png" alt="Soft Decision Quantization Trellis Chart" class="img-medium" ><br>
+                <img src="files/image44.png" alt="Soft Decision Quantization Trellis Chart" class="img-medium" ><br>
             </div>
             <p>4x4 块的 16 个倒序 zig-zag 系子中，预测与总结系子强度（等于 1_大于 1，或<span class="text-blue-math">NumEq1_NumLg1</span>）的数量归纳为 8 种 CABAC 上下文长度的节点（0_0~any_any），如 2_0 对应<span class="text-blue-math">NumLg1×2</span>，<span class="text-blue-math">NumEq1×1</span>，即 2_0 线。</p>
             <p>若<span class="text-blue-math">NumLg1 &gt; 0</span>，则从当前系子节点切到下个系子的 ×_1 线并不再回到<span class="text-blue-math">NumEq1</span></p>
@@ -3843,9 +3851,9 @@ sao分析跳过视频右边和下边边界
             <h3>HDR 元数据设置</h3>
             <p>x264/5 皆支持的元数据设置。但因为 HDR 分为硬件标准，软件标准，以及数据标准，所以很乱。为了保证色彩正确，必须参考片源的元数据。如：</p>
             <div class="align-items-center">
-                <img src="files/image43.png" alt="Metadata for VUI HDR Info 1" class="" >
+                <img src="files/image45.png" alt="Metadata for VUI HDR Info 1" class="" >
                 <p class="text-gray-side">图 1: cll 1000,640. master-display 由 G(13250…) 开头，L(10000000,1) 结尾</p>
-                <img src="files/image44.png" alt="Metadata for VUI HDR Info 2" class="img-medium" >
+                <img src="files/image46.png" alt="Metadata for VUI HDR Info 2" class="img-medium" >
                 <p class="text-gray-side">图 2: cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
 

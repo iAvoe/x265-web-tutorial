@@ -930,13 +930,6 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
                 <img src="files/image30.png" alt="RDO Settings 2" class="img-medium" >
             </div>
 
-            <h3>优化策略 - 随量化强度增加而增加</h3>
-            <div class="align-items-center">
-                <img src="files/image29.jpg" alt="RDO Settings 1" class="" >
-                <p class="text-gray-side">图：左 1 源有微量边缘失真以及颗粒。2~4=高量化导致块失真，worm，蚊噪等。5 对应失真用 psy-rd(oq)，(limit)sao，deblock，aq，降 crf 抑制</p>
-                <img src="files/image30.png" alt="RDO Settings 2" class="img-medium" >
-            </div>
-
             <h2>环路滤波</h2>
             <h3>去块滤镜</h3>
             <p>修复高量化时宏块间出现明显横纵割痕瑕疵的平滑滤镜。编码器内去块利用了之前搜索到的信息而相比外部滤镜误判更少，但大体上就是检查 1 像素宽，且周围没有较大高度/像素值变化的横纵边缘，所以误判也不可避免。</p>

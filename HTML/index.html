@@ -38,7 +38,7 @@ avs2pipemod 源.avs -y4mp | x265.exe --y4m - --output</code></pre>
             <h3 class="m-0">多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
             <code>ffmpeg -filter_complex "ass='F\:/字幕.ass'"滤镜</code>
             <h3 class="m-0">Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
-            
+
             <pre><code>x265.exe [命令行] 2>&1 | tee home\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
@@ -144,7 +144,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             
             <h2>帧间 - 子像素运动补偿</h2>
             <p>动态预测 ME 除了与帧内编码后的帧做差（以便推演 P/B/I 帧，见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）以外，还被动态补偿 MC 以「允动画之移，拦静画所变」的原理消除如噪点之类导致的动态信息误判，同时将帧间矢量表中动态矢量的精度提高到¼像素以修复「动态预测因精度低导致细节损失」的画面错误。</p>
-            <p>大体上，补偿过程是用帧内编码所得的“粗加工 PU”与源视频对应的块做差，使用有限冲激响应滤镜 Finite impulse response (FIR) filter 放大。此处指 x264-6tap；x265-8tap，7tap 和 4tap 滤镜。放大后用 SATD 对准动态矢量，得“精加工 PU”。</p>
+            <p>大体上，补偿过程是用帧内编码所得的“粗加工 PU”与源视频对应的块做差，使用有限冲激响应滤镜 FIR filter 放大。此处指 x264-6tap；x265-8tap，x265-7tap 和 x265-4tap 滤镜。放大后用 SATD 对准动态矢量，得“精加工 PU”。</p>
             <div class="row">
                 <div id="LR-UD-005" class="col-8 align-items-center">
                     <table class="table-center">
@@ -3213,7 +3213,7 @@ sao分析跳过视频右边和下边边界
             <p>通过 MPS，LPS 变量简化出字概率的统计。再降精度到 1/2 的幂（如 8 则在 0~1 区间精确到 1/256 个位深过渡）来略增误差优化性能，再加一步将像素值转二进制的编码，设以便统计过程中交换值，而算数编码的部分不变，就实现了二进制的算数编码。</p>
 
             <h3>几何分布/等差等比分布类 Geometric distribution</h3>
-            <p>条件过程不变，各个尝试独立，只有阴阳两结果的伯努利试验中统计 n 遍成功的概率分布所形成的概率变化曲线，为：<span class="text-blue-math">\[ P(X=x) = (1-p)^{x-1} p \]</span>其中概率 <span class="text-blue-math">\(1-p\)</span> 盖失败，<span class="text-blue-math">\(p\)</span> 盖成功。如：</p>
+            <p>条件过程不变，各个尝试独立，只有阴阳两结果的<a href="https://zh.wikipedia.org/zh-hans/%E4%BC%AF%E5%8A%AA%E5%88%A9%E8%A9%A6%E9%A9%97">伯努利试验</a>中统计 n 遍成功的概率分布所形成的概率变化曲线，为：<span class="text-blue-math">\[ P(X=x) = (1-p)^{x-1} p \]</span>其中概率 <span class="text-blue-math">\(1-p\)</span> 盖失败，<span class="text-blue-math">\(p\)</span> 盖成功。如：</p>
             <ol>
                 <li>尝试 3 次后得阳结果记作"阴，阴，阳"。<span class="text-blue-math">\(P(X=3)=(1-p)(1-p)(p)=(1-p)^{3-1} p\)</span></li>
                 <li>成功概率为 90% 则记做 <span class="text-blue-math">\( P(X=x) = (1-0.9)^{x-1} (0.9) \)</span>，且成功概率与尝试次数独立</li>

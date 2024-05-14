@@ -44,8 +44,8 @@ x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2>分块</h2>
-            <p>HEVC 中，帧下结构按面积大小分为<span class="text-blue-emph">帧 → 瓦 tile → 条带 slice → 条带分段 ss → ctu 树单元 → cu 单元</span>。</p>
-            <p>CU，CB 由同帧的 CTU 经动态搜索 ME 与运动补偿 MC 隔离所得。其 U/unit 代表 YCbCr 整体块，B/block 则单指 Y，Cb 或 Cr 块（区分亮度色度）。ipcm-cu（Intra pulse code modulation CU）代表跳过 MEMC，直达环路滤波的「帧内编码 pcm 波形 CU」，因为“块”是一串像素值的波形，只是用元数据“换行”到二维而已。</p>
+            <p>HEVC 中，帧的下级结构按照分辨率大小分为<span class="text-blue-emph">帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss） → CTU 树单元 → CU 单元</span>。</p>
+            <p>Coding Unit（CU），Coding Block（CB）是由同一帧的 CTU 通过动态搜索 ME 与运动补偿 MC 隔离分块得到。其中的 U/unit 代表 YCbCr 一体的结构，B/block 则单指 Y，Cb 或 Cr 块（用于特指亮度或色度）。IPCM-CU（Intra pulse code modulation CU）表示了跳过动态搜索与运动补偿 MEMC，直达环路滤波的「帧内编码 PCM 波形 CU」，因为“块”实际上只是一串像素值的波形，只是用元数据“换行”到了二维。</p>
             <div class="align-items-center">
                 <img src="files/image1.png" alt="Coding Tree Unit" class="img-medium" >
                 <p class="text-gray-side mt-0">图：Coding Tree Unit 以及其下 Coding Unit 的划分</p>
@@ -932,8 +932,7 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
 
             <h2>环路滤波</h2>
             <h3>去块滤镜</h3>
-            <p>修复高量化时宏块间出现明显横纵割痕瑕疵的平滑滤镜。编码器内去块利用了之前搜索到的信息而相比外部滤镜误判更少，但大体上就是检查 1 像素宽，且周围没有较大高度/像素值变化的横纵边缘，所以误判也不可避免。</p>
-            <p>块失真源自块间不统一的量化程度。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
+            <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
             <div class="align-items-center">
                 <img src="files/image32.png" alt="Deblock detection visualization" class="img-medium" >
                 <img src="files/image33.png" alt="Deblock edge visualization" class="img-medium" >

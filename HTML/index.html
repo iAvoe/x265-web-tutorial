@@ -19,7 +19,7 @@
 	<body class="text-gray-main">
         <div class="container-mobile rounded-9 border-main">
             <h1>x265 教程<span class="text-blue-emph"> HTML 完整版</span></h1>
-            <p>欢迎阅读！若有什么不会的可以加群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门先看 x264 视频压缩教程综合版，手头需要编码压制不妨搭配急用版教程。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
+            <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
             
             <h3 class="mb-0">ffmpeg，VapourSynth，avs2yuv 传递参数</h3>
             <pre><code>
@@ -98,21 +98,21 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/image5.png" alt="Fourier Transform Editing" id="LR-UD-004" class="img-medium img-right col-4 mb-auto" >
             </div>
 
-            <pre class="m-0"><code><b>--limit-tu</b>&lt;整数0~4默认关，<span class="text-red-emph">需tu-intra/inter-depth大于1</span>&gt;
+            <pre class="m-0"><code><b>--limit-tu</b> &lt;整数0~4默认关，<span class="text-red-emph">需tu-intra/inter-depth大于1</span>&gt;
 提前退出tu分块，以量化/残差编码质量为代价提速。<a href="https://forum.doom9.org/showthread.php?p=1963250#post1963250">tu大则易出现量化涂抹</a>，不利于暂停画质
     · <span class="text-blue-emph">1</span> 一般，画质编码，取分裂/跳过中花费最小的
     · <span class="text-blue-emph">2</span> 以同ctu内的首个tu分裂次数为上限
     · <span class="text-blue-emph">3</span> 快速编码取帧内帧间附近tu分裂平均次数为上限
     · <span class="text-blue-emph">4</span> 不推荐，将3作为未来tu的分裂上限，相比0+20%速度
-<b>--rdpenalty</b>&lt;整数0~2，默认关，<span class="text-red-emph">需tu-intra-depth大于1</span>&gt;
+<b>--rdpenalty</b> &lt;整数0~2，默认关，<span class="text-red-emph">需tu-intra-depth大于1</span>&gt;
 与limit-tu相反，强制tu分块细化以增加算力损耗并降低量化涂抹。可理解为tu分块的下限，例如高limit-tu，高crf时设2，避免32x32tu量化效果太强画面糊掉
     · <span class="text-blue-emph">1</span> 提高率失真代价而减少32x32tu出现概率
     · <span class="text-blue-emph">2</span> 强制32x32tu分块
     · <span class="text-red-emph">32x32的帧内cu需tu-intra-depth 2</span>
     · <span class="text-red-emph">64x64帧内cu需tu-intra-depth 3</span>
-<b>--tu-intra-depth --tu-inter-depth</b>&lt;整数1~4，默认1，<span class="text-blue-emph">配合limit-tu</span>&gt;
+<b>--tu-intra-depth --tu-inter-depth</b> &lt;整数1~4，默认1，<span class="text-blue-emph">配合limit-tu</span>&gt;
 空间域tu分裂次数上限,默认只在cu基础上分裂一次。决定量化质量所以建议开高，建议一般情况设2，保画质设3~4
-<b>--max-tu-size</b>&lt;32/16/8/4，默认32&gt;大tu使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></code></pre>
+<b>--max-tu-size</b> &lt;32/16/8/4，默认32&gt;大tu使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></code></pre>
 
             <h2>帧间 - 动态搜索</h2>
             <p>逐块于帧间找最小失真朝向 Direction of minimal distortion / DMD，组成一张张帧间矢量表。缺则参考帧与分块的建立就不甚理想，损失可能的压缩率或画质。</p>
@@ -125,21 +125,21 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p class="text-gray-side mt-0">图：umh 搜索。</p>
             </div>
 
-            <pre><code><b>--analyze-src-pics</b>&lt;开关，默认关&gt;
+            <pre><code><b>--analyze-src-pics</b> &lt;开关，默认关&gt;
 允许动态搜索查找片源帧，耗时增加压缩
-<b>--me</b>&lt;hex/umh/star/esa/full，推荐umh&gt;
+<b>--me</b> &lt;hex/umh/star/esa/full，推荐umh&gt;
 搜索算法，umh平衡，star四角星搜索之后收益递减，sea是优化过的x264 esa穷举，但收益递减仍大
-<b>--merange</b>&lt;整数，推荐4的倍数，<span class="text-red-emph">需me</span>&gt;
+<b>--merange</b> &lt;整数，推荐4的倍数，<span class="text-red-emph">需me</span>&gt;
 <span class="text-blue-emph">完全取决于ME算法和分辨率</span>，过大会因「找不到更好，找到也是错」而损失画质和压缩
     · 1920x1080下推荐<span class="text-blue-emph">48</span>左右
     · 3840x2160下推荐<span class="text-blue-emph">52</span>左右
     · me hex下设<span class="text-blue-emph">16</span>
     · me umh-star设<span class="text-blue-emph">≥32</span>
-<b>--no-temporal-mvp</b>&lt;开关&gt;
+<b>--no-temporal-mvp</b> &lt;开关&gt;
 关P-B条带的动态搜索，除直播外不推荐
-<b>--hme-search</b>&lt;hex/umh/star/esa/full，<span class="text-red-emph">关me</span>&gt;
+<b>--hme-search</b> &lt;hex/umh/star/esa/full，<span class="text-red-emph">关me</span>&gt;
 三份异分辨率原画分别查找宏观到微观的搜索动态信息
-<b>--hme-range</b>&lt;三整数，<span class="text-red-emph">需hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt;
+<b>--hme-range</b> &lt;三整数，<span class="text-red-emph">需hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt;
 对应1/16，¼和全分辨率三画面</code></pre>
             
             <h2>帧间 - 子像素运动补偿</h2>
@@ -211,7 +211,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/image11.png" alt="7tap 8tap interpolation 2" class="img-medium" >
             </div>
 
-            <pre><code><b>--subme</b>&lt;整数范围1~7，默认2&gt;
+            <pre><code><b>--subme</b> &lt;整数范围1~7，默认2&gt;
 根据源帧率借下表判断。
 注：x264的rdo选项和subme并用，所以与x265不通用；SATD算法见x264教程。</code></pre>
             <table class="align-items-center table-center text-smaller">
@@ -282,7 +282,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
                 <img src="files/image12.png" alt="Implicit Weighted Prediction" id="LR-UD-008" class="img-small img-right col-2 mt-3 mb-auto" >
 
-                <pre><code><b>--weightb</b>&lt;开关，默认关&gt;
+                <pre><code><b>--weightb</b> &lt;开关，默认关&gt;
 启用B条带的隐加权预测。注意光线变化和淡入淡出在公开课，电脑录屏，低成本/旧动漫等片源中几乎不存在，这种情况下打开只会浪费性能
                 </code></pre>
             </div>
@@ -311,7 +311,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>将中值滤镜输出作为（2D）高斯模糊的权重蒙版（通过矩阵点除实现动态干涉滤镜强度）；因此平面/斜面/线条本身会决定高斯模糊正态分布钟在对应位置被保留/干涉/隔断的程度</p>
             <img src="files/image14.png" alt="Bilateral Filter" class="" >
 
-            <pre><code><b>--mcstf</b>&lt;开关，默认关，<span class="text-red-emph">会关多线程</span>&gt;
+            <pre><code><b>--mcstf</b> &lt;开关，默认关，<span class="text-red-emph">会关多线程</span>&gt;
 时域动态补偿滤镜mctf搭配双阈滤镜的自动降噪，理论上提高细节保真。关多线程会大幅削弱性能</code></pre>
 
             <h2>溯块向量搜索</h2>
@@ -335,30 +335,30 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/image15.png" alt="HEVC Merge Mode" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
             </div>
 
-            <pre><code><b>--max-merge</b>&lt;整数0~5，默认2&gt;
+            <pre><code><b>--max-merge</b> &lt;整数0~5，默认2&gt;
 重设merge mode被选参考块的数量，时间换质量。建议高压编码设<span class="text-blue-emph">4</span>，其它可设<span class="text-blue-emph">2，3</span>
-<b>--early-skip</b>&lt;开关，默认关&gt;
+<b>--early-skip</b> &lt;开关，默认关&gt;
 先查2nx2n merge被选块，找不到就跳过AMVP以提速</code></pre>
 
             <h2>初始化-Lookahead</h2>
             <p>最先运行，给视频帧分段并最终整合成 GOP 内树叉状的参考结构，设关键帧并递给下一步帧内编码。一来冗余，二来防止参考错误蔓延（否则丢一个网络数据包会导致长时间绿屏花屏）。过程见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
-            <pre><code><b>--scenecut</b>&lt;整数，不推荐用&gt;
+            <pre><code><b>--scenecut</b> &lt;整数，不推荐用&gt;
 Lookahead中两帧差距达到该参数值则触发转场
-<b>--hist-scenecut</b>&lt;开关，默认关，会关scenecut，<span class="text-blue-emph">10与12bit源可能会导致崩溃</span>，推荐8bit下用&gt;
+<b>--hist-scenecut</b> &lt;开关，默认关，会关scenecut，<span class="text-blue-emph">10与12bit源可能会导致崩溃</span>，推荐8bit下用&gt;
 亮度平面边缘+颜色直方图SAD阈值触发转场。x265 v3.5+69后编码彩色视频，尤其<a href="https://forum.doom9.org/showthread.php?p=1978502">HDR源中超越scenecut精度~20%</a>，降低了正误判（设I帧，closed-gop下帧间冗余效益降低）和负误判（不设I帧，分为多个带I块的P帧，帧内编码效益降低），因此除黑白视频外推荐。缺点是超过8bit后不稳定，且理论上不应对画质/压缩率有太大影响
 注：hist-threshold参数于x265 v3.5+69被删
-<b>--rc-lookahead</b>&lt;帧数量，范围1~250，推荐keyint÷2&gt;
+<b>--rc-lookahead</b> &lt;帧数量，范围1~250，推荐keyint÷2&gt;
 指定cutree的检索帧数，通常设在帧率的2.5~3倍。高则占用内存增加延迟，低则降低压缩率和平均画质。
 注：cutree会自动选择--rc-lookahead和max(--keyint,max(--vbv-maxrate,--bitrate)÷--vbv-bufsize×fps)中最小的值作为检索帧数
-<b>--no-cutree</b>&lt;开关&gt;
+<b>--no-cutree</b> &lt;开关&gt;
 关闭少见CTU量化增强偏移。可能只有近无损，crf小于16才用的到</code></pre>
 
             <h3 class="same-line">P/B 帧推演 - Viterbi 最短路径算法</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
-            <pre><code><b>--b-adapt</b>&lt;整数0~2，推荐<span class="text-blue-emph">2</span>&gt;
+            <pre><code><b>--b-adapt</b> &lt;整数0~2，推荐<span class="text-blue-emph">2</span>&gt;
 <span class="text-blue-emph">0</span>停用，<span class="text-blue-emph">1</span>快速算法，因当今设备算力够高所以一律<span class="text-blue-emph">2</span>
-<b>--bframe-bias</b>&lt;整数-90~100，推荐默认&gt;
+<b>--bframe-bias</b> &lt;整数-90~100，推荐默认&gt;
 设立B帧判定偏移，增大的同时搭配低pbratio可增加B帧数量，用负值搭配高pbratio可以减少B帧数量</code></pre>
 
             <h3>网络抽象层单元 - 参数集</h3>
@@ -370,10 +370,10 @@ Lookahead中两帧差距达到该参数值则触发转场
                 <li>条带段 Slice segment—————————分枝 - 负责防止 ctu 中的错误传播到整个条带，ctu 以上最小的单位</li>
             </ul>
 
-            <pre><code><b>--opt-qp-pps --opt-ref-list-length-pps</b>&lt;开关，默认关，已知兼容性问题&gt;
+            <pre><code><b>--opt-qp-pps --opt-ref-list-length-pps</b> &lt;开关，默认关，已知兼容性问题&gt;
 据上个GOP改动当前PPS中默认的qp/ref参数值，从而整体上优化视频数据结构。尽管符合HEVC标准，但部分解码端，包括视频网站都不这么想
 注：兼容性问题为<a href="https://forum.doom9.org/showthread.php?p=1978837">应该用hev1而非hvc1封装进ISO-BMFF</a>
-<b>--repeat-headers</b>&lt;开关，默认关&gt;
+<b>--repeat-headers</b> &lt;开关，默认关&gt;
 在流未封装的情况下提供SPS，PPS等信息，正常播放HEVC源码
 注：封装文件的科普<a href="https://www.nazorip.site/archives/63">见x264教程</a></code></pre>
 
@@ -381,18 +381,18 @@ Lookahead中两帧差距达到该参数值则触发转场
             <p>视音频在开始播放前预先加载到内存的一段缓冲区。只要存入缓冲区的波动不大就能保证播放在很多条件下的流畅性。视频流则以确保网络设施正常和控制视频码率本身做到流畅</p>
 
             <h3>Videl Buffer Verifier - 基于缓冲条件的量化控制</h3>
-            <p>手动指定网络/设备下所允许的缓冲速度 kbps 以加大量化压缩，控制 CRF/ABR 模式。与 CRF 一并使用时叫可变码率 Variable Bitrate / VBR 模式。使用时应注意 VBV 完全不理画质，而卡顿的原因可能仅仅是因为 app 客户端的缓存设太小了。</p>
+            <p>手动指定网络/设备下所允许的缓冲速度 kbps 以加大 CRF/ABR 模式基础上的量化压缩。与 CRF 一并使用时叫可变码率 Variable Bitrate / VBR 模式。使用时应注意 VBV 完全不理画质，而卡顿的原因可能仅仅是因为 app 客户端的缓存设太小了。</p>
 
-            <pre><code><b>--vbv-bufsize</b>&lt;整数kbps，默认关=0，<span class="text-red-emph">小于maxrate</span>&gt;
+            <pre><code><b>--vbv-bufsize</b> &lt;整数kbps，默认关=0，<span class="text-red-emph">小于maxrate</span>&gt;
 编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每gop原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完GOP平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>
-<b>--vbv-maxrate</b>&lt;整数kbps，默认关0&gt;
+<b>--vbv-maxrate</b> &lt;整数kbps，默认关0&gt;
 峰值红线。用「出缓帧码率-入缓帧码率必≤maxrate"」限制编码器在GOP码率超bufsize，即缓存跑满时压缩超载帧（提高qp值+强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超maxrate也会因缓存有空而不被压缩。所以有四种状态，需经验判断：
     · 大：GOP大小=bufsize=2×maxrate，超限后等缓存满再压，避开多数涨落，适合限平均率的串流
     · 小：GOP大小=bufsize=1×maxrate，超码率限制后直接压，避开部分涨落，适合限峰值的串流
     · 超：GOP大小&lt;bufsize=1~2×maxrate，超码率限制后直接压，但因视频小/crf大所以没啥作用
     · 欠：GOP大小&gt;bufsize=1~2×maxrate，超码率限制后直接压，但因视频大/crf小所以全都糊掉
     · 由于gop多样，4种状态常会出现在同一视频中。buf/max实际控制了这些状态的出现概率
-<b>--crf-max</b>&lt;整数0~51&gt;
+<b>--crf-max</b> &lt;整数0~51&gt;
 防止vbv把crf拉太高，但会导致码率失控</code></pre>
 
             <h3>关键帧</h3>
@@ -417,13 +417,13 @@ Lookahead中两帧差距达到该参数值则触发转场
                 <li class="mt-0">open-gop 间划界，访问不相关/不相连 GOP 的特殊 CRA 帧。用于不暂停播放的分辨率切换</li>
             </ul>
 
-            <pre><code><b>no-open-gop</b>&lt;开关，默认关，建议开&gt;
+            <pre><code><b>no-open-gop</b> &lt;开关，默认关，建议开&gt;
 不用cra/bla，增加码率增加兼容性，适合长GOP策略
-<b>--keyint</b>&lt;整数，默认25&gt;
+<b>--keyint</b> &lt;整数，默认25&gt;
 判断新发现的转场距上个IDR帧的距离是否短于此值。有两种设定逻辑，而它们给出的画质都一样：
     · 设5或更高，省了设立一些IDR帧拖慢速度。快速编码/直播环境直接设=keyint
     · 设1来增加IDR帧，一帧被判做转场本来就意味着前后溯块的价值不高。而P/B帧内可以放置I宏块，x264/5倾向插P/B帧。好处是进度条落点在激烈的动作场面更密集
-<b>--fades</b>&lt;开关，默认关&gt;
+<b>--fades</b> &lt;开关，默认关&gt;
 找流中的虚实渐变fade-in，给小到帧间条带，大到整个帧间范围改用I条带，并根据渐变后最亮的帧重设码率控制历史记录，解决转场致模糊的问题
 注：与weightb殊路同归但效果更强，增加码率更多</code></pre>
 
@@ -433,16 +433,16 @@ Lookahead中两帧差距达到该参数值则触发转场
                 <li>打开直播或用户拖动进度条落在 CRA 附近，找不到 I 帧时指定应该解码 decode 还是略过 skip 的标签 P 帧</li>
             </ul>
 
-            <pre><code><b>--ref</b>&lt;整数1~16，推荐<span class="text-blue-math">fps÷100+3.4</span>&gt;
+            <pre><code><b>--ref</b> &lt;整数1~16，推荐<span class="text-blue-math">fps÷100+3.4</span>&gt;
 向量溯块前后帧数半径，一图流设<span class="text-blue-emph">1</span>。要在能溯全所有块的情况下降低参考面积，所以一般设<span class="text-blue-emph">3</span>就不管了
-<b>--radl</b>&lt;整数默认0，小于连续B帧，推荐2~3&gt;
+<b>--radl</b> &lt;整数默认0，小于连续B帧，推荐2~3&gt;
 原理见上
-<b>--ipratio --pbratio</b>&lt;浮点,默认1.4 1.3&gt;
+<b>--ipratio --pbratio</b> &lt;浮点,默认1.4 1.3&gt;
 P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更多帧中找到参考源，因此量化强度理应最高：
     · 真人录像片源中保持默认
     · 动漫片源中连续长B帧出现几率增多，有时会找不到合适的参考源导致画质损失，用<span class="text-blue-emph">1.2</span>或更小分配一定码率
     · 可据比例换算帧类型的qp，如<span class="text-blue-emph">I-qp17</span>，<span class="text-blue-emph">P-qp20</span>，<span class="text-blue-emph">B-qp22</span>即<span class="text-blue-emph">--qp/crf 17 --ipratio 1.1765 --pbratio 1.1</span>
-<b>--bframes</b>&lt;整数0~16&gt;
+<b>--bframes</b> &lt;整数0~16&gt;
 最多可连续插入的B帧数量：
     · 一般录像/录屏快速，以及视频剪辑素材设<span class="text-blue-emph">3~6</span>以防止录制和剪辑的解码算力要求过高
     · 电影片源快速设<span class="text-blue-emph">8</span>左右
@@ -452,20 +452,21 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
             <h2>帧内编码/单图冗余</h2>
             <div class="row">
                 <div id="LR-UD-013" class="col-8">
-                    <p>在帧间编码跑完，内容大部分重复的帧变成 P-B 参考帧后，它们所参考的数据最终都会对准 I 帧/I 块上。而这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。分为补偿参考源，平滑（3-tap/ss），和编码 PB 三步。</p>
+                    <p>在帧间编码跑完，内容大部分重复的帧变成 P-B 参考帧后，它们所参考的数据都在 I 帧/I 块上。这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。冗余分为补偿参考源，平滑（3-tap/ss），和编码预测块 PB 三步。</p>
                     <ul>
-                        <li>补偿解决参考源（因为编码顺序等原因而）缺失的问题</li>
-                        <li>平滑预处理据情况选择 3-tap FIR 或强力平滑滤镜，卷积插值出「纯预测 PU」</li>
-                        <li>编码即根据特征使用趋平/夹角/DC 三种方案之一冗余 PB</li>
+                        <li>预测块的左，上两排像素构成参考源</li>
+                        <li>补偿解决参考源（因为编码顺序等原因而）缺失，无法判断 PB 与 CB 参考关系的问题</li>
+                        <li>平滑预处理据参考源自身像素值的分布特征选择 3-tap FIR 或强力平滑滤镜，卷积插值出「纯预测 PU」</li>
+                        <li>编码即根据参考源像素值分布的特征和 CB 像素值的相性选用趋平/夹角/DC 三种方案之一编码 PB</li>
                     </ul>
-                    <p>以下图预测块 C 为例：缺编码块 B 处的参考源就用编码块 A 的最右存在参考源做副本，并如法炮制编码块 D 补充 A-B 两块参考源的逻辑；EDAB 四编码块皆缺，则拿编码块 F 的顶部参考源替代；否则参考源皆填像素中值</p>
+                    <p>以下图预测块 C 为例：编码块 B 处缺少参考源就用编码块 A 的最右侧存在参考源做副本。编码块 D 补充 A-B 两块参考源的逻辑同上；若 EDAB 四个编码块都没有参考源，就用编码块 F 的顶部参考源替代；若 EDABF 五个编码块都没有参考源，则给所有参考源填像素中值。</p>
                     <p class="text-gray-side mt-0">图：补充参考源的检查顺序。</p>
                 </div>
                 <img src="files/image16.png" alt="HEVC Merge Mode" id="LR-UD-014" class="img-medium img-right col-4 mb-auto" >
     
                 <div id="LR-UD-015" class="col-8">
                     <h3>强力平滑滤镜的启用条件</h3>
-                    <ol class="text-smaller">
+                    <ol>
                         <li>预测块 C 的大小小于 32x32</li>
                         <li>底 - 中 - 顶，及左 - 中 - 右三个纵/横向参考源两两差之和小于视频位深，如 8bit 下为 8</li>
                         <li>非 DC，非平行（夹角 10），非垂直（夹角 26）的帧内编码模式</li>
@@ -476,7 +477,7 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
                 
                 <div id="LR-UD-017" class="col-8">
                     <h3>强力平滑滤镜 Strong intra smoothing</h3>
-                    <ol class="text-smaller">
+                    <ol>
                         <li>从横 - 纵向两个参考点直接线性插值 lerp 出所有参考点，以及所对应的预测像素 p</li>
                         <li>缓解了色带问题</li>
                     </ol>
@@ -534,7 +535,9 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
             <h3 class="same-line">量化</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
             <h2>率控制 - 算出量化值 Quantization Parameter</h2>
             <p>人眼对明暗变化与画面细节程度的感知呈对数㏒状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
-            <img src="files/image23.png" alt="Logrithm QP to qScale" class="" >
+            <div class="align-items-center">
+                <img src="files/image23.png" alt="Logrithm QP to qScale" class="img-medium" >
+            </div>
             <p>由于当前帧此时还未编码（码率未知），故寻已编码前帧的量化失真程度（越高则后帧理应越复杂），做推演复杂度/模糊复杂度。CRF 越高则除进推演复杂度的分母越大/ABR 越低则分子越小，得到的推演复杂度越低，推演出的 qp 就越高。</p>
             
             <div class="mt-3 align-items-center">
@@ -606,44 +609,44 @@ P帧比IDR/I，及B/b帧相比P帧的量化值递增。B帧双向参考能从更
             <p>经此实现了帧内画面复杂则 qp 低，简则高；同时据用户设定的（对数）强度的动态变化。这种质量判断只有两帧而不宏观，所以引出了各种各样的优化步骤，如 mb/cutree，rdoq 等。</p>
 
             <h3>CRF 上层模式</h3>
-            <pre><code><b>--crf</b>&lt;浮点范围0~51，默认23&gt;
+            <pre><code><b>--crf</b> &lt;浮点范围0~51，默认23&gt;
 据cplxBlur，cutree，B帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称crf。素材级画质设在16~18，收藏~高压画质设在19~20.5，YouTube是23。由于动画和录像的内容差距，动画比录像要给低点。理论上crf高=量化损失多→率失真优化慢；但测试出来是crf+2则4k 4:4:4 12bit会快~0.5fps
-<b>--qpmin</b>&lt;整数0~51&gt;
+<b>--qpmin</b> &lt;整数0~51&gt;
 由于画质和优质参考帧呈正比，所以仅高压环境建议设最高14
-<b>--qpmax</b>&lt;整数0~51&gt;
+<b>--qpmax</b> &lt;整数0~51&gt;
 在要用到颜色键，颜色替换等需要清晰物件边缘的滤镜时，可以设<span class="text-blue-emph">26</span>防止录屏时物件的边缘被压缩的太厉害，其他情况永远不如关cu/mbtree
-<b>--qcomp</b>&lt;开关，tune grain时开启&gt;
+<b>--qcomp</b> &lt;开关，tune grain时开启&gt;
 通过cplxBlur抑制qp判断被噪声带偏，胶片颗粒片源用
-<b>--cplxblur</b>&lt;浮点0~100，默认20&gt;
+<b>--cplxblur</b> &lt;浮点0~100，默认20&gt;
 第-1帧不存在，无法算出第0帧的cplxBlur所以直接指定</code></pre>
 
             <h3>ABR 上层模式</h3>
             <p>编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
-            <pre><code><b>--bitrate</b>&lt;整数kbps&gt;
+            <pre><code><b>--bitrate</b> &lt;整数kbps&gt;
 平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。如果给太低则会得到码率不达标，同时画质差的片子。平均码率模式，除2pass分隔，一般推流用的"码率选项"就是这个参数，速度快但同时妥协了压缩</code></pre>
 
             <h3>SBRC 下层模式 - 可搭配 CRF/ABR/CRF-VBR/ABR-VBR</h3>
             <p>分段式率控制 Segment based rate control，实现 DASH，M3U8 串流（视频平台）用。</p>
-            <pre><code><b>--sbrc</b>&lt;开关，<span class="text-red-emph">需min-keyint=keyint</span>，<span class="text-red-emph">no-open-gop</span>&gt;
+            <pre><code><b>--sbrc</b> &lt;开关，<span class="text-red-emph">需min-keyint=keyint</span>，<span class="text-red-emph">no-open-gop</span>&gt;
 由于提高了初始CRF值的利用率，所以建议搭配--cplxblur=crf使用</code></pre>
 
             <h3>CQP 双层模式</h3>
-            <pre><code><b>--qp</b>&lt;整数0~69，<span class="text-red-emph">禁用crf/abr+模式决策+率失真优化</span>&gt;
+            <pre><code><b>--qp</b> &lt;整数0~69，<span class="text-red-emph">禁用crf/abr+模式决策+率失真优化</span>&gt;
 直接设定全局量化强度。影响其后的综合画质下降或码率暴涨，所以除非yuv4:4:4情况下有既定目的，都不建议</code></pre>
 
             <h3>2pass-ABR 双层模式</h3>
             <p>先用 CRF 模式分析整个视频总结可压缩信息，后根据 ABR 模式的码率限制统一分配量化值。有 pass 2 给特别高的平均码率，输出最小损失的最小体积近无损模式，以及 pass2 给码率硬限的全局整体压缩模式</p>
-            <pre><code><b>--pass 1</b>&lt;挡位，导出stats数据文件&gt;；
-    <b>--pass 2</b>&lt;挡位，导入stats数据文件&gt;；
-    <b>--stats</b>&lt;路径，默认在x264/5目录下&gt;
-<b>--slow-firstpass</b>&lt;开关&gt;
+            <pre><code><b>--pass 1</b> &lt;挡位，导出stats数据文件&gt;；
+<b>--pass 2</b> &lt;挡位，导入stats数据文件&gt;；
+<b>--stats</b> &lt;路径，默认在x264/5目录下&gt;
+<b>--slow-firstpass</b> &lt;开关&gt;
 pass1 里不用 fast-intra no-rect no-amp early-skip ref 1 max-merge 1 me dia subme 2 rd 2，或者手动覆盖掉</code></pre>
 
             <h3>Analysis-2pass-ABR 双层模式</h3>
             <p>于普通 2pass 基础上让 pass1 的帧内帧间分析结果给到 pass2。</p>
-            <pre><code><b>--analysis-save --analysis-load</b>&lt;路径&gt;
+            <pre><code><b>--analysis-save --analysis-load</b> &lt;路径&gt;
 指定导入/出analysis信息文件的路径，文件名
-<b>--analysis-save-reuse-level --analysis-load-reuse-level</b>&lt;整数1~10，默认5&gt;
+<b>--analysis-save-reuse-level --analysis-load-reuse-level</b> &lt;整数1~10，默认5&gt;
 指定analysis-save和load的信息量，配合pass1的动态搜索，帧内搜索，参考帧等参数。推荐8
     · <span class="text-blue-emph">1</span>储存lookahead信息
     · <span class="text-blue-emph">2==4</span>同时储存帧内/帧间向量格式+参考信息
@@ -651,36 +654,36 @@ pass1 里不用 fast-intra no-rect no-amp early-skip ref 1 max-merge 1 me dia su
     · <span class="text-blue-emph">7</span>加8x8cu分块优化信息
     · <span class="text-blue-emph">8==9</span>加完整8x8cu分块信息
     · <span class="text-blue-emph">10</span>加所有cu分析信息
-<b>--dynamic-refine</b>&lt;开关，默认关&gt;
+<b>--dynamic-refine</b> &lt;开关，默认关&gt;
 自动调整refine-inter，x265官方建议搭配refine-intra 4用，相比手动设定提高了压缩
-<b>--refine-inter</b>&lt;整数0~3，默认0&gt;
+<b>--refine-inter</b> &lt;整数0~3，默认0&gt;
 限制帧间块的向量格式，<span class="text-blue-emph">取决于pass1分析结果是否可信，如pass 1只跑了快速搜索的情况</span>
     · <span class="text-blue-emph">0</span>完全遵从pass1的分块深度和向量格式
     · <span class="text-blue-emph">1</span>分析所有pass2中与pass1相同分块的向量格式，除2pass中比1pass更大的分块
     · <span class="text-blue-emph">2</span>一旦找出最佳的动态向量格式就应用于全部的块，2Nx2N块的rect/amp分块全部遵从pass1，仅对merge和2Nx2N划分的块的动态向量信息进行分析
     · <span class="text-blue-emph">3</span>保持使用pass1的分块程度，仍然搜索向量格式
-<b>--refine-intra</b>&lt;整数0~3，默认0&gt;
+<b>--refine-intra</b> &lt;整数0~3，默认0&gt;
 限制帧间块的向量格式，<span class="text-blue-emph">取决于pass1分析结果是否可信，如pass 1只跑了快速搜索的情况</span>
     · <span class="text-blue-emph">0~2</span>同上
     · <span class="text-blue-emph">3</span>保持使用pass1的分块程度，但优化动态向量
     · <span class="text-blue-emph">4</span>pass1丢弃不用
-<b>--refine-mv</b>&lt;整数1~3&gt;
+<b>--refine-mv</b> &lt;整数1~3&gt;
 优化分辨率变化情况下pass2的最优动态向量，<span class="text-blue-emph">1</span>仅搜索动态向量周围的动态，<span class="text-blue-emph">2</span>增加搜索AMVP的顶级候选块，<span class="text-blue-emph">3</span>再搜索更多AMVP候选
-<b>--scale-factor</b>&lt;整数1~3&gt;
+<b>--scale-factor</b> &lt;整数1~3&gt;
 优化分辨率变化情况下pass2的最优动态向量，<span class="text-blue-emph">1</span>仅搜索动态向量周围的动态，<span class="text-blue-emph">2</span>增加搜索AMVP的顶级候选块，<span class="text-blue-emph">3</span>再搜索更多AMVP候选
 <b>--refine-mv-type avc</b>读取API调用的动态信息，目前支持avc大小，使用analyse-reuse模块就用这个参数+avc
-<b>--refine-ctu-distortion</b>&lt;整数0~1&gt;
+<b>--refine-ctu-distortion</b> &lt;整数0~1&gt;
 pass 1下用0写，pass 2下用1读取ctu失真信息</code></pre>
 
             <h3>2pass 转场优化</h3>
-            <pre><code><b>--scenecut-aware-qp</b>&lt;整数，默认关，<span class="text-red-emph">仅pass2</span>&gt;
+            <pre><code><b>--scenecut-aware-qp</b> &lt;整数，默认关，<span class="text-red-emph">仅pass2</span>&gt;
 降低转场前/后qp以增加转场画质，类似fades和weightb
     · <span class="text-blue-emph">1</span>仅转前
     · <span class="text-blue-emph">2</span>仅转后
     · <span class="text-blue-emph">3</span>前加后
-<b>--analysis-reuse-file</b>&lt;路径，默认x265目录下x265_analysis.dat&gt;
+<b>--analysis-reuse-file</b> &lt;路径，默认x265目录下x265_analysis.dat&gt;
 若使用了2pass-ABR调优，则导入multi-pass-opt-analysis/distortion信息的路径，文件名
-<b>--masking-strength</b>&lt;逗号分隔整数&gt;
+<b>--masking-strength</b> &lt;逗号分隔整数&gt;
 于sct-awr-qp基础上定制qp偏移量。建议根据低~高成本动漫，真人录像三种情况定制参数值。scenecut-aware-qp的三种方向决定了masking-strength的三种方向。所谓的非参考帧就是参考参考帧的帧，包括B，b，P三种帧
     · sct-awr-qp=1时写作<span class="text-blue-emph">&lt;转前毫秒（推500）&gt;,&lt;参考±qp&gt;,&lt;非参±qp&gt;</span>
     · sct-awr-qp=2时写作<span class="text-blue-emph">&lt;转后毫秒（荐500）&gt;,&lt;参考±qp&gt;,&lt;非参±qp&gt;</span>
@@ -689,15 +692,15 @@ pass 1下用0写，pass 2下用1读取ctu失真信息</code></pre>
 
             <h3>Analysis-Npass 间调优</h3>
             <p>在 Analysis-pass1~2 之间加一步优化计算。实现比普通 2pass 更精细的码率控制，1~N 也行</p>
-            <pre><code><b>--multi-pass-opt-analysis</b>&lt;开关，默认生成x265_analysis.dat，<span class="text-red-emph">需关闭pme/pmode/analysis-save|load</span>&gt;
+            <pre><code><b>--multi-pass-opt-analysis</b> &lt;开关，默认生成x265_analysis.dat，<span class="text-red-emph">需关闭pme/pmode/analysis-save|load</span>&gt;
 储存/导入每个CTU的参考帧/分块/向量等信息。将信息优化，细化并省去多余计算
-<b>--multi-pass-opt-distortion</b>&lt;开关，<span class="text-red-emph">需关闭pme/pmode/analysis-save|load</span>&gt;
+<b>--multi-pass-opt-distortion</b> &lt;开关，<span class="text-red-emph">需关闭pme/pmode/analysis-save|load</span>&gt;
 根据失真（编码前后画面差）进一步分析qp
-<b>--multi-pass-opt-rps</b>&lt;开关，默认关&gt;
+<b>--multi-pass-opt-rps</b> &lt;开关，默认关&gt;
 将pass1常用的率参数集保存在序列参数集SPS里以加速</code></pre>
 
             <h3>Analysis-pass2-ABR 天梯模式</h3>
-            <pre><code><b>--abr-ladder</b>&lt;文件名.txt，<a href="https://streaminglearningcenter.com/blogs/the-evolving-encoding-ladder-what-you-need-to-know.html">苹果TN2224</a>，<span class="text-red-emph">实验性</span>&gt;
+            <pre><code><b>--abr-ladder</b> &lt;文件名.txt，<a href="https://streaminglearningcenter.com/blogs/the-evolving-encoding-ladder-what-you-need-to-know.html">苹果TN2224</a>，<span class="text-red-emph">实验性</span>&gt;
 编码器内部实现analysis模式2pass abr多规格压制输出。方便平台布置多分辨率版本用。可以把不变参数写进pass1+2，变化的写进txt。
 格式为："[压制名:analysis-load-reuse-level:analysis-load] &lt;参数1+输出文件名1&gt;"
 例：
@@ -708,35 +711,35 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 [2160p2:10:Anld存档3] --input视频.yuv --input-res 3840x2160 --bitrate 16000 --ssim --psnr --csv 11.csv --csv-log-level 2 --output 3.hevc --scale-factor 0 }</code></pre>
 
             <h3>近无损与真无损压缩双层模式</h3>
-            <pre><code><b>--lossless</b>&lt;开关&gt;
+            <pre><code><b>--lossless</b> &lt;开关&gt;
 过分块，动/帧/参搜索，量/自适量化等影响画质的步骤，保留率失真优化以增强参考性能。输出体积特大的原画。相比锁定量化方法，这样更能满足影业与科研用，但不适合个人和一般媒体。真无损导出有很小几率因为参考质量提升而会比近无损小
-<b>--tskip</b>&lt;开关，默认关，<span class="text-red-emph">需rd大于2</span>&gt;
+<b>--tskip</b> &lt;开关，默认关，<span class="text-red-emph">需rd大于2</span>&gt;
 4x4 tu上跳过DCT变换，可保留深度分块/纹理密集处的放大细节
-<b>--cu-lossless</b>&lt;开关，默认关&gt;
+<b>--cu-lossless</b> &lt;开关，默认关&gt;
 将无损量化cu（qp 4）作为率失真优化的结果选项之一，只要码率管够（符合λ=R/D）就不量化。用更多码率换取原画相似度，无损源能提高参考冗余</code></pre>
 
             <h2>自适应量化</h2>
             <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 qp 分配过程。讨论时注意 aq 与 vaq 的混淆。见 <a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
             
-            <pre><code><b>--aq-mode</b>&lt;整数0~3&gt;
+            <pre><code><b>--aq-mode</b> &lt;整数0~3&gt;
 据原画和crf/abr设定，以及码率不足时（crf&lt;18/低码abr）如何分配qp
     · <span class="text-blue-emph">1</span>标准自适应量化（急用，简单平面）
     · <span class="text-blue-emph">2</span>加启用aq-variance，自动调整aq-strength强度（录像-电影以及crf&lt;17推荐）
     · <span class="text-blue-emph">3</span>加码率不够用时倾向保暗场（接受更明显的涂抹失真）
     · <span class="text-blue-emph">4</span>加码率不够用时更加倾向保纹理（接受平面上的涂抹失真，<span class="text-red-emph">实验性</span>，很慢）
-<b>--aq-strength</b>&lt;浮点&gt;
+<b>--aq-strength</b> &lt;浮点&gt;
 自适应量化强度。搭配aq-mode，如动漫1:0.8，2:0.9，3:0.7用。录像上可加0.1~0.2，画面混乱/观众难以注意平面时可再增加。注意低成本动漫的平面居多，因此码率不足时反而要妥协纹理
-<b>--hevc-aq</b>&lt;开关&gt;
+<b>--hevc-aq</b> &lt;开关&gt;
 以¼tile而非aq的边缘高频信息实现自适应。据doom9结论<a href="https://forum.doom9.org/showthread.php?p=1925373#post1925373">1</a>，<a href="https://forum.doom9.org/showthread.php?p=1925464">2</a>: hevc-aq比aq 4快且适合动漫，而aq 4更适合录播。目前学术方-官方-第三方间信息较割裂，暂无适解
-<b>--aq-motion</b>&lt;开关，<span class="text-red-emph">实验性</span>&gt;
+<b>--aq-motion</b> &lt;开关，<span class="text-red-emph">实验性</span>&gt;
 据动态信息微调自适应量化的效果mode和强度strength
-<b>--qg-size</b>&lt;64/32/16/8，默认64，<span class="text-red-emph">≥min-cu-size</span>&gt;
+<b>--qg-size</b> &lt;64/32/16/8，默认64，<span class="text-red-emph">≥min-cu-size</span>&gt;
 偏移蓝，红色色度面相比亮度平面的qp值差异，负值降低量化。如当色度平面的量化太高则可以用这两个参数补偿回来，但x264-5会根据色度平面采样格式（4:2:2，4:4:4）自动设定这些参数。由于编码器一直不擅长深红色，而人眼又对红光敏感，所以可以给红色面设<span class="text-blue-emph">-3</span>左右
-<b>--cbqpoffs --crqpoffs</b>&lt;整数偏移值&gt;
+<b>--cbqpoffs --crqpoffs</b> &lt;整数偏移值&gt;
 据动态信息微调自适应量化的效果mode和强度strength</code></pre>
 
             <h3>x265 jpsdr-mod 参数</h3>
-            <pre class="mb-0"><code><b>--aq-auto</b>&lt;8bit四开关十进制，默认0关&gt;
+            <pre class="mb-0"><code><b>--aq-auto</b> &lt;8bit四开关十进制，默认0关&gt;
 对应下表：</code></pre>
             <table class="align-items-center table-center">
                 <thead>
@@ -807,39 +810,39 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                     </tr>
                 </tbody>
             </table>
-            <pre class="mt-3"><code><b>-aq-fast-edge</b>&lt;开关，<span class="text-red-emph">需aq-mode4,5</span>&gt;
+            <pre class="mt-3"><code><b>-aq-fast-edge</b> &lt;开关，<span class="text-red-emph">需aq-mode4,5</span>&gt;
 边缘检测跳过高斯模糊过滤，不适合脏片源
-<b>--aq-bias-strength</b>&lt;浮点，默认1，<span class="text-red-emph">需aq-mode3,5</span>&gt;
+<b>--aq-bias-strength</b> &lt;浮点，默认1，<span class="text-red-emph">需aq-mode3,5</span>&gt;
 aq-strength偏给暗场的程度
-<b>--aq-strength-edge</b>&lt;浮点0~3，默认=aq-strength，<span class="text-red-emph">需aq-mode4,5</span>&gt;
+<b>--aq-strength-edge</b> &lt;浮点0~3，默认=aq-strength，<span class="text-red-emph">需aq-mode4,5</span>&gt;
 偏给纹理的aq-strength
-<b>--aq-bias-strength-edge</b>&lt;浮点，默认=aq-bias-str，<span class="text-red-emph">需aq-mode5</span>&gt;
+<b>--aq-bias-strength-edge</b> &lt;浮点，默认=aq-bias-str，<span class="text-red-emph">需aq-mode5</span>&gt;
 aq-strength-edge偏给暗场的程度</code></pre>
 
             <h2>模式决策</h2>
-            <p>Mode decision 整合搜来的信息，宏观地定制分块参考量化等细分方案。因为码率最小的压缩方案画质也差。注意片源含明显边缘失真时反而要减少决策优化</p>
+            <p>Mode decision 整合帧间与帧内搜索所得的信息，宏观地定制分块参考量化等细分方案，率失真优化关时量化越高越好。注意片源含明显边缘失真时反而要减少决策优化</p>
             <div class="align-items-center">
                 <img src="files/image24.png" alt="Mode Decision General" class="img-medium" >
             </div>
 
-            <pre><code><b>--rd</b>&lt;1/2/3/5，默认3，大则慢&gt;
+            <pre><code><b>--rd</b> &lt;1/2/3/5，默认3，大则慢&gt;
 据优化模式决策的程度。 建议快速用<span class="text-blue-emph">1</span>，<span class="text-blue-emph">2</span>；高压用<span class="text-blue-emph">3</span>；片源数据无损(非视觉无损)时用<span class="text-blue-emph">5</span>
     · <span class="text-blue-emph">1</span>优化帧内参考，并块/跳过决策，含明显边缘失真时用
     · <span class="text-blue-emph">2</span>加分块决策，含明显边缘失真时用
     · <span class="text-blue-emph">3</span>加帧间决策，高压高量化时可平衡
     · <span class="text-blue-emph">5==6</span>加向量/帧间方向预测决策，比3慢一倍，片源含边缘失真时会强化失真
-<b>--limit-modes</b>&lt;开关&gt;
+<b>--limit-modes</b> &lt;开关&gt;
 用附近的4个子CU以判断用merge还是AMVP，会大幅减少rect/amp的效果，提速明显。会增大或减少体积，微降画质但难以察觉
-<b>--limit-refs</b>&lt;整数0~3，默认3&gt;
+<b>--limit-refs</b> &lt;整数0~3，默认3&gt;
 限制分块用信息可参考性。<span class="text-blue-emph">0不限</span>压缩高且慢；<span class="text-blue-emph">1</span>用cu分裂后的信息+差异信息描述自身(推荐)；<span class="text-blue-emph">2</span>据单个cb的差异信息建立pu；<span class="text-blue-emph">3=1+2</span>
-<b>--rskip</b>&lt;整数0~2&gt;
+<b>--rskip</b> &lt;整数0~2&gt;
 前cu分块被跳过时，判断后cu接着搜索分块还是提前退出的参数。画面越接近录屏/低成本动漫就用得越多
     · <span class="text-blue-emph">0</span>继续分析。适合信噪比差/高噪源。原画很干净则不如<span class="text-blue-emph">1</span>
     · <span class="text-blue-emph">1</span>rd 0~4下据临cu是否细分而定；rd5~6下看附近2Nx2N cu分块难度而定，高压和一般情况推荐
     · <span class="text-blue-emph">2</span>直接对比cu纹理密度Edge Density，快且不比前者差，但存在对源的画质要求及客观判断“画质”的能力
-<b>--tskip-fast</b>&lt;开关，默认关&gt;
+<b>--tskip-fast</b> &lt;开关，默认关&gt;
 跳过4x4 tu的变换，忽略部分DCT系子coefficients来加速，CbCr-tu也取决于Y块是否被跳过。在全屏小细节的视频中有显著加速效果。建议除高压以外的情况使用
-<b>--rskip-edge-threshold</b>&lt;0~100，默认5: 趋向于分块，<span class="text-red-emph">需rskip大于1</span>&gt;用Sobel算法获取cu纹理密度再除以块所占面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8或16×16块下默认5%（即含3或12个系子）就分
+<b>--rskip-edge-threshold</b> &lt;0~100，默认5: 趋向于分块，<span class="text-red-emph">需rskip大于1</span>&gt;用Sobel算法获取cu纹理密度，再将纹理密度除以块所占面积，得到密度占据面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8或16×16块下默认5%（即含3或12个系子）就分
 注：类似x264 deadzone参数
     · 像素风：<span class="text-blue-emph">据像素变大的程度决定</span>。如分辨率宽÷2，分辨率高÷2会回到1x1像素大小，则使默认值乘以2以提速
     · 抗涂抹：<span class="text-blue-emph">rskip 2 rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比rskip 0快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</code></pre>
@@ -850,8 +853,8 @@ aq-strength-edge偏给暗场的程度</code></pre>
 
             <h2>率失真优化控制</h2>
             <h3>率失真优化 Rate distortion optimization</h3>
-            <p>简单地说，将失真；码率分别看做两种越大越差的程度；将其中一个程度乘以一个缩放值以对齐另一个（否则两值权重不一样），然后在各种模式决策，量化方案下找出最小的和，就有了最优方案。由代价函数「开销=失真+λ⋅码率」（越小越好）实现模式决策：
-            </p>
+            <p>原本有损压缩视频编码器的策略就是码率越小越好——所以量化强度越大越好。但实际情况是量化压缩相当程度的破坏了 P-B 帧原本可以参考 I 帧的部分——因为量化后差异太大而只能放弃参考，换成 I 块。解决这种乱量化问题的方法是将失真，码率分别看成两种越大越差的程度；将其中一个程度乘以一个缩放值以对齐另一个（使两值权重对等）以相互牵制出平衡点。再将这个“新的程度”应用到原本的编码器策略里，就是率失真优化。</p>
+            <p>“编码器策略”就是模式决策。率失真程度由代价函数「开销=失真+λ⋅码率」（越小越好）得出：</p>
             <span class="text-blue-math">\[J = D + \lambda \cdot R\]</span>
             <p>由于这个式子是一元一次函数（ <span class="text-blue-math">\(y = mx + b\)</span> ），所以可画图表示为每个方案 J 作为位于 D，R 坐标系，斜度 λ 线上的点；其中失真 D 用平方差 SSE 或总差异 SAD 判断（SSE 多取一步平方，使较大的差异呈指数增长）进而分到更多补偿的码率。拉格朗日值 λ 源于 qp，即 crf，abr 指定的率失真斜度区间。qp 越大斜度越小：</p>
             <ul>
@@ -882,12 +885,44 @@ aq-strength-edge偏给暗场的程度</code></pre>
                 <li>
                     <span class="text-blue-math">\(\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}}\)</span>分别指块宽，块高的求和范围
                 </li>
-
                 <li>
                     <span class="text-blue-math">\(x,y\)</span>代表块中各个像素值的坐标
                 </li>
                 <li><span class="text-blue-math">| |</span> 求绝对值以正常求和</li>
             </ul>
+
+            <h3>优化模式决策</h3>
+            <pre><code><b>--dynamic-rd</b> &lt;整数0~4，<span class="text-red-emph">需rd小于5</span>&gt;
+给VBR限码画面调高rd止损。1~4为rd搜索面积倍数，大则慢
+<b>--splitrd-skip</b> &lt;开关，默认关&gt;
+在“所有当前CU分割致失真程度之总和”大于“同帧CU分割致失真程度之总和”时，不独立计算rd值以加速
+<b>--qp-adaptation-range</b> &lt;浮点1~6，默认1&gt;
+psy参数改动qp的最大范围，宏观影响大，片源含明显边缘失真时会强化失真
+<b>--psy-rd</b> &lt;浮点偏移值0~50，，默认2.0，<span class="text-red-emph">需rd 3，加psy-rdoq后构成x264 psy-rd参数</span>&gt;
+心理视觉优化往高影响量化块的能量J，使md偏好保留细节的程度，值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加
+    · <span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质
+    · <span class="text-blue-emph">0.2</span>高压或片源暗场有一点点边缘失真
+    · <span class="text-blue-emph">0.5~2</span>根据要保留的边缘峭度以及文件大小，VBR模式的峰值码率决定
+    · <span class="text-blue-emph">1.5~2.5</span>至少2k的录像片源，根据分辨率和边缘失真程度决定
+<b>--rd-refine</b> &lt;开关，<span class="text-red-emph">需rd 5，见下图斜面上出现的随机块失真</span>&gt;
+率失真优化分析完成帧内搜索cu的最佳量化和分块结果，耗时换压缩率和画质。x264中直接嵌入subme 8中，还多一个最优动态向量分析</code></pre>
+            <div class="align-items-center">
+                <img src="files/image31.jpg" alt="RD Refine Random Distortion" class="img-medium" >
+            </div>
+
+            <h3>优化量化</h3>
+            <pre><code><b>--rdoq-level</b> &lt;整数，0~2&gt;
+abr/crf分配量化值的宏观调控强度，大则慢，0则关
+    · <span class="text-blue-emph">1</span>逐分块进行率失真优化量化，psy-rdoq开启则倾向低量化
+    · <span class="text-blue-emph">2</span>对比4x4块高频信息/残差是否有利于整个编码组(CTU内分块)画质，同时对所有系子进行同类分析，大量减少4×4块，降低psy-rdoq效果，适合一般及高压缩用途
+<b>--psy-rdoq</b> &lt;浮点0~50，默认0关&gt;
+心理视觉往高影响量化块的能量J，改量化偏好为保留细节。值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加
+    · <span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质
+    · <span class="text-blue-emph">2.3~2.8</span>电脑录屏，中低成本动漫等几乎没有动态背景变化的情况
+    · <span class="text-blue-emph">3~4.8</span>分辨率从1280x720到3840x2160的高成本电影动漫，要求片源无明显边缘失真
+    · <span class="text-blue-emph">7~12+psy-rd 3，tskip，tskip-fast，ipratio 1.2，no-sao</span>留噪。保的细节面积越小越高
+<b>--nr-intra --nr-inter</b> &lt;整数0关~2000，默认0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080不建议超250</a>&gt;
+基于MC结果给量化前变换完的i帧降噪。nr-intra不如第三方降噪滤镜。但帧间/时域上降噪的nr-inter可以拉近参考源和参考帧的差距/残差，实现在rc-grain上进一步稳定qp值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点,结果类似低配双阈滤镜</code></pre>
 
             <h3>优化策略 - 随量化强度增加而增加</h3>
             <div class="align-items-center">
@@ -896,47 +931,12 @@ aq-strength-edge偏给暗场的程度</code></pre>
                 <img src="files/image30.png" alt="RDO Settings 2" class="img-medium" >
             </div>
 
-            <h3>优化模式决策</h3>
-            <pre><code><b>--dynamic-rd</b>&lt;整数0~4，<span class="text-red-emph">需rd小于5</span>&gt;
-给VBR限码画面调高rd止损。1~4为rd搜索面积倍数，大则慢
-<b>--splitrd-skip</b>&lt;开关，默认关&gt;
-在“所有当前CU分割致失真程度之总和”大于“同帧CU分割致失真程度之总和”时，不独立计算rd值以加速
-<b>--qp-adaptation-range</b>&lt;浮点1~6，默认1&gt;
-psy参数改动qp的最大范围，宏观影响大，片源含明显边缘失真时会强化失真
-<b>--psy-rd</b>&lt;浮点偏移值0~50，，默认2.0，<span class="text-red-emph">需rd 3，加psy-rdoq后构成x264 psy-rd参数</span>&gt;
-心理视觉优化往高影响量化块的能量J，使md偏好保留细节的程度，值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加
-    · <span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质
-    · <span class="text-blue-emph">0.2</span>高压或片源暗场有一点点边缘失真
-    · <span class="text-blue-emph">0.5~2</span>根据要保留的边缘峭度以及文件大小，VBR模式的峰值码率决定
-    · <span class="text-blue-emph">1.5~2.5</span>至少2k的录像片源，根据分辨率和边缘失真程度决定
-<b>--rd-refine</b>&lt;开关，<span class="text-red-emph">需rd 5，见下图斜面上出现的随机块失真</span>&gt;
-率失真优化分析完成帧内搜索cu的最佳量化和分块结果，耗时换压缩率和画质。x264中直接嵌入subme 8中，还多一个最优动态向量分析</code></pre>
+            <h3>优化策略 - 随量化强度增加而增加</h3>
             <div class="align-items-center">
-                <img src="files/image31.jpg" alt="RD Refine Random Distortion" class="img-medium" >
+                <img src="files/image29.jpg" alt="RDO Settings 1" class="" >
+                <p class="text-gray-side">图：左 1 源有微量边缘失真以及颗粒。2~4=高量化导致块失真，worm，蚊噪等。5 对应失真用 psy-rd(oq)，(limit)sao，deblock，aq，降 crf 抑制</p>
+                <img src="files/image30.png" alt="RDO Settings 2" class="img-medium" >
             </div>
-
-            <h3>优化量化</h3>
-            <pre><code><b>--rdoq-level</b>&lt;整数，0~2&gt;
-abr/crf分配量化值的宏观调控强度，大则慢，0则关
-    · <span class="text-blue-emph">1</span>逐分块进行率失真优化量化，psy-rdoq开启则倾向低量化
-    · <span class="text-blue-emph">2</span>对比4x4块高频信息/残差是否有利于整个编码组(CTU内分块)画质，同时对所有系子进行同类分析，大量减少4×4块，降低psy-rdoq效果，适合一般及高压缩用途
-<b>--psy-rdoq</b>&lt;浮点0~50，默认0关&gt;
-心理视觉往高影响量化块的能量J，改量化偏好为保留细节。值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加
-    · <span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质
-    · <span class="text-blue-emph">2.3~2.8</span>电脑录屏，中低成本动漫等几乎没有动态背景变化的情况
-    · <span class="text-blue-emph">3~4.8</span>分辨率从1280x720到3840x2160的高成本电影动漫，要求片源无明显边缘失真
-    · <span class="text-blue-emph">7~12+psy-rd 3，tskip，tskip-fast，ipratio 1.2，no-sao</span>留噪。保的细节面积越小越高
-<b>--nr-intra --nr-inter</b>&lt;整数0关~2000，默认0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080不建议超250</a>&gt;
-基于MC结果给量化前变换完的i帧降噪。nr-intra不如第三方降噪滤镜。但帧间/时域上降噪的nr-inter可以拉近参考源和参考帧的差距/残差，实现在rc-grain上进一步稳定qp值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点,结果类似低配双阈滤镜</code></pre>
-
-            <h3>峰值信噪比 Peak signal-noise ratio PSNR</h3>
-            <p>不只是人眼对光压的感知，包括痛觉冷热音量等强度的感知皆呈对数㏒状，因此对数被用于统计信号强度，如突出重点范围变化的分贝 dB 表示。信噪比 SNR 即「信号÷噪声」，用于测量处理传输变换信号的有效信息所剩。使用㏒统计还有在坐标系中撇开信噪比太好太差数据（指数增长缩放成线性增长）的效果。</p>
-            <p class="text-blue-math">$$PSNR_{8bit} = 10 \log_{10} \left( \frac{2^{8bit}-1}{MSE} \right) \,\text{(dB)}$$</p>
-
-            <ul class="text-gray-side">
-                <li>PSNR 用来判断编码前后的画面差距，此处画面差异记为均方差 MSE</li>
-                <li>右侧减 1 代表从 0 开始数，㏒<sub>10</sub>对齐十进制</li>
-            </ul>
 
             <h2>环路滤波</h2>
             <h3>去块滤镜</h3>
@@ -955,7 +955,7 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
                 <li>平滑 1：a 与 1 皆非帧内块，皆无参考源/已编码系子，溯异帧或动态向量相异</li>
                 <li>平滑 0：a 与 1 皆非帧内块，皆无参考源/已编码系子，溯同帧或动态向量相同，滤镜关</li>
             </ul>
-            <pre><code><b>--deblock</b>&lt;浮点偏移值，平滑强度:搜索精度，默认1:0，推荐0:0，-1:-1，-2:-1&gt;
+            <pre><code><b>--deblock</b> &lt;浮点偏移值，平滑强度:搜索精度，默认1:0，推荐0:0，-1:-1，-2:-1&gt;
 两值于原有强度上增减
     · 平滑<span class="text-blue-emph">≥1</span>时用以压缩
     · 平滑<span class="text-blue-emph">-2~-1</span>时略降锐度，适合串流
@@ -988,15 +988,15 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
             </ul>
             <p>融合 Merge 滤镜将相邻两个 CTB 的 SAO 信息（补偿方案，平面补偿开关等）根据参数决定直接用上/左块，还是对比像素趋势更接近哪个。和选择 BO，EO 具体的偏移值一样由率失真优化决定</p>
             
-            <pre><code><b>--no-sao</b>&lt;关闭sao，默认开--sao&gt;
+            <pre><code><b>--no-sao</b> &lt;关闭sao，默认开--sao&gt;
 由于针对的是强量化环境，所以高画质源+crf小于17的情况下可以关
-<b>--sao-non-deblock</b>&lt;开关&gt;
+<b>--sao-non-deblock</b> &lt;开关&gt;
 启用后，未经由deblock分析的内容会被sao分析
-<b>--no-sao-non-deblock</b>&lt;默认&gt;
+<b>--no-sao-non-deblock</b> &lt;默认&gt;
 sao分析跳过视频右边和下边边界
-<b>--limit-sao</b>&lt;开关，默认关&gt;
+<b>--limit-sao</b> &lt;开关，默认关&gt;
 对一些计算采用提前退出策略，不是改善画质的，但crf≈18，cutree和bframes 16下可以开，以保留一定影响
-<b>--selective-sao</b>&lt;0~4，默认0&gt;
+<b>--selective-sao</b> &lt;0~4，默认0&gt;
 从条带（横向的一组CTU）角度调整sao参数，1启用I条带sao，2增加P条带，3增加B条带，4所有条带。可直接控制sao，或搭配limit-sao的新方法</code></pre>
 
             <h2>熵编码/文本压缩</h2>
@@ -3432,17 +3432,17 @@ sao分析跳过视频右边和下边边界
             <h2>SEI 补充与优化消息</h2>
             <p>Supplemental enhance info 记录每帧的补充信息。主要有正确解码新 GOP 用的缓冲 SEI，解码校正时间戳的 pic timing SEI，让显示主控切边的 SEI，cc 字幕 SEI，HDR-SEI 等等。缓冲 SEI 记录对应 SPS 的号；待解码图像缓冲 Coded picture buffer CPB 的延迟安全区等信息；时戳 SEI 记录哪些帧上/下场优先的变化；连帧/三连帧的位置等信息。</p>
 
-            <pre class="mb-0"><code><b>--hrd</b>&lt;开关，默认关，<span class="text-red-emph">需开vbv</span>&gt;
+            <pre class="mb-0"><code><b>--hrd</b> &lt;开关，默认关，<span class="text-red-emph">需开vbv</span>&gt;
 将假设对照解码参数Hypothetical Reference Decoder Parameter估计不丢包无延迟的瞬间码率，写在每段SPS及SEI里，对专门配置了网络串流，NAS播放自动缓冲的播放器有好处
-<b>--hash</b>&lt;整数0~3，默认0/关&gt;SEI里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力：
+<b>--hash</b> &lt;整数0~3，默认0/关&gt;SEI里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力：
     · <span class="text-blue-emph">1</span>：checksum校验，性能占用最小
     · <span class="text-blue-emph">2</span>：CRC校验，性能占用略高，准确率较高，一般情况推荐
     · <span class="text-blue-emph">3</span>：CRC校验，性能占用略高，准确率高；性能占用高
-<b>--single-sei</b>&lt;开关&gt;只写一个装全部SEI信息的大NALU而非每GOP都写，提高很小一点压缩率，但可能会降低兼容性
-<b>--film-grain</b>&lt;文件名&gt;将如<a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a>提取的纹理细节模型Film grain model写进SEI，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能
-<b>--idr-recovery-sei</b>&lt;开关&gt;SEI写进idr帧，串流时防止整个GOP都找不到参考帧的机制
-<b>--frame-dup</b>&lt;开关，默认关，需<span class="text-red-emph">开vbv和hrd，有bug</span>&gt;直接将2~3面极近似的连续帧换成同一帧并用SEI告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性
-<b>--dup-threshold</b>&lt;整数1~99，默认70&gt;相似度判定值，默认达70%重复就判为相似</code></pre>
+<b>--single-sei</b> &lt;开关&gt;只写一个装全部SEI信息的大NALU而非每GOP都写，提高很小一点压缩率，但可能会降低兼容性
+<b>--film-grain</b> &lt;文件名&gt;将如<a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a>提取的纹理细节模型Film grain model写进SEI，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能
+<b>--idr-recovery-sei</b> &lt;开关&gt;SEI写进idr帧，串流时防止整个GOP都找不到参考帧的机制
+<b>--frame-dup</b> &lt;开关，默认关，需<span class="text-red-emph">开vbv和hrd，有bug</span>&gt;直接将2~3面极近似的连续帧换成同一帧并用SEI告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性
+<b>--dup-threshold</b> &lt;整数1~99，默认70&gt;相似度判定值，默认达70%重复就判为相似</code></pre>
 
             <h2>线程与节点控制</h2>
             <h3>设置创建比电脑处理器更多的线程会不会更快</h3>
@@ -3463,23 +3463,23 @@ sao分析跳过视频右边和下边边界
 
             <h3>多节点/多路主机</h3>
             <p>如电脑连接超过一台打印机，超过一个网卡（如有线 + 无线）就称为多节点部署。此处特指 CPU 节点——同主板上超过一颗处理器以及其对应内存的系统环境。这种环境的缺点是节点 0 的处理器访问节点 1 的内存的延迟很大，所以一般通过虚拟机，或专门优化的程序来限制软件只占用一个节点的 CPU 核心。</p>
-            <pre class="mb-0"><code><b>--pools</b>&lt;整数/加减符,,,，默认*（占用任意节点电脑的全部线程）&gt;x264中--threads的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程；
+            <pre class="mb-0"><code><b>--pools</b> &lt;整数/加减符,,,，默认*（占用任意节点电脑的全部线程）&gt;x264中--threads的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程；
 例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有4个CPU节点，用其首
 设为<span class="text-blue-emph">pools none</span>时关闭
 单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的8个线程
 注：若--wpp，--pmode，--pme，--lookahead-slices全关，则--pools参数无效
 注：若指定--pools none，则--wpp，--pmode，--pme，--lookahead-slices无效
-<b>--pmode</b>&lt;开关，x265官方建议rd 3/5占不满算力的情况下开&gt;并行模式决策，提高多核心占用但相对难以统一处理噪点</code></pre>
+<b>--pmode</b> &lt;开关，x265官方建议rd 3/5占不满算力的情况下开&gt;并行模式决策，提高多核心占用但相对难以统一处理噪点</code></pre>
 
             <h3>线程池 Threadpool</h3>
             <p>同网络下全电脑的所有可用线程，或此处所有节点 CPU 线程的数量。若 x265 占用超过 64 个线程（32bit 系统下为 32 个），则这些线程本身还可以细分出最多 64 个子线程（32bit 系统下为 32 个）。子线程池的大小和 pool 参数设置出的大小一致，但因为性能和系统兼容性的限制，子线程可能会比预期少。</p>
 
             <h3>工作者线程/分工线程-Worker thread</h3>
             <p>一种多线程优化，能部分解决跨节点运行性能问题——主程序分出一个活跃的分工线程持续重复执行任务，如监听端口 8080，监听信息的后台进程；或者是 x265 外包任务给其它核心或节点上的 pme/pmode Worker thread，使 x265 可以略好的跨节点运行。</p>
-            <pre class="mb-0"><code><b>--pmode</b>&lt;开关，默认关，<span class="text-red-emph">需pools</span>&gt;创建平行模式决策Parallel Mode Decision的Worker thread以更改pools参数功能。推荐先于pme打开，推荐搭配rd 3 + rect，而rd 5时可以先确认占用率未跑满再打开。
+            <pre class="mb-0"><code><b>--pmode</b> &lt;开关，默认关，<span class="text-red-emph">需pools</span>&gt;创建平行模式决策Parallel Mode Decision的Worker thread以更改pools参数功能。推荐先于pme打开，推荐搭配rd 3 + rect，而rd 5时可以先确认占用率未跑满再打开。
     · 如<span class="text-blue-emph">--pme --pmode</span>表明使用整个线程池，分配平行动态搜索，平行模式决策以更好地增加多线程节点占用。
     · 模式决策独立线程化会使本可提前退出的策略因信息孤立而不可跳过，使理论率失真最优推理更准（无损压缩略微提升）
-<b>--pme</b>&lt;开关，默认关，<span class="text-red-emph">需pools</span>&gt;创建平行动态搜索Parallel Motion Estimation的Worker thread以更改pools参数功能（不影响输出文件）。
+<b>--pme</b> &lt;开关，默认关，<span class="text-red-emph">需pools</span>&gt;创建平行动态搜索Parallel Motion Estimation的Worker thread以更改pools参数功能（不影响输出文件）。
     · 如<span class="text-blue-emph">--pme</span>表明使用整个线程池，并分配平行动态搜索的分工线程
     · 开pme时，遇到性能（比仅一个节点）更差状况的可能性不低</code></pre>
 
@@ -3517,7 +3517,7 @@ sao分析跳过视频右边和下边边界
                 </tbody>
             </table>
 
-            <pre><code><b>--frame-threads</b>&lt;整数0~16~线程数÷2，默认0自动&gt;同时压制多少帧：
+            <pre><code><b>--frame-threads</b> &lt;整数0~16~线程数÷2，默认0自动&gt;同时压制多少帧：
     · 如<span class="text-blue-emph">1</span>能让编码器做到前后整帧可完全分析参考，设1的代价是cpu占用显著降低，压制显著减速，建议搭配mcstf使用
     · 非<span class="text-blue-emph">1</span>则因为编码顺序，只有ctu下方的一行ctu可供参考，损失一半可能的参考范围</code></pre>
 
@@ -3858,11 +3858,11 @@ sao分析跳过视频右边和下边边界
                 <p class="text-gray-side">图 2: cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
 
-            <pre><code><b>--max-cll</b>&lt;最大内容光强，最大平均光强&gt;压制HDR源一定照源视频信息设，找不到不要用，见上图例
-<b>--colorprim</b>&lt;字符&gt;播放用三原色(以及白点)指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图1为 bt.2020
-<b>--colormatrix</b>&lt;字符&gt;播放用矩阵格式/系数指标：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020nc，bt2020c， smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp，不支持bt2020nc
-<b>--transfer</b>&lt;字符&gt;传输特质: bt470m，bt470bg，smpte170m，smpte240m，linear，log100，log316，iec61966-2-4，bt1361e，iec61966-2-1，bt2020-10，bt2020-12，smpte2084，smpte428，arib-std-b67，上图图2的PQ即st.2084的标准，所以参数值为smpte2084
-<b>--master-display</b>&lt;G(x,y)B(,)R(,)WP(,)L(,)&gt;写进SEI信息里，告诉解码端色彩空间/色域信息用
+            <pre><code><b>--max-cll</b> &lt;最大内容光强，最大平均光强&gt;压制HDR源一定照源视频信息设，找不到不要用，见上图例
+<b>--colorprim</b> &lt;字符&gt;播放用三原色(以及白点)指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图1为 bt.2020
+<b>--colormatrix</b> &lt;字符&gt;播放用矩阵格式/系数指标：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020nc，bt2020c， smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp，不支持bt2020nc
+<b>--transfer</b> &lt;字符&gt;传输特质: bt470m，bt470bg，smpte170m，smpte240m，linear，log100，log316，iec61966-2-4，bt1361e，iec61966-2-1，bt2020-10，bt2020-12，smpte2084，smpte428，arib-std-b67，上图图2的PQ即st.2084的标准，所以参数值为smpte2084
+<b>--master-display</b> &lt;G(x,y)B(,)R(,)WP(,)L(,)&gt;写进SEI信息里，告诉解码端色彩空间/色域信息用
     · 搞得这么麻烦是因为HDR标准设立时还没有HDR电视，所以就把master-display写成必须参数了，而最重要的信息反而是cll。
     · 绿蓝红GBR和白点WP指马蹄形色域的三角+白点4个位置的值×50000
     · 光强L的单位是candela×10000
@@ -3874,7 +3874,7 @@ sao分析跳过视频右边和下边边界
         · DCI-P3：	<span class="text-blue-emph">G(x0.265,y0.690),B(x0.150,y0.060),R(x0.680,y0.320),WP(x0.3127,y0.329)</span>
         · bt709：	<span class="text-blue-emph">G(x0.30,y0.60),B(x0.150,y0.060),R(x0.640,y0.330),WP(x0.3127,y0.329)</span>
         · bt2020：	<span class="text-blue-emph">G(x0.170,y0.797),B(x0.131,y0.046),R(x0.708,y0.292),WP(x0.3127,y0.329)</span>
-<b>--display-window</b>&lt;←,↑,→,↓&gt;指定黑边宽度，从而跳过加速编码，或者用--overscan crop直接裁掉</code></pre>
+<b>--display-window</b> &lt;←,↑,→,↓&gt;指定黑边宽度，从而跳过加速编码，或者用--overscan crop直接裁掉</code></pre>
 
             <h3>杜比视界 Dolby vision / DV</h3>
             <p>一种通过嵌入高频信号层来强化播放效果的私有格式。有单流/DV-MEL 和双流/DV-FEL 两种，两者皆含有参考单元 Reference picture unit RPU。</p>
@@ -4088,8 +4088,8 @@ sao分析跳过视频右边和下边边界
             <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
             <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
 
-            <pre class="mt-3"><code><b>--dolby-vision-profile</b>&lt;选择5/8.1（HDR10）/8.2（SDR）大于8.1需要写master-display和HDR10-opt
-<b>--dolby-vision-rpu</b>&lt;路径&gt;导入RPU二进制文件（.bin）
+            <pre class="mt-3"><code><b>--dolby-vision-profile</b> &lt;选择5/8.1（HDR10）/8.2（SDR）大于8.1需要写master-display和HDR10-opt
+<b>--dolby-vision-rpu</b> &lt;路径&gt;导入RPU二进制文件（.bin）
 注：杜比视界8.1需要 --dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code></pre>
 
             <h3>RPU 元数据获取</h3>
@@ -4097,22 +4097,22 @@ sao分析跳过视频右边和下边边界
             <code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code>
 
             <h2>输入输出 Input-output IO</h2>
-            <pre class="mb-0"><code><b>--seek</b>&lt;整数，默认0&gt;从第x帧开始压缩
-<b>--frames</b>&lt;整数，默认全部&gt;一共压缩x帧
-<b>--output</b>&lt;整数，默认0&gt;从第x帧开始压缩
-<b>--input-csp</b>&lt;i400/i422/i444/nv12/nv16，默认i420，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe时应设置</span>&gt;。rgb，yuvj等不支持需要滤镜转换
-<b>--dither</b>&lt;开关&gt;使用抖动功能以高质量的降低色深(比如10bit片源降8bit)，避免出现斑点和方块
-<b>--allow-non-conformance</b>&lt;开关&gt;不写入profile和level，绕过h.265标准的规定，只要不是按照h.265规定写的命令行参数值就必须使用这个参数
-<b>--force-flush</b>&lt;整数0~2，默认0&gt;低能耗设备用的编码调度控制:
+            <pre class="mb-0"><code><b>--seek</b> &lt;整数，默认0&gt;从第x帧开始压缩
+<b>--frames</b> &lt;整数，默认全部&gt;一共压缩x帧
+<b>--output</b> &lt;整数，默认0&gt;从第x帧开始压缩
+<b>--input-csp</b> &lt;i400/i422/i444/nv12/nv16，默认i420，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe时应设置</span>&gt;。rgb，yuvj等不支持需要滤镜转换
+<b>--dither</b> &lt;开关&gt;使用抖动功能以高质量的降低色深(比如10bit片源降8bit)，避免出现斑点和方块
+<b>--allow-non-conformance</b> &lt;开关&gt;不写入profile和level，绕过h.265标准的规定，只要不是按照h.265规定写的命令行参数值就必须使用这个参数
+<b>--force-flush</b> &lt;整数0~2，默认0&gt;低能耗设备用的编码调度控制:
     · <span class="text-blue-emph">0</span>等全部帧输入再编码
     · <span class="text-blue-emph">1</span>不等全部帧输入完就编码
     · <span class="text-blue-emph">2</span>取决于条带种类，调整slice type才能用    
-<b>--field</b>&lt;开关&gt;输入分行扫描视频时用，自动获取分场视频的帧率+优先场，替代了--interlaced参数
-<b>--input-res</b>&lt;宽x高，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe或lavf时应设置</span>&gt;指定输入源的分辨率，如1920x1080
-<b>--fps</b>&lt;整数/浮点/分数，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe或lavf时应设置</span>&gt;指定输入源的帧率，如30，24000/1001等
-<b>--chunk-start --chunk-end</b>&lt;开关，<span class="text-red-emph">需no-open-gop</span>&gt;start跨GOP打包网络数据包，end将数据包结尾标注分割
+<b>--field</b> &lt;开关&gt;输入分行扫描视频时用，自动获取分场视频的帧率+优先场，替代了--interlaced参数
+<b>--input-res</b> &lt;宽x高，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe或lavf时应设置</span>&gt;指定输入源的分辨率，如1920x1080
+<b>--fps</b> &lt;整数/浮点/分数，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe或lavf时应设置</span>&gt;指定输入源的帧率，如30，24000/1001等
+<b>--chunk-start --chunk-end</b> &lt;开关，<span class="text-red-emph">需no-open-gop</span>&gt;start跨GOP打包网络数据包，end将数据包结尾标注分割
 注：由于数据包接收顺序随机，所以只可参考其之前，而不可参考之后的内容，跟http串流的数据包编码协议有关
-<b>--temporal-layers</b>&lt;开关，默认关&gt;使x265更兼容svc标准，将非参考b帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗
+<b>--temporal-layers</b> &lt;开关，默认关&gt;使x265更兼容svc标准，将非参考b帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗
 注：可能会造成一般编解码方案的兼容性问题</code></pre>
 
             <h3 class="same-line">编解码图像序列</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
@@ -4167,7 +4167,7 @@ sao分析跳过视频右边和下边边界
             </table>
 
             <h2>预设参数</h2>
-            <pre><code><b>--preset</b>&lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt;
+            <pre><code><b>--preset</b> &lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt;
 见下：</code></pre>
             <div class="overflow-auto">
                 <table class="table-fit-container text-xs">
@@ -4350,7 +4350,7 @@ sao分析跳过视频右边和下边边界
                     </tbody>
                 </table>
             </div>
-            <pre class="mt-3"><code><b>--tune</b>&lt;zerolatency/animation/grain/film/fastdecode/psnr&gt;更改preset的一些参数，见下：
+            <pre class="mt-3"><code><b>--tune</b> &lt;zerolatency/animation/grain/film/fastdecode/psnr&gt;更改preset的一些参数，见下：
     · <span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和B帧功能：
     --bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1
     · <span class="text-blue-emph">animation</span> 优化动漫场景画面：

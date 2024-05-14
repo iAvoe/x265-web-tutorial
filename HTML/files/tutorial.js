@@ -166,3 +166,15 @@ for (let i=0; i<imgs.length; i++) {
  */
 anchors = document.querySelectorAll('a');
 for (let i=0; i<anchors.length; i++) { anchors[i].setAttribute("target", "_blank"); }
+
+/* Accordion collapse support */
+var collapseBtns = document.getElementsByClassName('collapsible');
+
+for (let i = 0; i < collapseBtns.length; i++) {
+    collapseBtns[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var collContent = this.nextElementSibling;
+        if (collContent.style.display === "block") { collContent.style.display = "none"; }
+        else { collContent.style.display = "block"; }
+    });
+}

@@ -297,6 +297,8 @@ a:active {
 
 /* Creating custom bootstrap css */
 .rounded-9 { border-radius: 0.9rem; }
+.rounded-6 { border-radius: 0.6rem; }
+.rounded-3 { border-radius: 0.3rem; }
 
 /* Heading and paragraph on same line */
 .same-line { display: inline; }
@@ -375,3 +377,44 @@ ol ol { list-style-type: upper-roman; }
 ol ol ol { list-style-type: lower-alpha; }
 ul ul { list-style-type: square; }
 ul ul ul { list-style-type: circle; }
+
+
+/* Collapsible divs - Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+button.collapsible {
+    background-color: var(--hex-lighest-gray);
+    font-family: var(--font-style-main);
+    position: relative;
+    display: flex;
+    width: 100%;
+    padding: 0.55rem 1.25rem;
+    text-align: left;
+    overflow-anchor: none;
+}
+
+.coll-content {
+    display: none;
+    overflow: hidden;
+}
+
+.collapsible:hover {
+    color: white;
+    background:#3C4042;
+    text-decoration: none;
+    transition: 300ms;
+}
+
+.active {
+    text-decoration: none;
+    background-color: #dee2e6;
+    transition: 300ms;
+}
+
+.collapsible.active:after {
+    content: '\2796'; /* Unicode minus sign (-) */ 
+}
+
+.collapsible:after {
+    content: '\2795'; /* Unicode plus sign (+) */
+    float: right;
+    margin-left: auto;
+}

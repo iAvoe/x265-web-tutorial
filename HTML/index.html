@@ -147,7 +147,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>动态预测 ME 除了与帧内编码后的帧做差（以便推演 P/B/I 帧，见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）以外，还被动态补偿 MC 以「允动画之移，拦静画所变」的原理消除如噪点之类导致的动态信息误判，同时将帧间矢量表中动态矢量的精度提高到¼像素以修复「动态预测因精度低导致细节损失」的画面错误。</p>
             <p>大体上，补偿过程是用帧内编码所得的“粗加工 PU”与源视频对应的块做差，使用有限冲激响应滤镜 FIR filter 放大。此处指 x264-6tap；x265-8tap，x265-7tap 和 x265-4tap 滤镜。放大后用 SATD 对准动态矢量，得“精加工 PU”。</p>
             <div class="row">
-                <div id="LR-UD-005" class="col-8 align-items-center">
+                <div id="LR-UD-005" class="col-10 align-items-center">
                     <table class="table-center">
                         <tr>
                             <th class="px-1">编码器</th>

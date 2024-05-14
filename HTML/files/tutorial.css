@@ -378,7 +378,6 @@ ol ol ol { list-style-type: lower-alpha; }
 ul ul { list-style-type: square; }
 ul ul ul { list-style-type: circle; }
 
-
 /* Collapsible divs - Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 button.collapsible {
     background-color: var(--hex-lighest-gray);

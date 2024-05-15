@@ -44,29 +44,26 @@ x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2>分块</h2>
-            <p>尽可能组合帧内的像素为大的整体以冗余单个像素的帧间/帧内信息；且尽可能根据动静态，以及边缘的变化细分为足够小的区间，以精确分配量化的强度。</p>
-            <p>HEVC 中，帧的下级结构按照分辨率大小分为<span class="text-blue-emph">帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss） → CTU 树单元 → CU 单元</span>。</p>
-            <p>Coding Unit（CU），Coding Block（CB）是由同一帧的 CTU 通过动态搜索 ME 与运动补偿 MC 隔离分块得到。其中的 U/unit 代表 YCbCr 一体的结构，B/block 则单指 Y，Cb 或 Cr 块（用于特指亮度或色度）。IPCM-CU（Intra pulse code modulation CU）表示了跳过动态搜索与运动补偿 MEMC，直达环路滤波的「帧内编码 PCM 波形 CU」，因为“块”实际上只是一串像素值的波形，只是用元数据“换行”到了二维。</p>
+            <p>将帧内的像素组合成大的整体，以更多地冗余单个像素的帧间/帧内信息；同时要根据动静态以及图像边缘的变化，将图像细分为足够小的区域，以精确分配量化的强度。可以说既要大，又要小。</p>
+            <p>在 High Efficiency Video Coding HEVC 中，帧的下级结构按照分辨率大小分为帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss）→ CTU 树单元 Coding Tree Unit → 编码单元 Coding Unit CU</p>
             <div class="align-items-center">
                 <img src="files/image1.png" alt="Coding Tree Unit" class="img-medium" >
                 <p class="text-gray-side mt-0">图：Coding Tree Unit 以及其下 Coding Unit 的划分</p>
             </div>
-
-            <h3 class="same-line">PU - 预测单元：</h3>
-            <p class="same-line">Prediction unit 是编码完，用做参考源的块。支持 CU 上对称 Rectangle，非对称 Asymmetric 划分，以更好的隔离动静态。亮度与色度上的分裂法可以不同，小至 4x4 像素。</p>
+            <p>编码单元 Coding Unit CU 的大小有 64x64，32x32，16x16 和 8x8，代表逻辑上粗略划分的待编码区域。是 CTU 通过动态搜索 ME 与运动补偿 MC 隔离分块得到的初步细分结构。其中的 U/unit 代表 YCbCr 一体的结构。</p>
+            <p>编码块 Coding Block CB 代表单指编码单元中的 Y，Cb 或 Cr 平面。</p>
+            <p>每个 CU 通常包含一个或多个预测单元 Prediction unit PU，从而精确地划分出更小的区间。这个区间相对于当前 CU 的大小，所以不用像素值大小表示。具体为默认的 2Nx2N，NxN、启用 rectangle 划分后添加 2NxN，Nx2N、启用不对称划分后添加 2Nx1.5N+2Nx0.5N，0.5Nx2N+1.5Nx2N，2Nx0.5N+2Nx1.5N，1.5Nx2N+0.5Nx2N。亮度 PB 与色度 PB 的划分方法可以是不同的。</p>
             <div class="align-items-center">
                 <img src="files/image2.png" alt="Prediction Unit" class="img-medium" >
                 <p class="text-gray-side mt-0">图：pu 的 4 种对称 rectangular 和 4 种不对称 asymmetric 划分</p>
             </div>
             
-            <h3 class="same-line">TU - 变换单元：</h3>
-            <p class="same-line">Transforma unit 的划分与 CU 而非 PU 同步，实现变换和量化</p>
+            <p class="same-line">变换单元 Transform unit TU 的划分与 CU 而非 PU 同步，实现变换和量化</p>
             <div class="align-items-center">
                 <img src="files/image3.png" alt="Transform Unit" class="img-medium" >
             </div>
 
-            <h3 class="same-line">AU - 存取单元：</h3>
-            <p class="same-line">access unit，解码端用于启动解码播放的块，一般为 IDR-AU</p>
+            <p class="same-line">存取单元 Access unit AU 代表解码端用于启动解码的块，通常由 IDR 帧开始，所以一般叫做 IDR-AU</p>
 
             <pre><code><b>--ctu</b> &lt;64/32/16，默认64&gt;
 编码树单元最大大小。大则有损压缩效率高，速度慢。一般建议保持默认，除非片有类似jpeg边缘损失的老片设<span class="text-blue-emph">32</span>，分辨率特别小的老片设<span class="text-blue-emph">16</span>
@@ -79,14 +76,8 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="row">
                 <div id="LR-UD-001" class="col-8">
                     <h3>一维傅里叶变换 1D Fourier Transform</h3>
-                    <p>给出与原信号波形等高，从最长的频率周期开始不断缩窄（周期增加）并根据源信号调整相位的参考余弦。在参考余弦波变化的过程中，记下两条波形吻合度变化的曲线 - 不同波形周期的振幅，得频域信号。反过来将频域所对应的波形加回去就是逆变换。为将源波形中反相（上下颠倒）的余弦也考虑在内，所以计算过程含取立方转正。</p>
-                    <p>
-                        「不断缩窄的参考余弦」可用<span class="text-blue-math">\(\cos\left(\frac{2\pi}{T}\right)\)</span>表示，以及复数用<span class="text-blue-math">\(cos(x)+isin(x)\)</span>表示；相位可记为<span class="text-blue-math">\(\text{atan2}\left(\text{iFT}(x),\text{FT}(x)\right)\)</span>以及复数用<span class="text-blue-math">\(\sqrt{(FT(x)^2 + iFT(x)^2)}\)</span>，表示频域点的亮度和位移（二维变换下是旋角）。
-                    </p>
-                    <p>
-                        <span class="text-blue-math">\(\text{atan2}(y,x)\)</span>
-                        代表二轴坐标系统计一圈 360°（2π）的旋角，几何坐标系中同理的<span class="text-blue-math">\(\tan^{-1}\)</span>超过 180°（π）会归零而不用。详见<a href="https://www.desmos.com/calculator/qpnz9celzf">desmos 例 1</a>，<a href="https://www.desmos.com/calculator/ywxqicajbv">desmos 例 2</a>，<a href="https://www.youtube.com/watch?v=spUNpyF58BY">3b1b 视频科普</a>以及<a href="https://www.youtube.com/watch?v=tEzgtbnbXgQ">Computer Vision 公开课</a>。
-                    </p>
+                    <p>一种将信号从波形转换到频域的方法。变换时设定一条从最长周期开始，逐渐缩短周期（即频率增加）的余弦函数，并根据原始信号调整相位。在这个过程中，记录下余弦函数与原始信号匹配程度的变化曲线，就得到了不同频率下的振幅，从而得到频域表示的信号。逆变换时，根据每个周期的相位和振幅生成这些波形，再加到一起即可转换回原始信号。需要注意的是，在计算过程中需要考虑到信号中可能存在的反相情况，因此会涉及到取绝对值的操作。</p>
+                    
                     <h3>二维傅里叶变换 2D-FT</h3>
                     <p>宽高上单拆出线来分别进行 1DFT，以双求和/双积分 ΣΣ/∫∫ 整合。在频域中相当于每个像素的变换结果相加或干涉。亮则振幅大，距中心远则频率高。强在可编辑性，可以消除打印喷头，抖动等均匀噪声。</p>
                 </div>
@@ -116,7 +107,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 <b>--max-tu-size</b> &lt;32/16/8/4，默认32&gt;大tu使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></code></pre>
 
             <h2>帧间 - 动态搜索</h2>
-            <p>逐块于帧间找最小失真朝向 Direction of minimal distortion / DMD，组成一张张帧间矢量表。缺则参考帧与分块的建立就不甚理想，损失可能的压缩率或画质。</p>
+            <p>用于在连续帧间进行运动估计。这个过程涉及逐个像素块在相邻帧之间寻找最小失真朝向/最小失真方向 Direction of minimal distortion DMD，从而在每帧之间都生成一张向量表。如果这个过程缺失或不够理想，参考帧与分块的建立就可能会出现问题，从而导致潜在的压缩率损失或画质下降。</p>
             <div class="align-items-center">
                 <img src="files/image6.png" alt="Jain&Jain Search" class="" >
                 <p class="text-gray-side mt-0">图：传统的 Jain & Jain 十字搜索。</p>
@@ -144,8 +135,14 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 对应1/16，¼和全分辨率三画面</code></pre>
             
             <h2>帧间 - 子像素运动补偿</h2>
-            <p>动态预测 ME 除了与帧内编码后的帧做差（以便推演 P/B/I 帧，见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）以外，还被动态补偿 MC 以「允动画之移，拦静画所变」的原理消除如噪点之类导致的动态信息误判，同时将帧间矢量表中动态矢量的精度提高到¼像素以修复「动态预测因精度低导致细节损失」的画面错误。</p>
-            <p>大体上，补偿过程是用帧内编码所得的“粗加工 PU”与源视频对应的块做差，使用有限冲激响应滤镜 FIR filter 放大。此处指 x264-6tap；x265-8tap，x265-7tap 和 x265-4tap 滤镜。放大后用 SATD 对准动态矢量，得“精加工 PU”。</p>
+            <p>动态预测 ME 推演 P/B/I 帧（见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）之外，视频编码还需要动态补偿 Motion Compensation MC 来消除由噪点，动态预测精度不足等问题导致的细节损失。大体上是：</p>
+            <ol>
+                <li>“上帧画面 + 帧间向量表中的动态向量 =‘一系列粗加工 PU’”</li>
+                <li>将“粗加工 PU”与源视频所对应的画面做差，并使用有限冲激响应滤镜 FIR filter 放大这些残差</li>
+                <li>用绝对变换差 Sum of Absolute Transformed Differences SATD 来的动态搜索算法校正导致残差的动态向量</li>
+                <li>得到误差小到可接受的“精加工 PU”</li>
+            </ol>
+            <p>用于放大的滤镜有 x264 的 6tap 滤镜，以及 x265 的 8tap、7tap 和 4tap 滤镜，见下表。</p>
             <div class="row">
                 <div id="LR-UD-005" class="col-10 align-items-center">
                     <table class="table-center">

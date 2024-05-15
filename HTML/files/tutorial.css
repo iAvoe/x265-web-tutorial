@@ -31,8 +31,8 @@
  */
 /* Fonts, including Windows font YouYuan for multi-OS compatibility */
 @font-face {
-    font-family: 'SweiGothicL';
-    src: url('SweiGothicCJKsc-Light.ttf') format('truetype');
+    font-family: 'SweiGothic';
+    src: url('SweiGothicCJKsc-Regular.ttf') format('truetype');
 }
 @font-face {
     font-family: 'Zhudou Sans';
@@ -89,7 +89,7 @@
     --rgb-light-yellow: 253,253,205; /* reserved */
     --rgb-dark-purple: 95,73,122; /* reserved */
     --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "SweiGothicL", "Liberation Mono", "Courier New", monospace, "YouYuan";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "SweiGothic", "Liberation Mono", "Courier New", monospace, "YouYuan";
     --font-style-main: "Zhudou Sans", sans-serif;
     --font-style-side: "YouYuan", "Yuanti SC";
     --font-style-math: 'KaTeX Math', Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -101,7 +101,7 @@ body {
     background-color: #dee2e6;
 }
 code { font-family: var(--bs-font-monospace); }
-pre { overflow-x: scroll; margin-top: 0; }
+pre { overflow: auto; margin: 0; }
 .font-monospace { font-family: var(--bs-font-monospace) !important; }
 .text-gray-main { color: rgba(var(--rgb-dark-gray), var(--no-opacity)) !important; }
 .text-dark-green-main { color: rgba(var(--rgb-dark-green), var(--no-opacity)) !important; }
@@ -192,6 +192,8 @@ pre { overflow-x: scroll; margin-top: 0; }
     margin-top: 1rem !important;
     margin-bottom: 1rem !important;
 }
+.pl-3 { padding-left: 1rem !important; }
+.pl-5 { padding-left: 3rem !important; }
 
 /* Container and cols-rows system from bootstrap */
 .container-mobile {
@@ -388,6 +390,8 @@ button.collapsible {
     padding: 0.55rem 1.25rem;
     text-align: left;
     overflow-anchor: none;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
 }
 
 .coll-content {

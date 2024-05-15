@@ -959,37 +959,54 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>优化模式决策</h3>
-            <pre><code><b>--dynamic-rd</b> &lt;整数0~4，<span class="text-red-emph">需rd小于5</span>&gt;
-给VBR限码画面调高rd止损。1~4为rd搜索面积倍数，大则慢
-<b>--splitrd-skip</b> &lt;开关，默认关&gt;
-在“所有当前CU分割致失真程度之总和”大于“同帧CU分割致失真程度之总和”时，不独立计算rd值以加速
-<b>--qp-adaptation-range</b> &lt;浮点1~6，默认1&gt;
-psy参数改动qp的最大范围，宏观影响大，片源含明显边缘失真时会强化失真
-<b>--psy-rd</b> &lt;浮点偏移值0~50，，默认2.0，<span class="text-red-emph">需rd 3，加psy-rdoq后构成x264 psy-rd参数</span>&gt;
-心理视觉优化往高影响量化块的能量J，使md偏好保留细节的程度，值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加
-    · <span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质
-    · <span class="text-blue-emph">0.2</span>高压或片源暗场有一点点边缘失真
-    · <span class="text-blue-emph">0.5~2</span>根据要保留的边缘峭度以及文件大小，VBR模式的峰值码率决定
-    · <span class="text-blue-emph">1.5~2.5</span>至少2k的录像片源，根据分辨率和边缘失真程度决定
-<b>--rd-refine</b> &lt;开关，<span class="text-red-emph">需rd 5，见下图斜面上出现的随机块失真</span>&gt;
-率失真优化分析完成帧内搜索cu的最佳量化和分块结果，耗时换压缩率和画质。x264中直接嵌入subme 8中，还多一个最优动态向量分析</code></pre>
+            <code><b>--dynamic-rd</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数 0~4，<span class="text-red-emph">需 rd 小于 5</span>&gt; 给 VBR 限码画面调高 rd 止损。1~4 为 rd 搜索面积倍数，大则慢。</p>
+            <code><b>--splitrd-skip</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关&gt; 在“所有当前 CU 分割致失真程度之总和”大于“同帧 CU 分割致失真程度之总和”时，不独立计算 rd 值以加速。</p>
+            <code><b>--qp-adaptation-range</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;浮点 1~6，默认 1&gt; psy 参数改动 qp 的最大范围，宏观影响大，片源含明显边缘失真时会不应使用，以防止进一步的失真。</p>
+            <code><b>--psy-rd</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;浮点偏移值 0~50，默认 2.0，span class="text-red-emph">需 rd 3，加 psy-rdoq 后构成 x264 psy-rd 参数</span>&gt; 心理视觉优化往高影响量化块的能量 J，使 md 偏好保留细节的程度，值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
+                <li><span class="text-blue-emph">0.2</span>高压或片源暗场有一点点边缘失真</li>
+                <li><span class="text-blue-emph">0.5~2</span>根据要保留的边缘峭度以及文件大小，VBR 模式的峰值码率决定</li>
+                <li><span class="text-blue-emph">1.5~2.5</span>至少 2k 的录像片源，根据分辨率和边缘失真程度决定</li>
+            </ul>
+            <code><b>--rd-refine</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，<span class="text-red-emph">需 rd 5，见下图斜面上出现的随机块失真</span>&gt; 率失真优化分析完成帧内搜索 cu 的最佳量化和分块结果，耗时换压缩率和画质。x264 中直接嵌入 subme 8 中，还多一个最优动态向量分析。</p>
             <div class="align-items-center">
                 <img src="files/image30.jpg" alt="RD Refine Random Distortion" class="img-medium" >
             </div>
 
             <h3>优化量化</h3>
-            <pre><code><b>--rdoq-level</b> &lt;整数，0~2&gt;
-abr/crf分配量化值的宏观调控强度，大则慢，0则关
-    · <span class="text-blue-emph">1</span>逐分块进行率失真优化量化，psy-rdoq开启则倾向低量化
-    · <span class="text-blue-emph">2</span>对比4x4块高频信息/残差是否有利于整个编码组(CTU内分块)画质，同时对所有系子进行同类分析，大量减少4×4块，降低psy-rdoq效果，适合一般及高压缩用途
-<b>--psy-rdoq</b> &lt;浮点0~50，默认0关&gt;
-心理视觉往高影响量化块的能量J，改量化偏好为保留细节。值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加
-    · <span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质
-    · <span class="text-blue-emph">2.3~2.8</span>电脑录屏，中低成本动漫等几乎没有动态背景变化的情况
-    · <span class="text-blue-emph">3~4.8</span>分辨率从1280x720到3840x2160的高成本电影动漫，要求片源无明显边缘失真
-    · <span class="text-blue-emph">7~12+psy-rd 3，tskip，tskip-fast，ipratio 1.2，no-sao</span>留噪。保的细节面积越小越高
-<b>--nr-intra --nr-inter</b> &lt;整数0关~2000，默认0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080不建议超250</a>&gt;
-基于MC结果给量化前变换完的i帧降噪。nr-intra不如第三方降噪滤镜。但帧间/时域上降噪的nr-inter可以拉近参考源和参考帧的差距/残差，实现在rc-grain上进一步稳定qp值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点,结果类似低配双阈滤镜</code></pre>
+            <code><b>--rdoq-level</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数，0~2&gt; abr/crf分配量化值的宏观调控强度，大则慢，0则关。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">1</span>逐分块进行率失真优化量化，psy-rdoq 开启则倾向低量化</li>
+                <li><span class="text-blue-emph">2</span>对比 4x4 块高频信息/残差是否有利于整个编码组 (CTU 内分块) 画质，同时对所有系子进行同类分析，大量减少 4×4 块，降低 psy-rdoq 效果，适合一般及高压缩用途</li>
+            </ul>
+            <code><b>--psy-rdoq</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;浮点 0~50，默认 0 关&gt; 心理视觉往高影响量化块的能量 J，改量化偏好为保留细节。值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
+                <li><span class="text-blue-emph">2.3~2.8</span>电脑录屏，中低成本动漫等几乎没有动态背景变化的情况</li>
+                <li><span class="text-blue-emph">3~4.8</span>分辨率从 1280x720 到 3840x2160 的高成本电影动漫，要求片源无明显边缘失真</li>
+                <li><span class="text-blue-emph">7~12+psy-rd 3, tskip, tskip-fast, ipratio 1.2, no-sao</span>留噪。保的细节面积越小越高</li>
+            </ul>
+            <code><b>--nr-intra --nr-inter</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数 0 关~2000，默认 0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080 不建议超 250</a>&gt; 基于 MC 结果给量化前变换完的 i 帧降噪。nr-intra 不如第三方降噪滤镜。但帧间/时域上降噪的 nr-inter 可以拉近参考源和参考帧的差距/残差，实现在 rc-grain 上进一步稳定 qp 值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点，结果类似低配双阈滤镜。</p>
+
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充信噪比 SNR 和峰值信噪比 PSNR 的内容</button>
+            <div class="coll-content">
+                <h3>峰值信噪比 Peak signal-noise ratio PSNR</h3>
+                <p>根据信号与噪声之间的比例关系衡量图像或视频的质量。PSNR 不仅仅适用于视频、音频和图像，还可以是温度、气压等强度的差异。由于人对光线变化的感知强度呈对数状，因此对数被用于统计信号的强度，通常用分贝 dB 表示。信噪比 SNR 是指信号与噪声的比值，用于衡量在处理、传输或变换信号过程中有效信息的保留程度。使用对数统计的 PSNR 也能更好地突出关键范围内的变化，并在坐标系中平衡过高或过低的信噪比数据，使得变化更易于理解。</p>
+                <p class="text-blue-math">$$PSNR_{8bit} = 10 \log_{10} \left( \frac{2^{8bit}-1}{MSE} \right) \,\text{(dB)}$$</p>
+                <ul class="text-gray-side">
+                    <li>PSNR 用来判断编码前后的画面差距，此处画面差异记为均方差 MSE</li>
+                    <li>右侧减 1 代表从 0 开始数，㏒<sub>10</sub>对齐十进制</li>
+                </ul>
+            </div>
 
             <h3>优化策略 - 随量化强度增加而增加</h3>
             <div class="align-items-center">
@@ -1014,13 +1031,16 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
                 <li>平滑 1：a 与 1 皆非帧内块，皆无参考源/已编码系子，溯异帧或动态向量相异</li>
                 <li>平滑 0：a 与 1 皆非帧内块，皆无参考源/已编码系子，溯同帧或动态向量相同，滤镜关</li>
             </ul>
-            <pre><code><b>--deblock</b> &lt;浮点偏移值，平滑强度:搜索精度，默认1:0，推荐0:0，-1:-1，-2:-1&gt;
-两值于原有强度上增减
-    · 平滑<span class="text-blue-emph">≥1</span>时用以压缩
-    · 平滑<span class="text-blue-emph">-2~-1</span>时略降锐度，适合串流
-    · 平滑<span class="text-blue-emph">2</span>适合锐利视频源，4k电影，游戏录屏。提高码率且会出现块失真
-    · 平滑<span class="text-blue-emph">-3~-2</span>适合高码动画源/桌面录屏。增块失真，但观感还是比1好
-    · 搜索<span class="text-blue-emph">大于2</span>易误判；<span class="text-blue-emph">小于1</span>会遗漏。建议保持<span class="text-blue-emph">0~-1</span>，除非qp大于26时设<span class="text-blue-emph">1</span></code></pre>
+
+            <code><b>--deblock</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;浮点偏移值，默认 1:0。推荐 0:0，-1:-1，-2:-1&gt; 平滑强度：搜索精度。两值于原有强度上增减。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>平滑<span class="text-blue-emph">≥1</span>时用以压缩</li>
+                <li>平滑<span class="text-blue-emph">-2~-1</span>时略降锐度，适合串流</li>
+                <li>平滑<span class="text-blue-emph">2</span>适合锐利视频源，4k 电影，游戏录屏。提高码率且会出现块失真</li>
+                <li>平滑<span class="text-blue-emph">-3~-2</span>适合高码动画源/桌面录屏。增块失真，但观感仍比 1 好</li>
+                <li>搜索<span class="text-blue-emph">大于 2</span>易误判；<span class="text-blue-emph">小于 1</span>会遗漏。建议保持<span class="text-blue-emph">0~-1</span>，除非 qp 大于 26 时设设<span class="text-blue-emph">1</span></li>
+            </ul>
 
             <h3>取样迁就偏移滤镜 Sample adaptive offset</h3>
             <div class="row">
@@ -1047,16 +1067,16 @@ abr/crf分配量化值的宏观调控强度，大则慢，0则关
             </ul>
             <p>融合 Merge 滤镜将相邻两个 CTB 的 SAO 信息（补偿方案，平面补偿开关等）根据参数决定直接用上/左块，还是对比像素趋势更接近哪个。和选择 BO，EO 具体的偏移值一样由率失真优化决定</p>
             
-            <pre><code><b>--no-sao</b> &lt;关闭sao，默认开--sao&gt;
-由于针对的是强量化环境，所以高画质源+crf小于17的情况下可以关
-<b>--sao-non-deblock</b> &lt;开关&gt;
-启用后，未经由deblock分析的内容会被sao分析
-<b>--no-sao-non-deblock</b> &lt;默认&gt;
-sao分析跳过视频右边和下边边界
-<b>--limit-sao</b> &lt;开关，默认关&gt;
-对一些计算采用提前退出策略，不是改善画质的，但crf≈18，cutree和bframes 16下可以开，以保留一定影响
-<b>--selective-sao</b> &lt;0~4，默认0&gt;
-从条带（横向的一组CTU）角度调整sao参数，1启用I条带sao，2增加P条带，3增加B条带，4所有条带。可直接控制sao，或搭配limit-sao的新方法</code></pre>
+            <code><b>---no-sao</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;关闭 sao，默认开--sao&gt; 由于针对的是强量化环境，所以高画质源+crf 小于 17 的情况下可以关。</p>
+            <code><b>--sao-non-deblock</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关&gt; 启用后，未经由 deblock 分析的内容会被 sao 分析。</p>
+            <code><b>--no-sao-non-deblock</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;默认&gt; sao 分析跳过视频右边和下边边界。</p>
+            <code><b>--limit-sao</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关&gt; 对一些计算采用提前退出策略，不是改善画质的，但 crf≈18，cutree 和 bframes 16 下可以开，以保留一定影响。</p>
+            <code><b>--selective-sao</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;0~4，默认 0&gt; 从条带（横向的一组 CTU）角度调整 sao 参数，1 启用 I 条带 sao，2 增加 P 条带，3 增加 B 条带，4 所有条带。可直接控制 sao，或搭配 limit-sao 的新方法。</p>
 
             <h2>熵编码/文本压缩</h2>
             <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
@@ -3544,17 +3564,25 @@ sao分析跳过视频右边和下边边界
             <h2>SEI 补充与优化消息</h2>
             <p>Supplemental enhance info 记录每帧的补充信息。主要有正确解码新 GOP 用的缓冲 SEI，解码校正时间戳的 pic timing SEI，让显示主控切边的 SEI，cc 字幕 SEI，HDR-SEI 等等。缓冲 SEI 记录对应 SPS 的号；待解码图像缓冲 Coded picture buffer CPB 的延迟安全区等信息；时戳 SEI 记录哪些帧上/下场优先的变化；连帧/三连帧的位置等信息。</p>
 
-            <pre class="mb-0"><code><b>--hrd</b> &lt;开关，默认关，<span class="text-red-emph">需开vbv</span>&gt;
-将假设对照解码参数Hypothetical Reference Decoder Parameter估计不丢包无延迟的瞬间码率，写在每段SPS及SEI里，对专门配置了网络串流，NAS播放自动缓冲的播放器有好处
-<b>--hash</b> &lt;整数0~3，默认0/关&gt;SEI里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力：
-    · <span class="text-blue-emph">1</span>：checksum校验，性能占用最小
-    · <span class="text-blue-emph">2</span>：CRC校验，性能占用略高，准确率较高，一般情况推荐
-    · <span class="text-blue-emph">3</span>：CRC校验，性能占用略高，准确率高；性能占用高
-<b>--single-sei</b> &lt;开关&gt;只写一个装全部SEI信息的大NALU而非每GOP都写，提高很小一点压缩率，但可能会降低兼容性
-<b>--film-grain</b> &lt;文件名&gt;将如<a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a>提取的纹理细节模型Film grain model写进SEI，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能
-<b>--idr-recovery-sei</b> &lt;开关&gt;SEI写进idr帧，串流时防止整个GOP都找不到参考帧的机制
-<b>--frame-dup</b> &lt;开关，默认关，需<span class="text-red-emph">开vbv和hrd，有bug</span>&gt;直接将2~3面极近似的连续帧换成同一帧并用SEI告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性
-<b>--dup-threshold</b> &lt;整数1~99，默认70&gt;相似度判定值，默认达70%重复就判为相似</code></pre>
+            <code><b>--hrd</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt; 将假设对照解码参数 Hypothetical Reference Decoder Parameter 估计不丢包无延迟的瞬间码率，写在每段 SPS 及 SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
+            <code><b>--hash</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数 0~3，默认 0/关&gt; SEI 里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">1</span>：checksum 校验，性能占用最小</li>
+                <li><span class="text-blue-emph">2</span>：CRC 校验，性能占用略高，准确率较高，一般情况推荐</li>
+                <li><span class="text-blue-emph">3</span>：CRC 校验，性能占用略高，准确率高；性能占用高</li>
+            </ul>
+            <code><b>--single-sei</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关&gt; 只写一个装全部 SEI 信息的大 NALU 而非每 GOP 都写，提高很小一点压缩率，但可能会降低兼容性。</p>
+            <code><b>--film-grain</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;文件名&gt; 将如<a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a>提取的纹理细节模型 Film grain model 写进 SEI，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能。</p>
+            <code><b>--idr-recovery-sei</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关&gt; SEI 写进 idr 帧，串流时防止整个 GOP 都找不到参考帧的机制。</p>
+            <code><b>--frame-dup</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关，需<span class="text-red-emph">开 vbv 和 hrd，有 bug</span>&gt; 直接将 2~3 面极近似的连续帧换成同一帧并用 SEI 告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性。</p>
+            <code><b>--dup-threshold</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数 1~99，默认 70&gt; 相似度判定值，默认达 70% 重复就判为相似。</p>
 
             <h2>线程与节点控制</h2>
             <h3>设置创建比电脑处理器更多的线程会不会更快</h3>
@@ -3575,25 +3603,35 @@ sao分析跳过视频右边和下边边界
 
             <h3>多节点/多路主机</h3>
             <p>如电脑连接超过一台打印机，超过一个网卡（如有线 + 无线）就称为多节点部署。此处特指 CPU 节点——同主板上超过一颗处理器以及其对应内存的系统环境。这种环境的缺点是节点 0 的处理器访问节点 1 的内存的延迟很大，所以一般通过虚拟机，或专门优化的程序来限制软件只占用一个节点的 CPU 核心。</p>
-            <pre class="mb-0"><code><b>--pools</b> &lt;整数/加减符,,,，默认*（占用任意节点电脑的全部线程）&gt;x264中--threads的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程；
-例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有4个CPU节点，用其首
-设为<span class="text-blue-emph">pools none</span>时关闭
-单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的8个线程
-注：若--wpp，--pmode，--pme，--lookahead-slices全关，则--pools参数无效
-注：若指定--pools none，则--wpp，--pmode，--pme，--lookahead-slices无效
-<b>--pmode</b> &lt;开关，x265官方建议rd 3/5占不满算力的情况下开&gt;并行模式决策，提高多核心占用但相对难以统一处理噪点</code></pre>
+
+            <code><b>--pools</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数/加减符“,,,”，默认*（占用任意节点电脑的全部线程）&gt; x264 中--threads 的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有 4 个 CPU 节点，使用首个节点</li>
+                <li>设为<span class="text-blue-emph">pools none</span>时关闭</li>
+                <li>单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的 8 个线程</li>
+                <li>若--wpp，--pmode，--pme，--lookahead-slices 全关，则--pools 参数无效</li>
+                <li>若指定--pools none，则--wpp，--pmode，--pme，--lookahead-slices 无效</li>
+            </ul>
 
             <h3>线程池 Threadpool</h3>
-            <p>同网络下全电脑的所有可用线程，或此处所有节点 CPU 线程的数量。若 x265 占用超过 64 个线程（32bit 系统下为 32 个），则这些线程本身还可以细分出最多 64 个子线程（32bit 系统下为 32 个）。子线程池的大小和 pool 参数设置出的大小一致，但因为性能和系统兼容性的限制，子线程可能会比预期少。</p>
+            <p>同网络下整台电脑的所有可用线程，或此处所有节点 CPU 线程的数量。若 x265 占用超过 64 个线程（32bit 系统下为 32 个），则这些线程本身还可以细分出最多 64 个子线程（32bit 系统下为 32 个）。子线程池的大小和 pool 参数设置出的大小一致，但因为性能和系统兼容性的限制，子线程可能会比预期少。</p>
 
             <h3>工作者线程/分工线程-Worker thread</h3>
             <p>一种多线程优化，能部分解决跨节点运行性能问题——主程序分出一个活跃的分工线程持续重复执行任务，如监听端口 8080，监听信息的后台进程；或者是 x265 外包任务给其它核心或节点上的 pme/pmode Worker thread，使 x265 可以略好的跨节点运行。</p>
-            <pre class="mb-0"><code><b>--pmode</b> &lt;开关，默认关，<span class="text-red-emph">需pools</span>&gt;创建平行模式决策Parallel Mode Decision的Worker thread以更改pools参数功能。推荐先于pme打开，推荐搭配rd 3 + rect，而rd 5时可以先确认占用率未跑满再打开。
-    · 如<span class="text-blue-emph">--pme --pmode</span>表明使用整个线程池，分配平行动态搜索，平行模式决策以更好地增加多线程节点占用。
-    · 模式决策独立线程化会使本可提前退出的策略因信息孤立而不可跳过，使理论率失真最优推理更准（无损压缩略微提升）
-<b>--pme</b> &lt;开关，默认关，<span class="text-red-emph">需pools</span>&gt;创建平行动态搜索Parallel Motion Estimation的Worker thread以更改pools参数功能（不影响输出文件）。
-    · 如<span class="text-blue-emph">--pme</span>表明使用整个线程池，并分配平行动态搜索的分工线程
-    · 开pme时，遇到性能（比仅一个节点）更差状况的可能性不低</code></pre>
+
+            <code><b>--pmode</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关，<span class="text-red-emph">需 pools</span>&gt; 创建平行模式决策 Parallel Mode Decision 的 Worker thread 以更改 pools 参数功能。推荐先于 pme 打开，推荐搭配 rd 3 + rect，而 rd 5 时可以先确认占用率未跑满再打开。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>如<span class="text-blue-emph">--pme --pmode</span>表明使用整个线程池，分配平行动态搜索，平行模式决策以更好地增加多线程节点占用。</li>
+                <li>模式决策独立线程化会使本可提前退出的策略因信息孤立而不可跳过，使理论率失真最优推理更准（无损压缩略微提升）</li>
+            </ul>
+            <code><b>--pme</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关，<span class="text-red-emph">需 pools</span>&gt; 创建平行动态搜索 Parallel Motion Estimation 的 Worker thread 以更改 pools 参数功能（不影响输出文件）。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>如<span class="text-blue-emph">--pme</span>表明使用整个线程池，并分配平行动态搜索的分工线程</li>
+                <li>开 pme 时，遇到性能（比仅一个节点）更差状况的可能性不低</li>
+            </ul>
 
             <h3>多线程 vs 多参考（frame-thread）</h3>
             <p>用多线程一次编码多帧来占满算力 vs 一次只编一帧，确保所有参考画面可用（大幅提高多核占用，画质和文件影响小）的决策。造成多线多参考帧困难的原因有：</p>
@@ -3629,9 +3667,12 @@ sao分析跳过视频右边和下边边界
                 </tbody>
             </table>
 
-            <pre><code><b>--frame-threads</b> &lt;整数0~16~线程数÷2，默认0自动&gt;同时压制多少帧：
-    · 如<span class="text-blue-emph">1</span>能让编码器做到前后整帧可完全分析参考，设1的代价是cpu占用显著降低，压制显著减速，建议搭配mcstf使用
-    · 非<span class="text-blue-emph">1</span>则因为编码顺序，只有ctu下方的一行ctu可供参考，损失一半可能的参考范围</code></pre>
+            <code><b>--frame-threads</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数 0~16~线程数÷2，默认 0 自动&gt; 同时压制多少帧：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>如<span class="text-blue-emph">1</span>能让编码器做到前后整帧可完全分析参考，设 1 的代价是 cpu 占用显著降低，压制显著减速，建议搭配 mcstf 使用</li>
+                <li>非<span class="text-blue-emph">1</span>则因为编码顺序，只有 ctu 下方的一行 ctu 可供参考，损失一半可能的参考范围</li>
+            </ul>
 
             <h2>色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
             <p>Video usability information 是有工具就可以随时改的元数据。HDR 电视只读取 maxcll 和 maxfall，所以实际情况是 master-display 可略。光强/光压 Candela 等于尼特，即<span class="text-blue-math">\(1 \text{cd} = 1 \text{nit}\)</span>。因 bt601，709，HDR-PQ，HLG 标准重视的亮度范围，曲线所异（偏亮或偏暗），故需要量化曲线，心理学优化，模式决策的重适配。色彩格式的具体转换变量与算法标准见下表（<a href="https://www.itu.int/rec/dologin.asp?lang=s&id=T-REC-H.265-201504-S!!MSW-E">ITU-T Rec. H.265</a>（建议书）的 Table E.3 所在处，2015 版为 p347~353 的 5~6 页）：</p>
@@ -3970,23 +4011,39 @@ sao分析跳过视频右边和下边边界
                 <p class="text-gray-side">图 2: cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
 
-            <pre><code><b>--max-cll</b> &lt;最大内容光强，最大平均光强&gt;压制HDR源一定照源视频信息设，找不到不要用，见上图例
-<b>--colorprim</b> &lt;字符&gt;播放用三原色(以及白点)指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图1为 bt.2020
-<b>--colormatrix</b> &lt;字符&gt;播放用矩阵格式/系数指标：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020nc，bt2020c， smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp，不支持bt2020nc
-<b>--transfer</b> &lt;字符&gt;传输特质: bt470m，bt470bg，smpte170m，smpte240m，linear，log100，log316，iec61966-2-4，bt1361e，iec61966-2-1，bt2020-10，bt2020-12，smpte2084，smpte428，arib-std-b67，上图图2的PQ即st.2084的标准，所以参数值为smpte2084
-<b>--master-display</b> &lt;G(x,y)B(,)R(,)WP(,)L(,)&gt;写进SEI信息里，告诉解码端色彩空间/色域信息用
-    · 搞得这么麻烦是因为HDR标准设立时还没有HDR电视，所以就把master-display写成必须参数了，而最重要的信息反而是cll。
-    · 绿蓝红GBR和白点WP指马蹄形色域的三角+白点4个位置的值×50000
-    · 光强L的单位是candela×10000
-    · SDR视频的L是1000,1. 压HDR视频前一定要看视频信息再设L，见上图
-        · DCI-P3电影业内：	<span class="text-blue-emph">G(13250,34500)B(7500,3000)R(34000,16000)WP(15635,16450)L(?,1)</span>
-        · bt709：		<span class="text-blue-emph">G(15000,30000)B(7500,3000)R(32000,16500)WP(15635,16450)L(?,1)</span>
-        · bt2020超清：	<span class="text-blue-emph">G(8500,39850)B(6550,2300)R(35400,14600)WP(15635,16450)L(?,1)</span>
-    · RGB原信息(对照小数格式的视频信息，然后选择上面对应的参数):
-        · DCI-P3：	<span class="text-blue-emph">G(x0.265,y0.690),B(x0.150,y0.060),R(x0.680,y0.320),WP(x0.3127,y0.329)</span>
-        · bt709：	<span class="text-blue-emph">G(x0.30,y0.60),B(x0.150,y0.060),R(x0.640,y0.330),WP(x0.3127,y0.329)</span>
-        · bt2020：	<span class="text-blue-emph">G(x0.170,y0.797),B(x0.131,y0.046),R(x0.708,y0.292),WP(x0.3127,y0.329)</span>
-<b>--display-window</b> &lt;←,↑,→,↓&gt;指定黑边宽度，从而跳过加速编码，或者用--overscan crop直接裁掉</code></pre>
+            <code><b>--max-cll</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;最大内容光强，最大平均光强&gt; 压制 HDR 源一定照源视频信息设，找不到不要用，见上图例。</p>
+            <code><b>--colorprim</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;字符&gt; 播放用三原色 (以及白点) 指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图 1 为 bt.2020。</p>
+            <code><b>--colormatrix</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;字符&gt; 播放用矩阵格式/系数指标：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020c，smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp。</p>
+            <p class="text-gray-side pl-5 m-0">注：不支持 bt2020nc</p>
+            <code><b>--transfer</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;字符&gt; 传输特质：bt470m，bt470bg，smpte170m，smpte240m，linear，log100，log316，iec61966-2-4，bt1361e，iec61966-2-1，bt2020-10，bt2020-12，smpte2084，smpte428，arib-std-b67。</p>
+            <p class="text-gray-side pl-5 m-0">上图图 2 的 PQ 即 st.2084 的标准，所以参数值为 smpte2084。</p>
+            <code><b>--master-display</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;G(x,y)B(,)R(,)WP(,)L(,)（绿，蓝，红，白点，光强）&gt; 写进 SEI 信息里，告诉解码端色彩空间/色域信息用</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>HDR 标准设立时还没有 HDR 电视，所以就把 master-display 写成必须参数了，而最重要的信息反而是 cll。</li>
+                <li>绿蓝红 GBR 和白点 WP 指马蹄形色域的三角 + 白点 4 个位置的值×50000</li>
+                <li>光强 L 的单位是 candela×10000</li>
+                <li>SDR 视频的 L 是 1000,1. 压 HDR 视频前一定要看视频信息再设 L，见上图
+                    <ul>
+                        <li>DCI-P3 电影业内：	<span class="text-blue-emph">G(13250,34500)B(7500,3000)R(34000,16000)WP(15635,16450)L(?,1)</span></li>
+                        <li>bt709：		<span class="text-blue-emph">G(15000,30000)B(7500,3000)R(32000,16500)WP(15635,16450)L(?,1)</span></li>
+                        <li>bt2020 超清：	<span class="text-blue-emph">G(8500,39850)B(6550,2300)R(35400,14600)WP(15635,16450)L(?,1)</span></li>
+                    </ul>
+                </li>
+                <li>RGB 原信息 (对照小数格式的视频信息，然后选择上面对应的参数):
+                    <ul>
+                        <li>DCI-P3：	<span class="text-blue-emph">G(x0.265,y0.690),B(x0.150,y0.060),R(x0.680,y0.320),WP(x0.3127,y0.329)</span></li>
+                        <li>bt709：	<span class="text-blue-emph">G(x0.30,y0.60),B(x0.150,y0.060),R(x0.640,y0.330),WP(x0.3127,y0.329)</span></li>
+                        <li>bt2020：	<span class="text-blue-emph">G(x0.170,y0.797),B(x0.131,y0.046),R(x0.708,y0.292),WP(x0.3127,y0.329)</span></li>
+                    </ul>
+                </li>
+            </ul>
+            <code><b>--display-window</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;←,↑,→,↓&gt; 指定黑边宽度，从而跳过加速编码，或者用--overscan crop 直接裁掉。</p>
 
             <h3>杜比视界 Dolby vision / DV</h3>
             <p>一种通过嵌入高频信号层来强化播放效果的私有格式。有单流/DV-MEL 和双流/DV-FEL 两种，两者皆含有参考单元 Reference picture unit RPU。</p>
@@ -4200,34 +4257,64 @@ sao分析跳过视频右边和下边边界
             <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
             <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
 
-            <pre class="mt-3"><code><b>--dolby-vision-profile</b> &lt;选择5/8.1（HDR10）/8.2（SDR）大于8.1需要写master-display和HDR10-opt
-<b>--dolby-vision-rpu</b> &lt;路径&gt;导入RPU二进制文件（.bin）
-注：杜比视界8.1需要 --dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code></pre>
+            <code><b>--dolby-vision-profile</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;选择 5/8.1（HDR10）/8.2（SDR）&gt; <span class="text-red-emph">大于 8.1 需 master-display 和 HDR10-opt</span>。</p>
+            <code><b>--dolby-vision-rpu</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;路径&gt;导入 RPU 二进制文件（.bin）。</p>
+            <p class="text-gray-side pl-5 m-0">注：杜比视界 8.1 需要 <code>--dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code>。</p>
 
             <h3>RPU 元数据获取</h3>
             <p>可以用<a href="https://github.com/quietvoid/dovi_tool">dovi_tool</a>提取 RPU，<a href="https://github.com/saindriches/dovi_meta">dovi_meta</a>创建 RPU。ffmpeg 提取源视频 RPU 用：</p>
-            <code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code>
+            <pre><code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code></pre>
 
             <h2>输入输出 Input-output IO</h2>
-            <pre class="mb-0"><code><b>--seek</b> &lt;整数，默认0&gt;从第x帧开始压缩
-<b>--frames</b> &lt;整数，默认全部&gt;一共压缩x帧
-<b>--output</b> &lt;整数，默认0&gt;从第x帧开始压缩
-<b>--input-csp</b> &lt;i400/i422/i444/nv12/nv16，默认i420，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe时应设置</span>&gt;。rgb，yuvj等不支持需要滤镜转换
-<b>--dither</b> &lt;开关&gt;使用抖动功能以高质量的降低色深(比如10bit片源降8bit)，避免出现斑点和方块
-<b>--allow-non-conformance</b> &lt;开关&gt;不写入profile和level，绕过h.265标准的规定，只要不是按照h.265规定写的命令行参数值就必须使用这个参数
-<b>--force-flush</b> &lt;整数0~2，默认0&gt;低能耗设备用的编码调度控制:
-    · <span class="text-blue-emph">0</span>等全部帧输入再编码
-    · <span class="text-blue-emph">1</span>不等全部帧输入完就编码
-    · <span class="text-blue-emph">2</span>取决于条带种类，调整slice type才能用    
-<b>--field</b> &lt;开关&gt;输入分行扫描视频时用，自动获取分场视频的帧率+优先场，替代了--interlaced参数
-<b>--input-res</b> &lt;宽x高，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe或lavf时应设置</span>&gt;指定输入源的分辨率，如1920x1080
-<b>--fps</b> &lt;整数/浮点/分数，<span class="text-red-emph">未使用YUV for MPEG（y4m）pipe或lavf时应设置</span>&gt;指定输入源的帧率，如30，24000/1001等
-<b>--chunk-start --chunk-end</b> &lt;开关，<span class="text-red-emph">需no-open-gop</span>&gt;start跨GOP打包网络数据包，end将数据包结尾标注分割
-注：由于数据包接收顺序随机，所以只可参考其之前，而不可参考之后的内容，跟http串流的数据包编码协议有关
-<b>--temporal-layers</b> &lt;开关，默认关&gt;使x265更兼容svc标准，将非参考b帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗
-注：可能会造成一般编解码方案的兼容性问题</code></pre>
 
-            <h3 class="same-line">编解码图像序列</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
+            <code><b>--seek</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数，默认 0&gt; 从第 x 帧开始压缩。</p>
+            <code><b>--frames</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数，默认全部&gt; 一共压缩 x 帧。</p>
+            <code><b>--output</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数，默认 0&gt; 从第 x 帧开始压缩。</p>
+            <code><b>--input-csp</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;i400/i422/i444/nv12/nv16，默认 i420，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 时应设置</span>&gt; rgb，yuvj 等不支持需要滤镜转换。</p>
+            <code><b>--dither</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关&gt; 使用抖动功能以高质量的降低色深 (比如 10bit 片源降 8bit)，避免出现斑点和方块。</p>
+            <code><b>--allow-non-conformance</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关&gt; 不写入 profile 和 level，绕过 HEVC 标准规定，只要不是按照 h.265 规定写的命令行参数值就必须使用这个参数。</p>
+            <code><b>--force-flush</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数 0~2，默认 0&gt; 低能耗设备用的编码调度控制：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">0</span>等全部帧输入再编码</li>
+                <li><span class="text-blue-emph">1</span>不等全部帧输入完就编码</li>
+                <li><span class="text-blue-emph">2</span>取决于条带种类，调整 slice type 才能用</li>
+            </ul>
+            <code><b>--field</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关&gt; 输入分行扫描视频时用，自动获取分场视频的帧率 + 优先场，x264 中中为 <code>--interlaced</code> 参数</p>
+            <code><b>--input-res</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;宽 x 高，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置</span>&gt; 指定输入源的分辨率，如 1920x1080。</p>
+            <code><b>--fps</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;整数/浮点/分数，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置</span>&gt; 指定输入源的帧率，如 30，24000/1001 等。</p>
+            <code><b>--temporal-layers</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;开关，默认关&gt; 使 x265 更兼容 svc 标准，将非参考 b 帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗。</p>
+            <p class="text-gray-side pl-5 m-0">注：可能会造成一般编解码方案的兼容性问题</p>
+
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：串流——HLS 与 Chunked Encoding</button>
+            <div class="coll-content">
+                <h3>HTTP 数据块编码协议 Chunked Encoding（1997 年）</h3>
+                <p>HTTP/1.1 的一部分。数据块编码允许服务器分段传输视频流的数据块，实现视频的直播、实时聊天等场合。理论上所有平台都支持该协议。</p>
+
+                <h3>HTTP 直播协议 HTTP Live Streaming HLS（2009 年）</h3>
+                <p>适用于视频直播和点播，可以根据网络条件和设备性能动态调整视频质量。HLS 还提供了媒体播放列表（M3U8）和分段（TS）的机制，使得它更适合跨互联网传输视频。主流的浏览器、视频播放器和移动设备都兼容 HLS。</p>
+            
+                <p>总的来说，HTTP Live Streaming（HLS）和 Chunked Encoding 都是 HTTP 协议的一部分。Chunked Encoding 优点在于容易实现以及冷门设备更可能支持，但是在专门的流媒体应用中不如 HTTP Live Streaming（HLS）的功能强大。</p>
+
+                <code><b>--chunk-start --chunk-end</b></code>
+                <p class="font-monospace pl-5 m-0"> &lt;开关，<span class="text-red-emph">需 no-open-gop</span>&gt; start 跨 GOP 打包网络数据包，end 将数据包结尾标注分割。</p>
+                <p class="text-gray-side pl-5 m-0">注：由于数据包接收顺序随机，所以只可参考 chunk 数据包之前，而不可参考 chunk 数据包之后的内容，跟 http 串流的数据包编码协议有关</p>
+            </div>
+
+            <h3>编解码图像序列</h3>
+            <p>：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
             <h2>下载，附录，操作</h2>
             <h3>下载 x265.exe</h3>
@@ -4279,8 +4366,9 @@ sao分析跳过视频右边和下边边界
             </table>
 
             <h2>预设参数</h2>
-            <pre><code><b>--preset</b> &lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt;
-见下：</code></pre>
+
+            <code><b>--preset</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt; 见下：</p>
             <div class="overflow-auto">
                 <table class="table-fit-container text-xs">
                     <thead class="thead-no-border">
@@ -4462,17 +4550,16 @@ sao分析跳过视频右边和下边边界
                     </tbody>
                 </table>
             </div>
-            <pre class="mt-3"><code><b>--tune</b> &lt;zerolatency/animation/grain/film/fastdecode/psnr&gt;更改preset的一些参数，见下：
-    · <span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和B帧功能：
-    --bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1
-    · <span class="text-blue-emph">animation</span> 优化动漫场景画面：
-    --psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2
-    · <span class="text-blue-emph">grain</span> 保留高频信号/最高画质：
-    --aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0
-    · <span class="text-blue-emph">fastdecode</span> 降低解码算力占用以降低超高帧率-分辨率解码负载：
-    --no-weightb --no-weightp --no-deblock --no-sao
-    · <span class="text-blue-emph">psnr</span> 尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大：
-    --aq-mode 0 --rd 0 --no cutree</code></pre>
+
+            <code><b>--tune</b></code>
+            <p class="font-monospace pl-5 m-0"> &lt;zerolatency/animation/grain/film/fastdecode/psnr&gt; 更改 preset 的一些参数，见下：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和B帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</li>
+                <li><span class="text-blue-emph">animation</span> 优化动漫场景画面：<code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</li>
+                <li><span class="text-blue-emph">grain</span> 保留高频信号/最高画质：<code>--aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0</li>
+                <li><span class="text-blue-emph">fastdecode</span> 降低解码算力占用以降低超高帧率-分辨率解码负载：<code>--no-weightb --no-weightp --no-deblock --no-sao</li>
+                <li><span class="text-blue-emph">psnr</span> 尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大：<code>--aq-mode 0 --rd 0 --no cutree</code></li>
+            </ul>
         </div>
 
         <!-- Footer -->

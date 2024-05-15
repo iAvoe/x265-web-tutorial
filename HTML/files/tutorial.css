@@ -358,7 +358,7 @@ table thead { border-bottom: 1.25px solid var(--hex-light-grayblue); }
     color: white;
 }
 .thead-no-border { border-bottom: 0px; }
-.border-lr td {
+.border-lr td, .border-lr th {
     border-left: 1px solid #dee2e6 !important;
     border-right: 1px solid #dee2e6 !important;
 }

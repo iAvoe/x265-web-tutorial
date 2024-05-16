@@ -86,13 +86,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="row">
                 <div id="LR-UD-001" class="col-8">
                     <h3>一维傅里叶变换 1D Fourier Transform</h3>
-                    <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+                    <p>一种将信号从波形转换到频域的方法。变换时设定一条从最长周期开始，逐渐缩短周期（即频率增加）的余弦函数，并根据原始信号调整相位。在这个过程中，记录下余弦函数与原始信号匹配程度的变化曲线，就得到了不同频率下的振幅，从而得到频域表示的信号。逆变换时，根据每个周期的相位和振幅生成这些波形，再加到一起即可转换回原始信号。需要注意的是，在计算过程中需要考虑到信号中可能存在的反相情况，因此会涉及到取绝对值的操作。</p>
+                    <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：二维傅里叶变换</button>
                     <div class="coll-content">
-                        <p>一种将信号从波形转换到频域的方法。变换时设定一条从最长周期开始，逐渐缩短周期（即频率增加）的余弦函数，并根据原始信号调整相位。在这个过程中，记录下余弦函数与原始信号匹配程度的变化曲线，就得到了不同频率下的振幅，从而得到频域表示的信号。逆变换时，根据每个周期的相位和振幅生成这些波形，再加到一起即可转换回原始信号。需要注意的是，在计算过程中需要考虑到信号中可能存在的反相情况，因此会涉及到取绝对值的操作。</p>
-                    </div>
-                    <h3>二维傅里叶变换 2D-FT</h3>
-                    <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
-                    <div class="coll-content">
+                        <h3>二维傅里叶变换 2D-FT</h3>
                         <p>宽高上单拆出线来分别进行 1DFT，以双求和/双积分 ΣΣ/∫∫ 整合。在频域中相当于每个像素的变换结果相加或干涉。亮则振幅大，距中心远则频率高。强在可编辑性，可以消除打印喷头，抖动等均匀噪声。</p>
                     </div>
                 </div>
@@ -215,17 +212,16 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                                 <td class="px-1">4tap FIR</td>
                             </tr>
                         </table>
+                        <p class="text-gray-side mt-0">表：x264/5 的 h~qpel 插值计算（实现了浮点→整数变量的程序优化）</p>
                     </div>
                     <img src="files/image9.png" alt="hpel qpel interpolation" id="LR-UD-006" class="img-small img-right col-2 mb-auto" >
                 </div>
-                <p class="text-gray-side mt-0">表：x264/5 的 h~qpel 插值计算（实现了浮点→整数变量的程序优化）</p>
             </div>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法细节：
-            </button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法细节：</button>
             <div class="coll-content">
-                <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
                 <div class="align-items-center">
                     <img src="files/image10.png" alt="7tap 8tap interpolation 1" class="img-medium" >
+                    <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
                 </div>
                 <div class="align-items-center">
                     <img src="files/image11.png" alt="7tap 8tap interpolation 2" class="img-medium" >
@@ -427,10 +423,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0">&lt;开关，默认关&gt; 在流未封装的情况下提供 SPS，PPS 等信息，正常播放 HEVC 源码</p>
             <p class="text-gray-side pl-5 m-0">注：封装文件的科普<a href="https://www.nazorip.site/archives/63">见 x264 教程</a>。</p>
 
-            <h3>流媒体缓冲缓存</h3>
-            <p>视音频在开始播放前预先加载到内存的一段缓冲区。只要存入缓冲区的波动不大就能保证播放在很多条件下的流畅性。视频流则以确保网络设施正常和控制视频码率本身做到流畅</p>
+            <h3>缓冲区 Buffer</h3>
+            <p>网速在实际情况下是随机变化的，因此一旦网络，硬盘或内存带宽慢于当前视频码率，视频就会卡顿。为了解决这个问题，流媒体在播放前会设置一段缓冲区，利用了网速可能快于当前视频码率的随机条件，提前缓存一些数据使得播放流畅。具体上是一种“缸里一端加水、另一端放水，注水量变化，缸里一直有水，求缸的大小”的问题。这样一来，只要平均传输带宽大于视频的平均码率，就可以保证播放流畅。</p>
 
-            <h3>基于缓冲条件的量化控制 Videl Buffer Verifier</h3>
+            <h3>基于缓冲区的量化控制 Videl Buffer Verifier</h3>
             <p>手动指定网络/设备下所允许的缓冲速度 kbps 以加大 CRF/ABR 模式基础上的量化压缩。与 CRF 一并使用时叫可变码率 Variable Bitrate / VBR 模式。使用时应注意 VBV 完全不理画质，而卡顿的原因可能仅仅是因为 app 客户端的缓存设太小了。</p>
 
             <code><b>--vbv-bufsize</b></code>
@@ -446,6 +442,21 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0">由于 gop 多样，4 种状态可以出现在同一视频中。buf/max 实际控制了这些状态的出现概率</p>
             <code><b>--crf-max</b></code>
             <p class="font-monospace pl-5 m-0">&lt;整数 0~51&gt; 防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
+
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：HLS 与 Chunked Encoding 串流</button>
+            <div class="coll-content">
+                <h3>HTTP 数据块编码协议 Chunked Encoding（1997 年）</h3>
+                <p>HTTP/1.1 的一部分。数据块编码允许服务器分段传输视频流的数据块，实现视频的直播、实时聊天等场合。理论上所有平台都支持该协议。</p>
+
+                <h3>HTTP 直播协议 HTTP Live Streaming HLS（2009 年）</h3>
+                <p>适用于视频直播和点播，可以根据网络条件和设备性能动态调整视频质量。HLS 还提供了媒体播放列表（M3U8）和分段（TS）的机制，使得它更适合跨互联网传输视频。主流的浏览器、视频播放器和移动设备都兼容 HLS。</p>
+            
+                <p>总的来说，HTTP Live Streaming（HLS）和 Chunked Encoding 都是 HTTP 协议的一部分。Chunked Encoding 优点在于容易实现以及冷门设备更可能支持，但是在专门的流媒体应用中不如 HTTP Live Streaming（HLS）的功能强大。</p>
+
+                <code><b>--chunk-start --chunk-end</b></code>
+                <p class="font-monospace pl-5 m-0"> &lt;开关，<span class="text-red-emph">需 no-open-gop</span>&gt; start 跨 GOP 打包网络数据包，end 将数据包结尾标注分割。</p>
+                <p class="text-gray-side pl-5 m-0">注：由于数据包接收顺序随机，所以只可参考 chunk 数据包之前，而不可参考 chunk 数据包之后的内容，跟 http 串流的数据包编码协议有关</p>
+            </div>
 
             <h3>关键帧</h3>
             <h5>刷新解码帧 Instant decoder refresh IDR</h5>
@@ -4437,21 +4448,6 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--temporal-layers</b></code>
             <p class="font-monospace pl-5 m-0"> &lt;开关，默认关&gt; 使 x265 更兼容 svc 标准，将非参考 b 帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗。</p>
             <p class="text-gray-side pl-5 m-0">注：可能会造成一般编解码方案的兼容性问题</p>
-
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：串流——HLS 与 Chunked Encoding</button>
-            <div class="coll-content">
-                <h3>HTTP 数据块编码协议 Chunked Encoding（1997 年）</h3>
-                <p>HTTP/1.1 的一部分。数据块编码允许服务器分段传输视频流的数据块，实现视频的直播、实时聊天等场合。理论上所有平台都支持该协议。</p>
-
-                <h3>HTTP 直播协议 HTTP Live Streaming HLS（2009 年）</h3>
-                <p>适用于视频直播和点播，可以根据网络条件和设备性能动态调整视频质量。HLS 还提供了媒体播放列表（M3U8）和分段（TS）的机制，使得它更适合跨互联网传输视频。主流的浏览器、视频播放器和移动设备都兼容 HLS。</p>
-            
-                <p>总的来说，HTTP Live Streaming（HLS）和 Chunked Encoding 都是 HTTP 协议的一部分。Chunked Encoding 优点在于容易实现以及冷门设备更可能支持，但是在专门的流媒体应用中不如 HTTP Live Streaming（HLS）的功能强大。</p>
-
-                <code><b>--chunk-start --chunk-end</b></code>
-                <p class="font-monospace pl-5 m-0"> &lt;开关，<span class="text-red-emph">需 no-open-gop</span>&gt; start 跨 GOP 打包网络数据包，end 将数据包结尾标注分割。</p>
-                <p class="text-gray-side pl-5 m-0">注：由于数据包接收顺序随机，所以只可参考 chunk 数据包之前，而不可参考 chunk 数据包之后的内容，跟 http 串流的数据包编码协议有关</p>
-            </div>
 
             <h3>编解码图像序列</h3>
             <p>见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>

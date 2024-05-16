@@ -17,6 +17,15 @@
         <title>x265 教程 HTML 完整版</title>
 	</head>
 	<body class="text-gray-main">
+        <!--
+        <div id="navbar" class="t-invert-dark">
+            <button type="button" class="collapsible p-3 px-5">目录</button>
+            <div class="coll-content">
+                <a href="">分块</a> <a href="">变换</a> <a href="">量化</a>
+            </div>
+        </div>
+        <br>
+        -->
         <div class="container-mobile rounded-9 border-main">
             <h1>x265 教程<span class="text-blue-emph"> HTML 完整版</span></h1>
             <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
@@ -158,7 +167,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>用绝对变换差 Sum of Absolute Transformed Differences SATD 来的动态搜索算法校正导致残差的动态向量</li>
                 <li>得到误差小到可接受的“精加工 PU”</li>
             </ol>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，以及 x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
             <div class="coll-content">
                 <div class="row">
                     <div id="LR-UD-005" class="col-10 align-items-center">
@@ -209,12 +218,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </div>
                     <img src="files/image9.png" alt="hpel qpel interpolation" id="LR-UD-006" class="img-small img-right col-2 mb-auto" >
                 </div>
-                <p class="text-gray-side mt-0">表：x264/5 实现 h~qpel 插值计算（实现了浮点→整数变量的程序优化）</p>
+                <p class="text-gray-side mt-0">表：x264/5 的 h~qpel 插值计算（实现了浮点→整数变量的程序优化）</p>
             </div>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，以及 x265 的 8tap、7tap 和 4tap 滤镜算法细节：
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法细节：
             </button>
             <div class="coll-content">
-                <p class="text-gray-side mt-0">图：此“子像素”特指是放大出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
+                <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
                 <div class="align-items-center">
                     <img src="files/image10.png" alt="7tap 8tap interpolation 1" class="img-medium" >
                 </div>

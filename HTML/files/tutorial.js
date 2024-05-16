@@ -25,9 +25,12 @@ window.MathJax = {
  */
 function switchPlatform() {
     "use strict";
-    if (window.innerWidth <= window.innerHeight) { // Mobile / Vertical Layout
+    if (window.innerWidth+10 <= window.innerHeight) { // Mobile / Vertical Layout
         // Set class for the main container div for Mobile only
-        document.querySelector('div').setAttribute("class", "container-mobile rounded-9 border-main");
+        let rootDivs = document.querySelectorAll('div.container-desktop.rounded-9.border-main');
+        for (let i=0; i<rootDivs.length; i++) {
+            rootDivs[i].setAttribute("class", "container-mobile rounded-9 border-main");
+        }
         // Decrease mobile font size
         document.body.style.fontSize = "0.8rem";
         // Decrease PPM table's font size for Mobile, because it's massive size
@@ -42,7 +45,10 @@ function switchPlatform() {
     else { // Desktop / Horizontal Layout
         document.body.style.fontSize = "1rem";
         // Set class for the main container div for Desktop only
-        document.querySelector('div').setAttribute("class", "container-desktop rounded-9 border-main");
+        let rootDivs = document.querySelectorAll('div.container-mobile.rounded-9.border-main');
+        for (let i=0; i<rootDivs.length; i++) {
+            rootDivs[i].setAttribute("class", "container-desktop rounded-9 border-main");
+        }
         // Increase line height for Desktop
         mainPara = document.querySelectorAll('p:not([class])');
         for (let i=0; i<mainPara.length; i++) {

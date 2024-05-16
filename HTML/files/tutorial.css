@@ -99,6 +99,7 @@
 body {
     font-family: var(--font-style-main);
     background-color: #dee2e6;
+    margin: 0;
 }
 code { font-family: var(--bs-font-monospace); }
 pre { overflow: auto; margin: 0; }
@@ -183,6 +184,10 @@ pre { overflow: auto; margin: 0; }
 .px-5 {
     padding-right: 3rem !important;
     padding-left: 3rem !important;
+}
+.px-7 {
+    padding-right: 5rem !important;
+    padding-left: 5rem !important;
 }
 .py-3 {
     padding-top: 1rem !important;
@@ -390,8 +395,7 @@ button.collapsible {
     padding: 0.55rem 1.25rem;
     text-align: left;
     overflow-anchor: none;
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
+    border: none;
 }
 
 .coll-content {
@@ -421,3 +425,35 @@ button.collapsible {
     float: right;
     margin-left: auto;
 }
+
+/* Drop down navbar */
+#navbar {
+    display: flex;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 0;
+}
+
+#navbar button {
+    margin: 0;
+    padding: 0;
+    float: left;
+    display: block;
+    font-size: large;
+    background-color: #dee2e6;
+}
+
+#navbar button:hover {
+    color: white;
+    background:#3C4042;
+    transition: 300ms;
+}
+
+#navbar a {
+    float: left;
+    display: block;
+}
+
+

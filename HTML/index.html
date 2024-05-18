@@ -4203,15 +4203,16 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>双视频流下，EL 可被一般的解码器丢弃而正常播放</li>
                 <li>单视频流下，使用专利色彩空间（ICtCp）的源应依法使用专利授权的解码器解码</li>
                 <li>存在假源和假设备，但没有办法验证</li>
+                <lr>即使是样式为7时，EL 也可以为空，等效于仅 BL</lr>
             </ul>
-            <table class="table-center text-smaller">
+            <table class="table-fit-container align-items-center text-xs">
                 <thead>
-                    <tr>
+                    <tr class="t-invert-dark">
                         <th class="px-1">样式 Profile</th>
                         <th class="px-1">编码</th>
                         <th class="px-1">流标记</th>
-                        <th class="px-1">BL 兼容 ID</th>
-                        <th class="px-1">BL:EL 分辨率比例</th>
+                        <th class="px-1">BL 兼容ID</th>
+                        <th class="px-1">BL:EL 大小比例</th>
                         <th class="px-1">x265 支持</th>
                         <th class="px-1">伽马兼容</th>
                         <th class="px-1">色彩空间</th>
@@ -4233,9 +4234,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.05</td>
                         <td class="px-1">0</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
+                        <td class="px-1">仅 BL （DV-MEL）</td>
                         <td class="px-1">√</td>
-                        <td class="px-1">无（私有色彩空间）</td>
+                        <td class="px-1">无 （私有色彩空间）</td>
                         <td class="px-1">ICtCp</td>
                     </tr>
                     <tr class="t-light-gray border-lr">
@@ -4243,7 +4244,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.07</td>
                         <td class="px-1">6</td>
-                        <td class="px-1">UHD = 1:¼，FullHD = 1:1（EL 可以为空，等效于仅 BL）</td>
+                        <td class="px-1">UHD = 1:¼, FullHD = 1:1</td>
                         <td class="px-1"> </td>
                         <td class="px-1">UHD 蓝光</td>
                         <td class="px-1">YCbCr</td>
@@ -4253,7 +4254,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">1</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
+                        <td class="px-1">仅 BL （DV-MEL）</td>
                         <td class="px-1">√</td>
                         <td class="px-1">HDR10</td>
                         <td class="px-1">YCbCr</td>
@@ -4263,7 +4264,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">2</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
+                        <td class="px-1">仅 BL （DV-MEL）</td>
                         <td class="px-1">√</td>
                         <td class="px-1">SDR</td>
                         <td class="px-1">YCbCr</td>
@@ -4273,7 +4274,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">4</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
+                        <td class="px-1">仅 BL （DV-MEL）</td>
                         <td class="px-1"> </td>
                         <td class="px-1">HLG</td>
                         <td class="px-1">YCbCr</td>
@@ -4283,7 +4284,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">8bit avc</td>
                         <td class="px-1">dvav.09</td>
                         <td class="px-1">2</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
+                        <td class="px-1">仅 BL （DV-MEL）</td>
                         <td class="px-1"> </td>
                         <td class="px-1">SDR</td>
                         <td class="px-1">YCbCr</td>
@@ -4293,17 +4294,17 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit av1</td>
                         <td class="px-1">dav1.10</td>
                         <td class="px-1">0,1,2,4</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
+                        <td class="px-1">仅 BL （DV-MEL）</td>
                         <td class="px-1"> </td>
-                        <td class="px-1">无/SDR/HDR10/HLG</td>
+                        <td class="px-1">无/SDR/<br>HDR10/HLG</td>
                         <td class="px-1">YCbCr</td>
                     </tr>
                 </tbody>
             </table>
             <p>RPU 是含有动态元数据的特殊 NALU，类似（到现在还没几个播放器能正常解码的）<code>opt-qp-pps</code>, <code>opt-ref-list-length-pps</code>的功能。</p>
-            <table class="table-center text-smaller">
+            <table class="table-fit-container align-items-center text-xs">
                 <thead>
-                    <tr>
+                    <tr class="t-invert-dark">
                         <th class="px-1">级别 Level</th>
                         <th class="px-1">最大像素流量每秒（pps）</th>
                         <th class="px-1">匹配 pps 的格式</th>

@@ -675,7 +675,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--constrained-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 缺少生成参考点的 CB 时用帧内块或默认值，不用帧间块生成参考点。降低参考错误传播距离，降低压缩率和速度，增加数据损坏的恢复概率。</p>
             <code><b>--fast-intra</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; 先查夹角模式 2,10,18,26,34，再加精度到 5, 15, 21, 31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; 先查夹角模式 2,10,18,26,34，再加精度到 5，15，21，31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
             <code><b>--b-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; B 条带同样进行帧内预测。关闭可以提速，但相对浪费压缩率。</p>
             <code><b>--no-strong-intra-smoothing</b></code>
@@ -1120,7 +1120,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
                 <li><span class="text-blue-emph">2.3~2.8</span>电脑录屏，中低成本动漫等几乎没有动态背景变化的情况</li>
                 <li><span class="text-blue-emph">3~4.8</span>分辨率从 1280x720 到 3840x2160 的高成本电影动漫，要求片源无明显边缘失真</li>
-                <li><span class="text-blue-emph">7~12+psy-rd 3, tskip, tskip-fast, ipratio 1.2, no-sao</span>留噪。保的细节面积越小越高</li>
+                <li><span class="text-blue-emph">7~12 搭配 psy-rd 3，tskip，tskip-fast，ipratio 1.2，no-sao</span>留噪。保的细节面积越小越高</li>
             </ul>
             <code><b>--nr-intra --nr-inter</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数 0 关~2000，默认 0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080 不建议超 250</a>&gt; 基于 MC 结果给量化前变换完的 i 帧降噪。nr-intra 不如第三方降噪滤镜。但帧间/时域上降噪的 nr-inter 可以拉近参考源和参考帧的差距/残差，实现在 rc-grain 上进一步稳定 qp 值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点，结果类似低配双阈滤镜。</p>
@@ -4377,7 +4377,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </tr>
                 </tbody>
             </table>
-            <p>RPU 是含有动态元数据的特殊 NALU，类似（到现在还没几个播放器能正常解码的）<code>opt-qp-pps</code>, <code>opt-ref-list-length-pps</code>的功能。</p>
+            <p>RPU 是含有动态元数据的特殊 NALU，类似（到现在还没几个播放器能正常解码的）<code>opt-qp-pps</code>，<code>opt-ref-list-length-pps</code>的功能。</p>
             <p>像素流量每秒 Pixel per second PPS：像素宽，像素高，帧数每秒的商。</p>
             <table class="table-fit-container align-items-center text-xs">
                 <thead>
@@ -4529,56 +4529,6 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h3>编解码图像序列</h3>
             <p>见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
-
-            <h2>下载，附录，操作</h2>
-            <h3>下载 x265.exe</h3>
-            <table class="table-center align-items-center text-smaller">
-                <tbody>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a href="http://www.mediafire.com/?6lfp2jlygogwa">LigH</a></th>
-                        <td class="px-3">.hevc [8-10-12bit]</td>
-                        <td class="px-3">附 x86 32bit 版，Windows XP x86 版，附 libx265.dll</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a href="https://github.com/jpsdr/x265/releases">jpsdr</a></th>
-                        <td class="px-3">.hevc [8-10-12bit] </td>
-                        <td class="px-3">GCC 12.2 + MSVC_llvm 1928，附 Broadwell 版，支持 aq-mode 5</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a
-                                href="https://drive.google.com/drive/u/0/folders/0BzA4dIFteM2dWEpvWGZXV3ZhdTA">Rigaya</a></th>
-                        <td class="px-3">.hevc [8-10-12bit]</td>
-                        <td class="px-3 ">GCC 9.3，附 x86 32bit 版</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a href="http://www.mediafire.com/folder/arv5xmdqyiczc">Patman</a></th>
-                        <td class="px-3">.hevc [8-10-12bit]</td>
-                        <td class="px-3">GCC 11 + MSVC 1925</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a
-                                href="https://forum.doom9.org/showthread.php?p=1937773#post1937773">ShortKatz</a></th>
-                        <td class="px-3">arm64~64e（Mac OS，安卓等平台）</td>
-                        <td class="px-3">需运行编译命令文件，附 x86 32bit 版</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a href="https://github.com/DJATOM/x265-aMod/releases/">DJATOM-aMod</a></th>
-                        <td class="px-3">Intel 架构与 zen1~2 优化：[10bit]，zen3 优化：[10-12bit] </td>
-                        <td class="px-3">GCC 10.2.1 + GCC10.3</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <th class="t-invert-dark px-3"><a href="https://down.7086.in/">MeteorRain-yuuki</a></th>
-                        <td class="px-3">.mp4 .mkv [8][10][12bit]+[8-10-12bit]</td>
-                        <td class="px-3">GCC 9.3 + ICC 1900 + MSVC 1916</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="text-gray-side">表：[8-10-12bit] 代表一个.exe 同时含三种色深，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置 <code>-D</code> 参数以选择正确的色深</span>，而 [8][10][12]bit 则代表三个 .exe 分别支持三种色深，压制时选择正确的 .exe 即可</p>
-
-            <h3>LibavFormat / lavf</h3>
-            <p>一种用于处理封装和解封装的动态链接库，同时阅读封装文件的元数据并传给嵌入该库的程序。x264 一般都嵌入了 lavf，x265 则不多。由于只是复制元数据的值而没有做检测，所以元数据写错（情况不罕见）的源会导致编码跟着错，主要错在色彩空间和 HDR 设置上。</p>
-            <p class="text-gray-side">注：.hevc 代表不含 lavf 解码封装库，只能导出.hevc 视频流，需自行封装为 .mp4 .mkv 等格式；含 lavf 或使用 ffmpeg 内置的 libx265 则可以直接导出，使用见 x264/5 <a href="https://nazorip.site/archives/334/">急用版教程</a></p>
-
 
             <h2>预设参数</h2>
 
@@ -4769,16 +4719,137 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--tune</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;zerolatency/animation/grain/film/fastdecode/psnr&gt; 更改 preset 的一些参数，见下：</p>
             <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和 B 帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</li>
-                <li><span class="text-blue-emph">animation</span> 优化动漫场景画面：<code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</li>
-                <li><span class="text-blue-emph">grain</span> 保留高频信号/最高画质：<code>--aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0</li>
-                <li><span class="text-blue-emph">fastdecode</span> 降低解码算力占用以降低超高帧率-分辨率解码负载：<code>--no-weightb --no-weightp --no-deblock --no-sao</li>
+                <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和 B 帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</code></li>
+                <li><span class="text-blue-emph">animation</span> 优化动漫场景画面：<code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</code></li>
+                <li><span class="text-blue-emph">grain</span> 保留高频信号/最高画质：<code>--aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0</code></li>
+                <li><span class="text-blue-emph">fastdecode</span> 降低解码算力占用以降低超高帧率 - 分辨率解码负载：<code>--no-weightb --no-weightp --no-deblock --no-sao</code></li>
                 <li><span class="text-blue-emph">psnr</span> 尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大：<code>--aq-mode 0 --rd 0 --no cutree</code></li>
             </ul>
+
+            <h2>附录：下载</h2>
+            <h3>LibavFormat / lavf</h3>
+            <p>一种用于处理封装和解封装的动态链接库，同时阅读封装文件的元数据并传给嵌入该库的程序。x264 一般都嵌入了 lavf，x265 则不多。由于只是复制元数据的值而没有做检测，所以元数据写错（情况不罕见）的源会导致编码跟着错，主要错在色彩空间和 HDR 设置上。</p>
+            <p class="text-gray-side">注：.hevc 代表不含 lavf 解码封装库，只能导出.hevc 视频流，需自行封装为 .mp4 .mkv 等格式；含 lavf 或使用 ffmpeg 内置的 libx265 则可以直接导出，使用见 x264/5 <a href="https://nazorip.site/archives/334/">急用版教程</a></p>
+
+            <h3>下载 x265.exe</h3>
+            <table class="table-center">
+                <tbody>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="http://www.mediafire.com/?6lfp2jlygogwa">LigH</a></th>
+                        <td class="px-1">.hevc [8-10-12bit]</td>
+                        <td class="px-1">附 x86 32bit 版，Windows XP x86 版，附 libx265.dll</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://github.com/jpsdr/x265/releases">jpsdr</a></th>
+                        <td class="px-1">.hevc [8-10-12bit] </td>
+                        <td class="px-1">GCC 12.2 + MSVC_llvm 1928，附 Broadwell 版，支持 aq-mode 5</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a
+                                href="https://drive.google.com/drive/u/0/folders/0BzA4dIFteM2dWEpvWGZXV3ZhdTA">Rigaya</a></th>
+                        <td class="px-1">.hevc [8-10-12bit]</td>
+                        <td class="px-1">GCC 9.3，附 x86 32bit 版</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="http://www.mediafire.com/folder/arv5xmdqyiczc">Patman</a></th>
+                        <td class="px-1">.hevc [8-10-12bit]</td>
+                        <td class="px-1">GCC 11 + MSVC 1925</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a
+                                href="https://forum.doom9.org/showthread.php?p=1937773#post1937773">ShortKatz</a></th>
+                        <td class="px-1">arm64~64e（Mac OS，安卓等平台）</td>
+                        <td class="px-1">需运行编译命令文件，附 x86 32bit 版</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://github.com/DJATOM/x265-aMod/releases/">DJATOM-aMod</a></th>
+                        <td class="px-1">Intel 架构与 zen1~2 优化：[10bit]，zen3 优化：[10-12bit] </td>
+                        <td class="px-1">GCC 10.2.1 + GCC10.3</td>
+                    </tr>
+                    <tr>
+                        <th class="px-3 t-light-gray"><a href="https://down.7086.in/">MeteorRain-yuuki</a></th>
+                        <td class="px-1">.mp4 .mkv [8][10][12bit]+[8-10-12bit]</td>
+                        <td class="px-1">GCC 9.3 + ICC 1900 + MSVC 1916</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-gray-side">表：[8-10-12bit] 代表一个.exe 同时含三种色深，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置 <code>-D</code> 参数以选择正确的色深</span>，而 [8][10][12]bit 则代表三个 .exe 分别支持三种色深，压制时选择正确的 .exe 即可</p>
+
+            <h3>下载基本工具</h3>
+            <table class="table-center">
+                <tbody>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffmpeg</a></th>
+                        <td class="px-1">强大的 CLI 开源视音频处理工具</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://mpv.io/installation/">mpv</a></th>
+                        <td class="px-1">开源，支持便携的现代视频播放器。见<a href="https://nazorip.site/archives/1052/">安装与配置</a>教程</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://www.voukoder.org/">Voukoder</a></th>
+                        <td class="px-1">开源 Premiere Vegas After Effects 压制导出插件，分为 Voukoder 和 V-Connector 两部分</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://obsproject.com/zh-cn/download">OBS</a></th>
+                        <td class="px-1">强大的开源直播框架和软件，设置略比传统录屏软件复杂，但效果也更好</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://mediaarea.net/zh-CN/MediaInfo">MediaInfo</a></th>
+                        <td class="px-1">开源的 GUI 媒体元数据/视音频格式读取器，用于配置正确的压制参数</td>
+                    </tr>
+                    <tr>
+                        <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffprobe</a></th>
+                        <td class="px-1">CLI 视音频格式读取器，若检测所得信息与 MediaInfo 所异，则优先参考 ffprobe<br>见<a href="https://nazorip.site/archives/169/">基本使用</a>，以及<a href="https://nazorip.site/archives/1068/">搭配 Excel 的视频数据可视化</a>教程
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>下载 x264</h3>
+            <table class="table-center">
+                <tbody>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://www.mediafire.com/folder/arv5xmdqyiczc">Patman</a></th>
+                        <td class="px-1">支持 Lavf 编解码 [8~10bit]</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://www.mediafire.com/?bxvu1vvld31k1">LigH</a></th>
+                        <td class="px-1">支持 Lavf 编解码 [8~10bit]</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://github.com/jpsdr/x264/releases/">jspdr (tMod)</a></th>
+                        <td class="px-1">支持 Lavf 编解码，MCF 线程管理库</td>
+                    </tr>
+                    <tr>
+                        <th class="px-3 t-light-gray">x264 7mod</th>
+                        <td class="px-1">支持 Lavf 编解码，支持 hqdn3d 降噪，镜像链接：<a href="https://drive.google.com/drive/folders/1kFCeNGA_wiiLt-DSeI3cyY8vxlffgQcy?usp=sharing">谷歌盘</a>/<a href="https://pan.baidu.com/s/1sbz8WztGTz3lcLzirHW_2w">百度云</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>下载 x264 GUI</h3>
+            <table class="table-center">
+                <tbody>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://shana.pe.kr/shanaencoder_download">ShanaEncoder</a></th>
+                        <td class="px-1">ffmpeg-CLI 或 GUI 控制少量选项，高级功能 (水印，高级字幕) 用 ffmpeg 参数控制，上手需要时间。ffmpeg 内嵌编码器，不能替换文件</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://bitbucket.org/muldersoft/simple-x264-launcher/downloads/">Simple x264 Launcher</a></th>
+                        <td class="px-1">英文软件，适合批量压制，需自行封装音频。只能压视频</td>
+                    </tr>
+                    <tr>
+                        <th class="px-3 t-light-gray">小丸工具箱</th>
+                        <td class="px-1">操作简单，适合入门的中文软件。网上能搜到详细教程。内嵌 MediaInfo，mp4box，Mkvtoolnix。镜像：<a href="https://pan.baidu.com/s/1VHonGHoZ0DmQBNZaRjML2A&pwd=crhu">百度云</a> 提取码"crhu"</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>x264 的下载为临时内容，x264 教程网页版写到对应地点后会转移。</p>
         </div>
 
         <!-- Footer -->
-        <footer class="py-3 my-4 align-items-center border-top">
+        <footer class="py-3 my-4 px-1 align-items-center border-top">
             <p>
                 联系：
                 <a href='https://github.com/iAvoe/'>Github</a>，

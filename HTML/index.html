@@ -17,19 +17,23 @@
         <title>x265 教程 HTML 完整版</title>
 	</head>
 	<body class="text-gray-main">
-        <!--
-        <div id="navbar" class="t-invert-dark">
-            <button type="button" class="collapsible p-3 px-5">目录</button>
-            <div class="coll-content">
-                <a href="">分块</a> <a href="">变换</a> <a href="">量化</a>
-            </div>
-        </div>
-        <br>
-        -->
-        <div class="container-mobile rounded-9 border-main">
+        <div>
             <h1>x265 教程<span class="text-blue-emph"> HTML 完整版</span></h1>
             <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
-            
+        </div>
+
+        <div class="container-mobile rounded-9 border-main">
+            <h2>命令行调用参考</h2>
+
+            <h3>命令行参数的说明格式</h3>
+            <code><b>--参数</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关 | 整数 A~B | 浮点 A~B | 其它格式，默认值，<span class="text-red-emph">限制</span>&gt; 说明信息，特点注解，推荐<span class="text-blue-emph">这个值</span>，其它情况可设<span class="text-blue-emph">这个值</span>。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>情况 1：特点如此，推荐<span class="text-blue-emph">这个值</span></li>
+                <li>情况 2：特点如此，推荐<span class="text-blue-emph">这个值</span></li>
+                <li>情况 3：特点如此，推荐<span class="text-blue-emph">这个值</span></li>
+            </ul>
+
             <h3 class="mb-0">ffmpeg，VapourSynth，avs2yuv 传递参数</h3>
             <pre><code>
 ffmpeg -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265 --y4m - --output
@@ -40,17 +44,90 @@ ffmpeg -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; -
 avs2yuv	源.avs -csp &lt;色&gt; -dept h&lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; - --output
 avs2pipemod 源.avs -y4mp | x265.exe --y4m - --output</code></pre>
 
-            <h3 class="m-0">搜索 ffmpeg 支持的色度采样：</h3>
-            <code>ffmpeg -pix_fmts | findstr &lt;或grep关键字&gt;</code>
-            <h3 class="m-0">检查/选择色深，版本，编译：</h3>
-            <code>x265.exe -V，-D &lt;8/10/12调整色深&gt;</code>
-            <h3 class="m-0">多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
+            <h3>搜索 ffmpeg 支持的色度采样：</h3>
+            <pre><code>ffmpeg -pix_fmts | findstr &lt;字符串，源视频色度采样&gt;
+ffmpeg -pix_fmts | grep &lt;字符串，源视频色度采样&gt;</code></pre>
+            <h3">检查/选择色深，版本，编译：</h3>
+            <code>x265.exe -V，-D &lt;8/10/12&gt;</code>
+            <h3>多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
             <code>ffmpeg -filter_complex "ass='F\:/字幕.ass'"滤镜</code>
-            <h3 class="m-0">Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
+            <h3>Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
 
             <pre><code>x265.exe [命令行] 2>&1 | tee home\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
+
+            <h2>视频的压制（节选自 x264 教程）</h2>
+            <ol>
+                <li><b>打开编码器</b>
+                    <ul>
+                        <li>用户可以通过多种方法打开编码器：
+                            <ul class="text-smaller">
+                                <li>如果编码器内置了如 Lavf 的解封装和解码动态链接库，则编码器可以自动解封装、解码和封装视频文件：
+                                    <ul class="text-smaller">
+                                        <li>GUI 软件通过发送 CLI 命令，或者使用像 Bash/CMD 这样的 CLI 工具来打开编码器程序。</li>
+                                        <li>编码器通常根据输出文件的后缀名自动封装视频文件。</li>
+                                    </ul>
+                                </li>
+                                <li>如果编码器没有内置解封装解码功能，则通常会使用 ffmpeg 内部的解封装工具和编码器。
+                                    <ul>
+                                        <li>可以使用 Unix Pipe 将上游如 ffmpeg、VapourSynth、avs2yuv 连接到下游如 x264/5 的编码器</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><b>解封装和解码</b>
+                    <ul>
+                        <li>解封装解码工具将已解压缩的 YUV for MPEG 或 RAW 格式视频流传递给编码器，编码器得到输入信号。
+                            <ul class="text-smaller">
+                                <li>如果输入是 RGB24 的 RAW 色彩空间视频流，通常需要使用编码器内置的色彩空间转换功能将其转换为 YUV 格式。</li>
+                                <li>如果编码器是录像设备的一部分，则需要根据录像设置将视频流拆分为视频帧。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><b>编码过程</b>
+                    <ul>
+                        <li><b>前瞻进程</b>：Lookahead 从更小的分辨率预先分析未来几帧的复杂度、运动和场景切换 scenecut 的估计。</li>
+                        <li><b>分帧/帧类型决策</b>：根据前瞻进程的结果和关键帧间隔 keyframe interval 设置关键帧 I 帧与参考帧 P-B 帧。</li>
+                        <li><b>粗分块</b>：
+                            <ul>
+                                <li>x264 中粗分到宏块 Macroblock MB</li>
+                                <li>x265 中粗分到编码树单元 Coding Tree Unit CTU </li>
+                            </ul>
+                        </li>
+                        <li><b>动态搜索 Motion Estimation ME </b>：找到当前帧与参考帧之间的相似区域，并为每个块分配动态向量。</li>
+                        <li><b>运动补偿 Motion Compensation MC </b>：对比实际画面与搜索到的向量生成预测块，并补偿¼子像素精度的对齐偏差。</li>
+                        <li><b>细分块</b>：根据 MEMC，进一步细分宏块或编码树单元到最小的 4x4 编码块上。</li>
+                        <li><b>帧间残差编码</b>：对比实际画面与动态搜索与补偿后所得的图像，得到残差，并对残差进行变换和量化，存储到 P-B 帧上，在解码时与 I 帧叠加以得到原始画面。</li>
+                        <li><b>帧内预测</b>：在 I 帧或 P 帧的 I 块上，从前面步骤中生成的候选夹角、DC、趋平中的最佳模式冗余帧内的块，得到预测块。</li>
+                        <li><b>帧内残差编码</b>：对比实际画面与帧内预测得到的残差块，进行变换和量化，存储在预测块中，在解码时与预测模式叠加以得到原始画面。</li>
+                        <li><b>跳过块编码</b>：跳过帧间或帧内残差编码的块，进行变换和量化。</li>
+                        <li><b>变换</b>：将图像从空间域转换到低频到高频信号分量之间的每个级别，也称为频域。</li>
+                        <li><b>量化</b>：根据用户设置的质量级别，削减高频信号分量，这一步骤对画质和文件大小影响最大。</li>
+                        <li><b>熵编码/文本编码</b>：将变换和量化后的频域分量统计为最小可能的二进制数。</li>
+                    </ul>
+                </li>
+                <li><b>生成视频流</b>
+                    <ul>
+                        <li>编码器将生成的数据流逐个 GOP Group of Pictures 打包，并附加如色彩空间、Supplemental Enhancement Information SEI、Video
+                            Usability Information/High Dynamic Range VUI/HDR 等元数据，得到视频流。</li>
+                    </ul>
+                </li>
+                <li><b>封装视频流</b>
+                    <ul>
+                        <li>用户可以通过多种方法将视频流封装为 .mp4、.mkv、.mov 等格式：
+                            <ul class="text-smaller">
+                                <li>如果编码器内置了像 Lavf 的解封装解码动态链接库，编码器可以根据输出命令行的文件后缀名自动完成。</li>
+                                <li>如果编码器没有内置解封装解码功能，则通常会使用 ffmpeg 内部的编码器和解封装工具，使编码完成后自动封装。</li>
+                                <li>可以使用工具如 <a href="http://ffmpeg.org/download.html">ffmpeg</a>、<a href="https://www.videohelp.com/software/MP4Box">MP4Box</a>，<a href="https://mkvtoolnix.download/">MKVToolNix</a> 等来进行封装。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
 
             <h2>分块</h2>
             <p>将帧内的像素组合成大的整体，以更多地冗余单个像素的帧间/帧内信息；同时要根据动静态以及图像边缘的变化，将图像细分为足够小的区域，以精确分配量化的强度。可以说既要大，又要小。</p>
@@ -933,7 +1010,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <code><b>--rd</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;1/2/3/5，默认 3，大则慢&gt; 据优化模式决策的程度。建议快速用用<span class="text-blue-emph">1</span>，<span class="text-blue-emph">2</span>；高压用<span class="text-blue-emph">3</span>；片源数据无损(非视觉无损)时用<span class="text-blue-emph">5</span>。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;1/2/3/5，默认 3，大则慢&gt; 据优化模式决策的程度。建议快速用用<span class="text-blue-emph">1</span>，<span class="text-blue-emph">2</span>；高压用<span class="text-blue-emph">3</span>；片源数据无损 (非视觉无损) 时用<span class="text-blue-emph">5</span>。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span>优化帧内参考，并块/跳过决策，含明显边缘失真时用</li>
                 <li><span class="text-blue-emph">2</span>加分块决策，含明显边缘失真时用</li>
@@ -4203,7 +4280,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>双视频流下，EL 可被一般的解码器丢弃而正常播放</li>
                 <li>单视频流下，使用专利色彩空间（ICtCp）的源应依法使用专利授权的解码器解码</li>
                 <li>存在假源和假设备，但没有办法验证</li>
-                <lr>即使是样式为7时，EL 也可以为空，等效于仅 BL</lr>
+                <lr>即使是样式为 7 时，EL 也可以为空，等效于仅 BL</lr>
             </ul>
             <table class="table-fit-container align-items-center text-xs">
                 <thead>
@@ -4211,7 +4288,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <th class="px-1">样式 Profile</th>
                         <th class="px-1">编码</th>
                         <th class="px-1">流标记</th>
-                        <th class="px-1">BL 兼容ID</th>
+                        <th class="px-1">BL 兼容 ID</th>
                         <th class="px-1">BL:EL 大小比例</th>
                         <th class="px-1">x265 支持</th>
                         <th class="px-1">伽马兼容</th>
@@ -4234,9 +4311,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.05</td>
                         <td class="px-1">0</td>
-                        <td class="px-1">仅 BL （DV-MEL）</td>
+                        <td class="px-1">仅 BL（DV-MEL）</td>
                         <td class="px-1">√</td>
-                        <td class="px-1">无 （私有色彩空间）</td>
+                        <td class="px-1">无（私有色彩空间）</td>
                         <td class="px-1">ICtCp</td>
                     </tr>
                     <tr class="t-light-gray border-lr">
@@ -4254,7 +4331,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">1</td>
-                        <td class="px-1">仅 BL （DV-MEL）</td>
+                        <td class="px-1">仅 BL（DV-MEL）</td>
                         <td class="px-1">√</td>
                         <td class="px-1">HDR10</td>
                         <td class="px-1">YCbCr</td>
@@ -4264,7 +4341,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">2</td>
-                        <td class="px-1">仅 BL （DV-MEL）</td>
+                        <td class="px-1">仅 BL（DV-MEL）</td>
                         <td class="px-1">√</td>
                         <td class="px-1">SDR</td>
                         <td class="px-1">YCbCr</td>
@@ -4274,7 +4351,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit hevc</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">4</td>
-                        <td class="px-1">仅 BL （DV-MEL）</td>
+                        <td class="px-1">仅 BL（DV-MEL）</td>
                         <td class="px-1"> </td>
                         <td class="px-1">HLG</td>
                         <td class="px-1">YCbCr</td>
@@ -4284,7 +4361,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">8bit avc</td>
                         <td class="px-1">dvav.09</td>
                         <td class="px-1">2</td>
-                        <td class="px-1">仅 BL （DV-MEL）</td>
+                        <td class="px-1">仅 BL（DV-MEL）</td>
                         <td class="px-1"> </td>
                         <td class="px-1">SDR</td>
                         <td class="px-1">YCbCr</td>
@@ -4294,7 +4371,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">10bit av1</td>
                         <td class="px-1">dav1.10</td>
                         <td class="px-1">0,1,2,4</td>
-                        <td class="px-1">仅 BL （DV-MEL）</td>
+                        <td class="px-1">仅 BL（DV-MEL）</td>
                         <td class="px-1"> </td>
                         <td class="px-1">无/SDR/<br>HDR10/HLG</td>
                         <td class="px-1">YCbCr</td>
@@ -4693,7 +4770,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--tune</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;zerolatency/animation/grain/film/fastdecode/psnr&gt; 更改 preset 的一些参数，见下：</p>
             <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和B帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</li>
+                <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和 B 帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</li>
                 <li><span class="text-blue-emph">animation</span> 优化动漫场景画面：<code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</li>
                 <li><span class="text-blue-emph">grain</span> 保留高频信号/最高画质：<code>--aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0</li>
                 <li><span class="text-blue-emph">fastdecode</span> 降低解码算力占用以降低超高帧率-分辨率解码负载：<code>--no-weightb --no-weightp --no-deblock --no-sao</li>

@@ -425,35 +425,3 @@ button.collapsible {
     float: right;
     margin-left: auto;
 }
-
-/* Drop down navbar */
-#navbar {
-    display: flex;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border: 0;
-}
-
-#navbar button {
-    margin: 0;
-    padding: 0;
-    float: left;
-    display: block;
-    font-size: large;
-    background-color: #dee2e6;
-}
-
-#navbar button:hover {
-    color: white;
-    background:#3C4042;
-    transition: 300ms;
-}
-
-#navbar a {
-    float: left;
-    display: block;
-}
-
-

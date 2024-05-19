@@ -97,8 +97,8 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                                 <li>x265 中粗分到编码树单元 Coding Tree Unit CTU </li>
                             </ul>
                         </li>
-                        <li><b>动态搜索 Motion Estimation ME </b>：找到当前帧与参考帧之间的相似区域，并为每个块分配动态向量。</li>
-                        <li><b>运动补偿 Motion Compensation MC </b>：对比实际画面与搜索到的向量生成预测块，并补偿¼子像素精度的对齐偏差。</li>
+                        <li><b>动态搜索</b>：Motion Estimation ME 找到当前帧与参考帧之间的相似区域，并为每个块分配动态向量。</li>
+                        <li><b>运动补偿</b>：Motion Compensation MC 对比实际画面与搜索到的向量生成预测块，并补偿¼子像素精度的对齐偏差。</li>
                         <li><b>细分块</b>：根据 MEMC，进一步细分宏块或编码树单元到最小的 4x4 编码块上。</li>
                         <li><b>帧间残差编码</b>：对比实际画面与动态搜索与补偿后所得的图像，得到残差，并对残差进行变换和量化，存储到 P-B 帧上，在解码时与 I 帧叠加以得到原始画面。</li>
                         <li><b>帧内预测</b>：在 I 帧或 P 帧的 I 块上，从前面步骤中生成的候选夹角、DC、趋平中的最佳模式冗余帧内的块，得到预测块。</li>
@@ -433,7 +433,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h2>溯块向量搜索</h2>
-            <p>与帧内编码并行给动态搜索提供溯块向量（cu 帧内/帧间朝向以及大小）的步骤。由于移动的物件会跨越多个 PU，所以将涉及同个移动物件的 PB 合到一起就能冗余一群 PB 的动态向量。x264/5 用 <span class="text-blue-emph">--ref</span> 参数于时域上划区，逐 PU 创建 L<sub>0</sub> 和 L<sub>1</sub> 左右两排参考列表。x265 在 x264 <span class="text-blue-emph">--direct auto</span> 的基础上添加了 AMVP 与 Merge mode 两个方案</p>
+            <p>与帧内预测并行给动态搜索提供溯块向量（cu 帧内/帧间朝向以及大小）的步骤。由于移动的物件会跨越多个 PU，所以将涉及同个移动物件的 PB 合到一起就能冗余一群 PB 的动态向量。x264/5 用 <span class="text-blue-emph">--ref</span> 参数于时域上划区，逐 PU 创建 L<sub>0</sub> 和 L<sub>1</sub> 左右两排参考列表。x265 在 x264 <span class="text-blue-emph">--direct auto</span> 的基础上添加了 AMVP 与 Merge mode 两个方案</p>
 
             <h3>高级动态向量搜索 Advanced Motion Vector Prediction</h3>
             <ol class="mt-0">
@@ -459,12 +459,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 先查 2nx2n merge 被选块，找不到就跳过 AMVP 以提速。</p>
 
             <h2>初始化-Lookahead</h2>
-            <p>最先运行，给视频帧分段并最终整合成 GOP 内树叉状的参考结构，设关键帧并递给下一步帧内编码。一来冗余，二来防止参考错误蔓延（否则丢一个网络数据包会导致长时间绿屏花屏）。过程见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
+            <p>最先运行，给视频帧分段并最终整合成 GOP 内树叉状的参考结构，设关键帧并递给下一步帧内预测。一来冗余，二来防止参考错误蔓延（否则丢一个网络数据包会导致长时间绿屏花屏）。过程见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
             <code><b>--scenecut</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，不推荐用&gt; Lookahead 中两帧差距达到该参数值则触发转场。</p>
             <code><b>--hist-scenecut</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，会关 scenecut，<span class="text-blue-emph">10 与 12bit 源可能会导致崩溃</span>，推荐 8bit 下用&gt; 亮度平面边缘 + 颜色直方图 SAD 阈值触发转场。x265 v3.5+69 后编码彩色视频，尤其<a href="https://forum.doom9.org/showthread.php?p=1978502">HDR 源中超越 scenecut 精度~20%</a>，降低了正误判（设 I 帧，closed-gop 下帧间冗余效益降低）和负误判（不设 I 帧，分为多个带 I 块的 P 帧，帧内编码效益降低），因此除黑白视频外推荐。缺点是超过 8bit 后不稳定，且理论上不应对画质/压缩率有太大影响</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，会关 scenecut，<span class="text-blue-emph">10 与 12bit 源可能会导致崩溃</span>，推荐 8bit 下用&gt; 亮度平面边缘 + 颜色直方图 SAD 阈值触发转场。x265 v3.5+69 后编码彩色视频，尤其<a href="https://forum.doom9.org/showthread.php?p=1978502">HDR 源中超越 scenecut 精度~20%</a>，降低了正误判（设 I 帧，closed-gop 下帧间冗余效益降低）和负误判（不设 I 帧，分为多个带 I 块的 P 帧预测效益降低），因此除黑白视频外推荐。缺点是超过 8bit 后不稳定，且理论上不应对画质/压缩率有太大影响</p>
             <p class="text-gray-side pl-5 m-0">注：hist-threshold 参数于 x265 v3.5+69 被删。</p>
             <code><b>--rc-lookahead</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;帧数量，范围 1~250，推荐 keyint÷2&gt; 指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
@@ -594,7 +594,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </ul>
             <p class="text-gray-side pl-5 m-0">注：bframes 大于 8，同时 keyint 大于 250 会大增内存占用，但也取决于视频分辨率</p>
 
-            <h2>帧内编码/单图冗余</h2>
+            <h2>帧内预测/单图压缩</h2>
             <div class="row">
                 <div id="LR-UD-013" class="col-8">
                     <p>在帧间编码跑完，内容大部分重复的帧变成 P-B 参考帧后，它们所参考的数据都在 I 帧/I 块上。这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。冗余分为补偿参考源，平滑（3-tap/ss），和编码预测块 PB 三步。参考源由预测块的左，上两排像素构成。</p>
@@ -677,7 +677,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--fast-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; 先查夹角模式 2,10,18,26,34，再加精度到 5, 15, 21, 31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
             <code><b>--b-intra</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; B 条带同样进行帧内编码压缩。关闭可以提速，但相对浪费压缩率。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; B 条带同样进行帧内预测。关闭可以提速，但相对浪费压缩率。</p>
             <code><b>--no-strong-intra-smoothing</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，不推荐&gt; 条件苛刻，强力平滑滤镜平滑的是参考点而非 pu，还能去色带，所以不推荐关。</p>
 

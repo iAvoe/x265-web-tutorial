@@ -209,7 +209,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <img src="files/image7.png" alt="LDSP&SDSP Search" class="" >
                     <p class="text-gray-side mt-0">图：大小菱搜索。x264/5 中，六边形搜索 me hex 将 LDSP 的上下左右斜 8 个外点减到 6 个，SDSP 的细化规则不变。</p>
                     <img src="files/image8.png" alt="Uneven multi-hexagon Search" class="" >
-                    <p class="text-gray-side mt-0">图：umh 搜索。</p>
+                    <p class="text-gray-side mt-0">图：umh 搜索。实现多分辨率的向量查找，从而减轻动态噪点对传统搜索算法的干扰</p>
                 </div>
             </div>
 
@@ -228,12 +228,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--no-temporal-mvp</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt; 关 P-B 条带的动态搜索，除直播外不推荐。</p>
             <code><b>--hme-search</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，<span class="text-red-emph">关 me</span>&gt; 三份异分辨率原画分别查找宏观到微观的搜索动态信息。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，<span class="text-red-emph">关 me</span>&gt; 原画做三种分辨率，分别查找搜索动态信息，能够更好地消除动态噪点所导致的假动态向量。</p>
             <code><b>--hme-range</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;三整数，<span class="text-red-emph">需 hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt; 对应 1/16，¼和全分辨率三画面。</p>
             
             <h2 id="h2-6">子像素运动补偿</h2>
-            <p>动态预测 ME 推演 P/B/I 帧（见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）之外，视频编码还需要动态补偿 Motion Compensation MC 来消除由噪点，动态预测精度不足等问题导致的细节损失。大体上是：</p>
+            <p>动态预测 ME 推演 P/B/I 帧（见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）之外，视频编码还需要动态补偿 Motion Compensation MC 来消除由噪点，动态预测精度不足等问题导致的细节损失。大体上是「允动之移，防静所变」，即允许真正移动的物件有运动向量，拦截噪点在静止画面上的假运动向量：</p>
             <ol>
                 <li>“上帧画面 + 帧间向量表中的动态向量 =‘一系列粗加工 PU’”</li>
                 <li>将“粗加工 PU”与源视频所对应的画面做差，并使用有限冲激响应滤镜 FIR filter 放大这些残差</li>

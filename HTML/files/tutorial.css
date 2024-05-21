@@ -296,6 +296,10 @@ a:active {
     border-radius: 1em;
     transition: 25ms;
 }
+td.px-1.t-invert-light a { 
+    color: whitesmoke;
+    text-shadow: -0.3px 0 var(--hex-light-green), 0 0.3px var(--hex-light-green), 0.3px 0 var(--hex-light-green), 0 -0.3px var(--hex-light-green);
+}
 
 /* Override button fontsize */
 .text-larger { font-size: larger; }

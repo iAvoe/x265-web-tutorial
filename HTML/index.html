@@ -199,7 +199,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--max-tu-size</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16/8/4，默认 32&gt; 大 tu 使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></p>
 
-            <h2>帧间 - 动态搜索</h2>
+            <h2>动态搜索</h2>
             <p>用于在连续帧间进行运动估计。这个过程涉及逐个像素块在相邻帧之间寻找最小失真朝向/最小失真方向 Direction of minimal distortion DMD，从而在每帧之间都生成一张向量表。如果这个过程缺失或不够理想，参考帧与分块的建立就可能会出现问题，从而导致潜在的压缩率损失或画质下降。</p>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
             <div class="coll-content">
@@ -232,7 +232,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--hme-range</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;三整数，<span class="text-red-emph">需 hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt; 对应 1/16，¼和全分辨率三画面。</p>
             
-            <h2>帧间 - 子像素运动补偿</h2>
+            <h2>子像素运动补偿</h2>
             <p>动态预测 ME 推演 P/B/I 帧（见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）之外，视频编码还需要动态补偿 Motion Compensation MC 来消除由噪点，动态预测精度不足等问题导致的细节损失。大体上是：</p>
             <ol>
                 <li>“上帧画面 + 帧间向量表中的动态向量 =‘一系列粗加工 PU’”</li>

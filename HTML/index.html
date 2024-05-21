@@ -22,7 +22,7 @@
             <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
         </div>
         <div class="container-mobile rounded-9 border-main">
-            <h2>命令行调用参考</h2>
+            <h2 id="h2-1">命令行调用参考</h2>
 
             <h3>命令行参数的说明格式</h3>
             <code><b>--参数</b></code>
@@ -56,7 +56,7 @@ ffmpeg -pix_fmts | grep &lt;字符串，源视频色度采样&gt;</code></pre>
 x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
 x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
-            <h2>视频的压制（节选自 x264 教程）</h2>
+            <h2 id="h2-2">视频的压制（节选自 x264 教程）</h2>
             <ol>
                 <li><b>打开编码器</b>
                     <ul>
@@ -128,7 +128,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </li>
             </ol>
 
-            <h2>分块</h2>
+            <h2 id="h2-3">分块</h2>
             <p>将帧内的像素组合成大的整体，以更多地冗余单个像素的帧间/帧内信息；同时要根据动静态以及图像边缘的变化，将图像细分为足够小的区域，以精确分配量化的强度。可以说既要大，又要小。</p>
             <p>在 High Efficiency Video Coding HEVC 中，帧的下级结构按照分辨率大小分为帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss）→ CTU 树单元 Coding Tree Unit → 编码单元 Coding Unit CU</p>
             <div class="align-items-center">
@@ -158,7 +158,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--rect --amp</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，受 limit-modes 限制，<span class="text-red-emph">amp 需 rect</span>&gt; 限制最小 cu 大小，简化计算步骤，因为使往后步骤 pu，tu 的划分也会更大。用多一点码率换取编码速度的参数。建议日常环境使用<span class="text-blue-emph">16</span>或快速编码环境使用<span class="text-blue-emph">32</span>。</p>
 
-            <h2>变换</h2>
+            <h2 id="h2-4">变换</h2>
             <div class="row">
                 <div id="LR-UD-001" class="col-8">
                     <h3>一维傅里叶变换 1D Fourier Transform</h3>
@@ -199,7 +199,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--max-tu-size</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16/8/4，默认 32&gt; 大 tu 使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></p>
 
-            <h2>动态搜索</h2>
+            <h2 id="h2-5">动态搜索</h2>
             <p>用于在连续帧间进行运动估计。这个过程涉及逐个像素块在相邻帧之间寻找最小失真朝向/最小失真方向 Direction of minimal distortion DMD，从而在每帧之间都生成一张向量表。如果这个过程缺失或不够理想，参考帧与分块的建立就可能会出现问题，从而导致潜在的压缩率损失或画质下降。</p>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
             <div class="coll-content">
@@ -232,7 +232,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--hme-range</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;三整数，<span class="text-red-emph">需 hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt; 对应 1/16，¼和全分辨率三画面。</p>
             
-            <h2>子像素运动补偿</h2>
+            <h2 id="h2-6">子像素运动补偿</h2>
             <p>动态预测 ME 推演 P/B/I 帧（见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）之外，视频编码还需要动态补偿 Motion Compensation MC 来消除由噪点，动态预测精度不足等问题导致的细节损失。大体上是：</p>
             <ol>
                 <li>“上帧画面 + 帧间向量表中的动态向量 =‘一系列粗加工 PU’”</li>
@@ -388,7 +388,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--weightb</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 启用 B 条带的隐加权预测。注意光线变化和淡入淡出在公开课，电脑录屏，低成本/旧动漫等片源中几乎不存在，这种情况下打开只会浪费性能。</p>
 
-            <h2>帧间 - 时域架网搜索</h2>
+            <h2 id="h2-7">帧间 - 时域架网搜索</h2>
             <h3>一维小波变换 1D Wavelet Transform</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
@@ -434,7 +434,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">会关多线程</span>&gt; 时域动态补偿滤镜 mctf 搭配双阈滤镜的自动降噪，理论上提高细节保真。关多线程会大幅削弱性能。</p>
             </div>
 
-            <h2>溯块向量搜索</h2>
+            <h2 id="h2-8">溯块向量搜索</h2>
             <p>与帧内预测并行给动态搜索提供溯块向量（cu 帧内/帧间朝向以及大小）的步骤。由于移动的物件会跨越多个 PU，所以将涉及同个移动物件的 PB 合到一起就能冗余一群 PB 的动态向量。x264/5 用 <span class="text-blue-emph">--ref</span> 参数于时域上划区，逐 PU 创建 L<sub>0</sub> 和 L<sub>1</sub> 左右两排参考列表。x265 在 x264 <span class="text-blue-emph">--direct auto</span> 的基础上添加了 AMVP 与 Merge mode 两个方案</p>
 
             <h3>高级动态向量搜索 Advanced Motion Vector Prediction</h3>
@@ -460,7 +460,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--early-skip</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 先查 2nx2n merge 被选块，找不到就跳过 AMVP 以提速。</p>
 
-            <h2>初始化-Lookahead</h2>
+            <h2 id="h2-9">初始化-Lookahead</h2>
             <p>最先运行，给视频帧分段并最终整合成 GOP 内树叉状的参考结构，设关键帧并递给下一步帧内预测。一来冗余，二来防止参考错误蔓延（否则丢一个网络数据包会导致长时间绿屏花屏）。过程见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
             <code><b>--scenecut</b></code>
@@ -596,7 +596,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </ul>
             <p class="text-gray-side pl-5 m-0">注：bframes 大于 8，同时 keyint 大于 250 会大增内存占用，但也取决于视频分辨率</p>
 
-            <h2>帧内预测/单图压缩</h2>
+            <h2 id="h2-10">帧内预测/单图压缩</h2>
             <div class="row">
                 <div id="LR-UD-013" class="col-8">
                     <p>在帧间编码跑完，内容大部分重复的帧变成 P-B 参考帧后，它们所参考的数据都在 I 帧/I 块上。这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。冗余分为补偿参考源，平滑（3-tap/ss），和编码预测块 PB 三步。参考源由预测块的左，上两排像素构成。</p>
@@ -684,7 +684,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，不推荐&gt; 条件苛刻，强力平滑滤镜平滑的是参考点而非 pu，还能去色带，所以不推荐关。</p>
 
             <h3 class="same-line">量化</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
-            <h2>率控制 - 算出量化值 Quantization Parameter</h2>
+            <h2 id="h2-11">率控制 - 算出量化值 Quantization Parameter</h2>
             <p>人眼对明暗变化与画面细节程度的感知呈对数㏒状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
             <div class="align-items-center">
                 <img src="files/image24.png" alt="Logrithm QP to qScale" class="img-medium" >
@@ -898,7 +898,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--cu-lossless</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;开关，默认关&gt; 将无损量化 cu（qp 4）作为率失真优化的结果选项之一，只要码率管够（符合λ=R/D）就不量化。用更多码率换取原画相似度，无损源能提高参考冗余。</p>
 
-            <h2>自适应量化</h2>
+            <h2 id="h2-12">自适应量化</h2>
             <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 qp 分配过程。讨论时注意 aq 与 vaq 的混淆。见 <a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
             
             <code><b>--aq-mode</b></code>
@@ -1003,7 +1003,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--aq-bias-strength-edge</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;浮点，默认等于 aq-bias-str，<span class="text-red-emph">需 aq-mode 5</span>&gt; aq-strength-edge 偏给暗场的程度。</p>
 
-            <h2>模式决策 Mode Decision</h2>
+            <h2 id="h2-13">模式决策 Mode Decision</h2>
             <p>在视频编码中根据帧间（Inter）和帧内（Intra）搜索所得的信息，综合考虑宏观和微观特征，以定制分块的参考量化和其他细分方案。在这一过程中有率失真优化的参与，即在保持视觉质量的前提下尽可能减小编码后视频的码率。</p>
             <p>对于明显边缘失真的源，编码时反而需要减少率失真优化的影响。因为优化的最终目标是降低与原画的差异，因此“保持画质”的意义不再重要。</p>
             <div class="align-items-center">
@@ -1043,7 +1043,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p class="text-gray-side">图：影响 DCT 系子分布的块中像素，而 DCT 系子的密度影响 rskip-edge-threshold 的设置</p>
             </div>
 
-            <h2>率失真优化控制</h2>
+            <h2 id="h2-14">率失真优化控制</h2>
             <h3>率失真优化 Rate distortion optimization</h3>
             <p>原本有损压缩视频编码器的策略就是码率越小越好——所以量化强度越大越好。但实际情况是量化压缩相当程度的破坏了 P-B 帧原本可以参考 I 帧的部分——因为量化后差异太大而只能放弃参考，换成 I 块。解决这种乱量化问题的方法是将失真，码率分别看成两种越大越差的程度；将其中一个程度乘以一个缩放值以对齐另一个（使两值权重对等）以相互牵制出平衡点。再将这个“新的程度”应用到原本的编码器策略里，就是率失真优化。</p>
             <p>“编码器策略”就是模式决策。率失真程度由代价函数「开销=失真+λ⋅码率」（越小越好）得出：</p>
@@ -1237,7 +1237,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </table>
             </div>
 
-            <h2>环路滤波</h2>
+            <h2 id="h2-15">环路滤波</h2>
             <h3>去块滤镜</h3>
             <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
             <div class="align-items-center">
@@ -1300,7 +1300,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--selective-sao</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;0~4，默认 0&gt; 从条带（横向的一组 CTU）角度调整 sao 参数，1 启用 I 条带 sao，2 增加 P 条带，3 增加 B 条带，4 所有条带。可直接控制 sao，或搭配 limit-sao 的新方法。</p>
 
-            <h2>熵编码/文本压缩</h2>
+            <h2 id="h2-16">熵编码/文本压缩</h2>
             <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
 
             <div class="align-items-center">
@@ -3783,7 +3783,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p>叫软判决量化是因为此处 SSE 测了欧几里得距离，相对的硬判决量化为 qp 值所对应的 DCT 除法表。</p>
             </div>
 
-            <h2>SEI 补充与优化消息</h2>
+            <h2 id="h2-17">SEI 补充与优化消息</h2>
             <p>Supplemental enhance info 记录每帧的补充信息。主要有正确解码新 GOP 用的缓冲 SEI，解码校正时间戳的 pic timing SEI，让显示主控切边的 SEI，cc 字幕 SEI，HDR-SEI 等等。缓冲 SEI 记录对应 SPS 的号；待解码图像缓冲 Coded picture buffer CPB 的延迟安全区等信息；时戳 SEI 记录哪些帧上/下场优先的变化；连帧/三连帧的位置等信息。</p>
 
             <code><b>--hrd</b></code>
@@ -3806,7 +3806,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--dup-threshold</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数 1~99，默认 70&gt; 相似度判定值，默认达 70% 重复就判为相似。</p>
 
-            <h2>线程与节点控制</h2>
+            <h2 id="h2-18">线程与节点控制</h2>
             <h3>设置创建比电脑处理器更多的线程会不会更快</h3>
             <p>每个 CPU 线程能占用的算力最高只有 100%，因此会导致处理器随机并发的特性，从任务数量上冲淡如参考帧建立等需要之前步骤算完才能开始运行的时间窗口，造成编码器跳过一部分参考压缩，码率增加，画质降低。</p>
 
@@ -3899,7 +3899,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>非<span class="text-blue-emph">1</span>则因为编码顺序，只有 ctu 下方的一行 ctu 可供参考，损失一半可能的参考范围</li>
             </ul>
 
-            <h2>色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
+            <h2 id="h2-19">色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
             <p>Video usability information 是有工具就可以随时改的元数据。HDR 电视只读取 maxcll 和 maxfall，所以实际情况是 master-display 可略。光强/光压 Candela 等于尼特，即<span class="text-blue-math">\(1 \text{cd} = 1 \text{nit}\)</span>。因 bt601，709，HDR-PQ，HLG 标准重视的亮度范围，曲线所异（偏亮或偏暗），故需要量化曲线，心理学优化，模式决策的重适配。</p>
             
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：色彩格式的具体转换变量与算法标准，见<a href="https://www.itu.int/rec/dologin.asp?lang=s&id=T-REC-H.265-201504-S!!MSW-E">ITU-T Rec. H.265</a>（建议书）的 Table E.3。</button>
@@ -4498,7 +4498,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>可以用<a href="https://github.com/quietvoid/dovi_tool">dovi_tool</a>提取 RPU，<a href="https://github.com/saindriches/dovi_meta">dovi_meta</a>创建 RPU。ffmpeg 提取源视频 RPU 用：</p>
             <pre><code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code></pre>
 
-            <h2>输入输出 Input-output IO</h2>
+            <h2 id="h2-20">输入输出 Input-output IO</h2>
 
             <code><b>--seek</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数，默认 0&gt; 从第 x 帧开始压缩。</p>
@@ -4532,7 +4532,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>编解码图像序列</h3>
             <p>见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
-            <h2>预设参数</h2>
+            <h2 id="h2-21">预设参数</h2>
 
             <code><b>--preset</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt; 见下：</p>
@@ -4728,7 +4728,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">psnr</span> 尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大：<code>--aq-mode 0 --rd 0 --no cutree</code></li>
             </ul>
 
-            <h2>附录：下载</h2>
+            <h2 id="h2-22">附录：下载</h2>
             <h3>LibavFormat / lavf</h3>
             <p>一种用于处理封装和解封装的动态链接库，同时阅读封装文件的元数据并传给嵌入该库的程序。x264 一般都嵌入了 lavf，x265 则不多。由于只是复制元数据的值而没有做检测，所以元数据写错（情况不罕见）的源会导致编码跟着错，主要错在色彩空间和 HDR 设置上。</p>
             <p class="text-gray-side">注：.hevc 代表不含 lavf 解码封装库，只能导出.hevc 视频流，需自行封装为 .mp4 .mkv 等格式；含 lavf 或使用 ffmpeg 内置的 libx265 则可以直接导出，使用见 x264/5 <a href="https://nazorip.site/archives/334/">急用版教程</a></p>

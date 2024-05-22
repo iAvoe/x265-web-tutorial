@@ -1266,28 +1266,45 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h3>取样迁就偏移滤镜 Sample adaptive offset</h3>
             <div class="row">
-                <p id="LR-UD-025" class="col-10">逐 CTB 划分。界偏移 EO 缓解纹理边缘因「高频波形的遮盖因强量化或去块丢失」的问题。可能分以下几步。算法略像帧内搜索的趋平滤镜。适合修复纹理量化出振铃的损失。关闭则遮不住平面的蠕虫失真</p>
+                <p id="LR-UD-025" class="col-10">沿着每个编码树单元 CTU 的划分，应用边缘偏移 Edge offset EO，带状偏移 Band offset BO 和融合 merge 滤镜。用于缓解量化或去块丢失所导致的边缘振铃失真，以及平面蠕虫失真。<span class="text-gray-side">图：上为边缘振铃失真，下为平面蠕虫失真</span></p>
                 <img src="files/image34.jpg" alt="Sample Adaptive Offset Case" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
             </div>
-
-            <ul class="text-gray-side">
-                <li>CTB 内据分块结果建立一批 3x3 像素的采样域</li>
-                <li>由 3x3 排列规律找出三个像素排成一排的横 0，纵 1，左倾 2 和右倾 3 四种可能</li>
-                <li>中心像素值要符合小于/大于旁像素且等于任意一边像素的条件，否则不是边界</li>
-                <li>确保 3x3 间的边界连续性，实现边界验证和性能优化</li>
-            </ul>
-            <p>带偏移 BO 滤镜对比源 + 补偿编码差异的平面 CTB，适合补偿平面，斜面和曲面渐变 CU，以及修复平面量化的损失。方法是：</p>
+            <h4>边缘振铃失真</h4>
+            <div class="row">
+                <p id="LR-UD-027" class="col-10">表现为高对比度边缘附近的波纹重影效应，因为量化减少了遮盖低频信号，以使信号整体逼近方形波的高频信号。详见<a href="https://en.wikipedia.org/wiki/Ringing_artifacts">维基百科</a></p>
+                <img src="files/image35.png" alt="Ringing Distortion" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
+            </div>
             <ol>
-                <li>划分 32 条色深带来均分当前色深下的像素值</li>
-                <li>分为 24~31，0~7 的明带，暗带；以及 8~23 的中间带</li>
-                <li>限制最大只能补偿 4 条相连的色深带，以确保 CTB 中色深差异不会大到触发 EO 同时涵盖足够大的斜面渐变</li>
-                <li>率失真优化找出所谓的补偿值：每条色深带的偏移值</li>
+                <li><b>边缘偏移滤镜</b>：
+                    <ul>
+                        <li>根据分块结果，在每个 CTU 内建立一批 3x3 像素的采样区域。</li>
+                        <li>从这些区域中找到三个像素排成一排的横向、纵向、左倾和右倾四种可能性</li>
+                        <li>确认中心像素值小于或大于相邻像素且等于任何一边像素的条件，识别出边界</li>
+                        <li>确保 3x3 区域的边界连续性，进行边界验证和性能优化。</li>
+                    </ul>
+                </li>
+                <li><b>带状偏移滤镜</b>：
+                    <ul>
+                        <li>在 CTU 内根据平面 CTU 对比源加上补偿编码差异。</li>
+                        <li>划分 32 条色深带，将当前色深下的像素值均分</li>
+                        <li>将这些色深带分为明带 24~31，暗带 0~7，和中间带 8~23</li>
+                        <li>最大只能补偿 4 条相连的色深带，确保 CTU 内的色深差异不会大到触发 EO，同时涵盖足够大的斜面渐变。</li>
+                        <li>使用率失真优化找到每条色深带的补偿像素值偏移</li>
+                    </ul>
+                </li>
+                <li><b>补偿方案（共 7x8 种）</b>：
+                    <ul>
+                        <li>7 种补偿方案：<span class="text-gray-side">0=无，1=横向 EO，2=纵向 EO，3=左倾 EO，4=右倾 EO，5=中间带，6=明暗带</span></li>
+                        <li>8 种平面选择：<span class="text-gray-side">0=无，1=Y，2=Y+Cr，3=Y+Cb，4=Y+Cb+Cr，5=Cr，6=Cb，7=Cb+Cr</span></li>
+                    </ul>
+                </li>
+                <li><b>融合滤镜 Merge</b>：
+                    <ul>
+                        <li>将相邻两个 CTU 的 SAO 方案（补偿方案、平面选择）融合，根据参数决定是直接使用上/左块的信息，还是对比像素趋势更接近哪个</li>
+                        <li>具体的偏移像素值由率失真优化决定</li>
+                    </ul>
+                </li>
             </ol>
-            <ul class="text-gray-side">
-                <li>共有 0=无，1=横 E0，2=纵 EO，3=左倾 EO，4=右倾 EO，5=中间带，6=明暗带，共 7 种补偿方案</li>
-                <li>共有 0=无，1=Y，2=Y+Cr，3=Y+Cb，4=YCbCr，5=Cr，6=Cb，7=CbCr 种平面补偿开关</li>
-            </ul>
-            <p>融合 Merge 滤镜将相邻两个 CTB 的 SAO 信息（补偿方案，平面补偿开关等）根据参数决定直接用上/左块，还是对比像素趋势更接近哪个。和选择 BO，EO 具体的偏移值一样由率失真优化决定</p>
             
             <code><b>---no-sao</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;关闭 sao，默认开--sao&gt; 由于针对的是强量化环境，所以高画质源+crf 小于 17 的情况下可以关。</p>
@@ -1304,7 +1321,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
 
             <div class="align-items-center">
-                <img src="files/image35.png" alt="CABAC Flow Chart" class="" >
+                <img src="files/image36.png" alt="CABAC Flow Chart" class="" >
                 <p class="text-gray-side">图：简化的上下文自适应二进制算数编码<a href="https://iphome.hhi.de/marpe/cabac.html">CABAC 流程</a>，分转二进制，出字概率统计和算数编码三步</p>
             </div>
 
@@ -1313,7 +1330,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
                 <div class="align-items-center">
-                    <img src="files/image36.png" alt="Arithmetic Coding Demonstration" class="" >
+                    <img src="files/image37.png" alt="Arithmetic Coding Demonstration" class="" >
                     <p class="text-gray-side">图：编码即逐字按出字概率缩窄概率条到最后一个字的出字概率，取上/下区间为编码结果，解码照概率位置（蓝线）的落点反推实现。</p>
                 </div>
     
@@ -3508,11 +3525,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <div class="row">
-                    <p id="LR-UD-027" class="col-10">以状态描述程序/机器。如 1~2 间可过渡出无限个数字，代表机械运动到位的中间过程；去掉过程后（如取整后）剩下圆圈数字表示的①↔②两种状态，就足以抽象地表示按动式圆珠笔；将两态联系起来的操作表示为箭头，即按下笔的按钮，而输出就是下一状态。若需要将笔伸出（需②）而笔已收拢则写作 ①→⓶；若需收拢而笔已伸出则 ②→⓵</p>
-                    <img src="files/image37.png" alt="Double Action Ball Point Pen" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
+                    <p id="LR-UD-029" class="col-10">以状态描述程序/机器。如 1~2 间可过渡出无限个数字，代表机械运动到位的中间过程；去掉过程后（如取整后）剩下圆圈数字表示的①↔②两种状态，就足以抽象地表示按动式圆珠笔；将两态联系起来的操作表示为箭头，即按下笔的按钮，而输出就是下一状态。若需要将笔伸出（需②）而笔已收拢则写作 ①→⓶；若需收拢而笔已伸出则 ②→⓵</p>
+                    <img src="files/image38.png" alt="Double Action Ball Point Pen" id="LR-UD-030" class="img-small img-right col-2 mb-auto" >
                 </div>
                 <div class="align-items-center">
-                    <img src="files/image38.png" alt="Finite State Machine on Double Action Pen" class="img-medium" >
+                    <img src="files/image39.png" alt="Finite State Machine on Double Action Pen" class="img-medium" >
                 </div>
             </div>
             
@@ -3526,7 +3543,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p>视频编码器中，MPS 和 LPS 的分布由人工筛选，所以具体逻辑要看编码器源码。x264 中大体为输入 LPS 为 0/为 1 时的状态切换：若大于 0.5 则变成 MPS，LPS 最小为 0.01875；MPS 最大为
                     0.98125</p>
                 <div class="align-items-center">
-                    <img src="files/image39.png" alt="Finite State Machine Context Adaptation" class="img-medium">
+                    <img src="files/image40.png" alt="Finite State Machine Context Adaptation" class="img-medium">
                 </div>
             </div>
 
@@ -3623,7 +3640,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </li>
                 </ol>
                 <div class="align-items-center">
-                    <img src="files/image40.png" alt="Golomb Rice Coding 2^K-M Variations" class="img-medium" >
+                    <img src="files/image41.png" alt="Golomb Rice Coding 2^K-M Variations" class="img-medium" >
                     <p class="text-gray-side">图：M=1~32 时，<span class="text-blue-math">\(2^K - M\)</span> 的边界变化，见<a href="https://www.desmos.com/calculator/2gonwxfc1m">Desmos 例</a></p>
                 </div>
             </div>
@@ -3734,7 +3751,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p>前者在不考虑大小的情况下测量数字信号的差距，如<span class="text-blue-math">100</span>与<span class="text-blue-math">010</span>的汉明距离为 2，数值误差为 90，很明显信号偏差的程度并不如数值误差所说的那么离谱。汉明距离以累计各位数的异或门 ⊻ 得到，“累计”代表误差和 SAD。</p>
                 <p>欧几里得距离测量更高维度下，至少两点分别取值的平方差 SSE，如 GPS 的定位误差</p>
                 <div class="align-items-center">
-                    <img src="files/image41.svg" alt="Euclidean distance" class="image-medium">
+                    <img src="files/image42.svg" alt="Euclidean distance" class="image-medium">
                     <p class="text-gray-side">图：欧几里得距离利用平方差的算法，见<a href="https://en.wikipedia.org/wiki/Euclidean_distance">维基百科</a></p>
                 </div>
                 <h3>软判决与硬判决解码 Soft/Hard Decision decoding</h3>
@@ -3751,7 +3768,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h3>游程/游标编码 Run-length/run-level coding</h3>
             <div class="align-items-center">
-                <img src="files/image42.png" alt="Run Length Coding Demonstration" class="img-medium" >
+                <img src="files/image43.png" alt="Run Length Coding Demonstration" class="img-medium" >
             </div>
 
             <h3>Trellis</h3>
@@ -3775,7 +3792,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <p>算数编码行游标编码之倒序——先编码最大概率的 0，后编码低概的绝对值强度 absolute level（因为含负强度/DCT 系子波形的反相）。得从各个可能路线整合出 trellis 所有上下文可能性以及变更（如下图）。由于文本编码是动态程序（一次编一字），所以路线一次只能改一条，且会保持出字概率而得斜线。</p>
                 <div class="align-items-center">
-                    <img src="files/image43.png" alt="Soft Decision Quantization Trellis Chart" class="img-medium" ><br>
+                    <img src="files/image44.png" alt="Soft Decision Quantization Trellis Chart" class="img-medium" ><br>
                 </div>
                 <p>4x4 块的 16 个倒序 zig-zag 系子中，预测与总结系子强度（等于 1_大于 1，或<span class="text-blue-math">NumEq1_NumLg1</span>）的数量归纳为 8 种 CABAC 上下文长度的节点（0_0~any_any），如 2_0 对应<span class="text-blue-math">NumLg1×2</span>，<span class="text-blue-math">NumEq1×1</span>，即 2_0 线。</p>
                 <p>若<span class="text-blue-math">NumLg1 &gt; 0</span>，则从当前系子节点切到下个系子的 ×_1 线并不再回到<span class="text-blue-math">NumEq1</span></p>
@@ -4234,9 +4251,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>HDR 元数据设置</h3>
             <p>x264/5 皆支持的元数据设置。但因为 HDR 分为硬件标准，软件标准，以及数据标准，所以很乱。为了保证色彩正确，必须参考片源的元数据。如：</p>
             <div class="align-items-center">
-                <img src="files/image44.png" alt="Metadata for VUI HDR Info 1" class="" >
+                <img src="files/image45.png" alt="Metadata for VUI HDR Info 1" class="" >
                 <p class="text-gray-side">图 1: cll 1000,640. master-display 由 G(13250…) 开头，L(10000000,1) 结尾</p>
-                <img src="files/image45.png" alt="Metadata for VUI HDR Info 2" class="img-medium" >
+                <img src="files/image46.png" alt="Metadata for VUI HDR Info 2" class="img-medium" >
                 <p class="text-gray-side">图 2: cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
 

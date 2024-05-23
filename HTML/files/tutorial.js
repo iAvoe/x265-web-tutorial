@@ -22,6 +22,7 @@ window.MathJax = {
  * Increase line height in Desktop
  * Change main container class on the fly (window Width > window Height)
  * This only changes style, not class, otherwise it would break class detection on image click re-formating
+ * @returns Updated class configuration for the root <div> which contains main content
  */
 function switchPlatform() {
     "use strict";
@@ -69,6 +70,8 @@ switchPlatform(); // Call this function onload as well
 
 /**
  * Click image to enlarge - up to 3 digits
+ * 1. Updates class configuration for the root <div> which contains main content
+ * 2. Get the alt attribute and paste as title attribute
  */
 const imgs = document.querySelectorAll('img');
 for (let i=0; i<imgs.length; i++) {
@@ -165,6 +168,7 @@ for (let i=0; i<imgs.length; i++) {
                 break;
         }
     }, false);
+    imgs[i].setAttribute('title', imgs[i].getAttribute('alt')); // Set title attribute with alt attribute
 }
 
 /**

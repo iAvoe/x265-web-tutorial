@@ -33,15 +33,20 @@
                 <li>情况 3：特点如此，推荐<span class="text-blue-emph">这个值</span></li>
             </ul>
 
-            <h3 class="mb-0">ffmpeg，VapourSynth，avs2yuv 传递参数</h3>
+            <h3 class="mb-0">ffmpeg，avs2yuv 传递参数</h3>
             <pre><code>
 ffmpeg -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265 --y4m - --output
 ffmpeg -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; - --output</code></pre>
-<span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span>关格式限制，<span class="text-blue-emph">--y4m</span>对应"YUV for MPEG"，两个"-"是 Unix pipe 串流
+<p><span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span>关格式限制，<span class="text-blue-emph">--y4m</span>对应"YUV for MPEG"，两个"-"是 pipe 串流</p>
+<pre><code>avs2yuv &lt;源.avs&gt; -csp &lt;色&gt; -dept h&lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; - --output
+avs2pipemod &lt;源.avs&gt; -y4mp | x265.exe --y4m - --output</code></pre>
 
-<pre><code>VSpipe	源.vpy --y4m - | x265.exe - --y4m --output
-avs2yuv	源.avs -csp &lt;色&gt; -dept h&lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; - --output
-avs2pipemod 源.avs -y4mp | x265.exe --y4m - --output</code></pre>
+            <h3>VapourSynth 传递参数</h3>
+            <h4>R.54 - API 3.0:</h4>
+            <pre><code>VSpipe &lt;源.vpy&gt; --y4m - | x265.exe - --y4m --output</code></pre>
+            <h4>R.55 - API 4.0:</h4>
+            <pre><code>VSpipe &lt;源.vpy&gt; -c y4m - | x265.exe - --y4m --output
+VSpipe &lt;源.vpy&gt; --container y4m - | x265.exe - --y4m --output</code></pre>
 
             <h3>搜索 ffmpeg 支持的色度采样：</h3>
             <pre><code>ffmpeg -pix_fmts | findstr &lt;字符串，源视频色度采样&gt;

@@ -206,6 +206,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2 id="h2-5">动态搜索</h2>
             <p>用于在连续帧间进行运动估计。这个过程涉及逐个像素块在相邻帧之间寻找最小失真朝向/最小失真方向 Direction of minimal distortion DMD，从而在每帧之间都生成一张向量表。如果这个过程缺失或不够理想，参考帧与分块的建立就可能会出现问题，从而导致潜在的压缩率损失或画质下降。</p>
+            <p>简化的模型下，动态搜索得到帧间向量表，帧间向量表加上上帧的画面就得到预测帧，原始帧减去预测帧得到残差帧，残差帧储存为参考帧，得到帧间结构</p>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
             <div class="coll-content">
                 <div class="align-items-center">
@@ -214,14 +215,14 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <img src="files/motion-estimation/LDSP&SDSP Search.png" alt="image7" class="" >
                     <p class="text-gray-side mt-0">图：大小菱搜索。x264/5 中，六边形搜索 me hex 将 LDSP 的上下左右斜 8 个外点减到 6 个，SDSP 的细化规则不变。</p>
                     <img src="files/motion-estimation/Uneven multi-hexagon Search.png" alt="image8" class="" >
-                    <p class="text-gray-side mt-0">图：umh 搜索。实现多分辨率的向量查找，从而减轻动态噪点对传统搜索算法的干扰</p>
+                    <p class="text-gray-side mt-0">图：umh 搜索。</p>
                 </div>
             </div>
 
             <code><b>--analyze-src-pics</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 允许动态搜索查找片源帧，耗时增加压缩。</p>
             <code><b>--me</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，推荐 umh&gt; 搜索算法，umh 平衡，star 四角星搜索之后收益递减，sea 是优化过的 x264 esa 穷举，但收益递减仍大。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，推荐 umh&gt; 搜索算法，umh 平衡，star 四角星搜索之后收益递减，sea 是优化过的 x264 esa 穷举，但收益递减仍大。umh 和 star 通过多种分辨率大小的查找范围，减轻了动态噪点对传统搜索算法的干扰</p>
             <code><b>--merange</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，推荐 4 的倍数，<span class="text-red-emph">需 me</span>&gt; <span class="text-blue-emph">完全取决于 ME 算法和分辨率</span>，过大会因「找不到更好，找到也是错」而损失画质和压缩。</p>
             <ul class="font-monospace pl-5 text-smaller">
@@ -474,8 +475,8 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--early-skip</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 先查 2nx2n merge 被选块，找不到就跳过 AMVP 以提速。</p>
 
-            <h2 id="h2-9">初始化-Lookahead</h2>
-            <p>最先运行，给视频帧分段并最终整合成 GOP 内树叉状的参考结构，设关键帧并递给下一步帧内预测。一来冗余，二来防止参考错误蔓延（否则丢一个网络数据包会导致长时间绿屏花屏）。过程见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
+            <h2 id="h2-9">前瞻进程 Lookahead</h2>
+            <p>最先启动，设立关键帧和参考帧，决定了 GOP 划分的初始编码步骤。决定了后续所有步骤的大纲。过程见<a href="../../x264-web-tutorial/HTML/index.html#h2-4">x264 教程网页版</a></p>
 
             <code><b>--scenecut</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，不推荐用&gt; Lookahead 中两帧差距达到该参数值则触发转场。</p>
@@ -518,8 +519,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>缓冲区 Buffer</h3>
             <p>网速在实际情况下是随机变化的，因此一旦网络，硬盘或内存带宽慢于当前视频码率，视频就会卡顿。为了解决这个问题，流媒体在播放前会设置一段缓冲区，利用了网速可能快于当前视频码率的随机条件，提前缓存一些数据使得播放流畅。具体上是一种“缸里一端加水、另一端放水，注水量变化，缸里一直有水，求缸的大小”的问题。这样一来，只要平均传输带宽大于视频的平均码率，就可以保证播放流畅。</p>
 
-            <h3>基于缓冲区的量化控制 Videl Buffer Verifier</h3>
-            <p>手动指定网络/设备下所允许的缓冲速度 kbps 以加大 CRF/ABR 模式基础上的量化压缩。与 CRF 一并使用时叫可变码率 Variable Bitrate / VBR 模式。使用时应注意 VBV 完全不理画质，而卡顿的原因可能仅仅是因为 app 客户端的缓存设太小了。</p>
+            <h3>基于缓冲区的量化控制 Video Buffer Verifier</h3>
+            <ul>
+                <li>检查 <code>--rc-lookahead</code> 范围内，用户通过 <code>--vbv-bufsize --vbv-maxrate</code> 指定网络/设备元器件带宽所能及的缓冲速度是否大于等于码率流量</li>
+                <li>码率超过缓冲区域则视频必然会卡顿，所以加大视频中「码率大于带宽处」的压缩强度。因此 VBV 对画质的破坏较大</li>
+                <li>与 CRF 一并使用时叫可变码率 Variable Bitrate VBR 模式</li>
+            </ul>
 
             <code><b>--vbv-bufsize</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt; 编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>

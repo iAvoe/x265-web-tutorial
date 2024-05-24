@@ -102,12 +102,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                                 <li>x265 中粗分到编码树单元 Coding Tree Unit CTU </li>
                             </ul>
                         </li>
-                        <li><b>动态搜索</b>：Motion Estimation ME 找到当前帧与参考帧之间的相似区域，并为每个块分配动态向量。</li>
-                        <li><b>运动补偿</b>：Motion Compensation MC 对比实际画面与搜索到的向量生成预测块，并补偿¼子像素精度的对齐偏差。</li>
+                        <li><b>动态搜索</b>：Motion Estimation ME 找到当前帧与参考帧之间的相似区域，并为每个块分配动态向量</li>
+                        <li><b>运动补偿</b>：Motion Compensation MC 对比实际画面与搜索到的向量生成预测块，并补偿精度达¼子像素精度的预测帧对齐偏差</li>
                         <li><b>细分块</b>：根据 MEMC，进一步细分宏块或编码树单元到最小的 4x4 编码块上。</li>
                         <li><b>帧间残差编码</b>：对比实际画面与动态搜索与补偿后所得的图像，得到残差，并对残差进行变换和量化，存储到 P-B 帧上，在解码时与 I 帧叠加以得到原始画面。</li>
-                        <li><b>帧内预测</b>：在 I 帧或 P 帧的 I 块上，从前面步骤中生成的候选夹角、DC、趋平中的最佳模式冗余帧内的块，得到预测块。</li>
-                        <li><b>帧内残差编码</b>：对比实际画面与帧内预测得到的残差块，进行变换和量化，存储在预测块中，在解码时与预测模式叠加以得到原始画面。</li>
+                        <li><b>帧内预测</b>：在 I 帧或 P 帧的 I 块上，从前面步骤中生成的候选夹角、DC、趋平中的最佳模式冗余帧内的块，得到预测块</li>
+                        <li><b>帧内残差编码</b>：对比实际画面与帧内预测得到的残差块，进行变换和量化，存储在预测块中，在解码时与预测模式叠加以得到原始画面</li>
                         <li><b>跳过块编码</b>：跳过帧间或帧内残差编码的块，进行变换和量化。</li>
                         <li><b>变换</b>：将图像从空间域转换到低频到高频信号分量之间的每个级别，也称为频域。</li>
                         <li><b>量化</b>：根据用户设置的质量级别，削减高频信号分量，这一步骤对画质和文件大小影响最大。</li>
@@ -205,8 +205,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16/8/4，默认 32&gt; 大 tu 使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></p>
 
             <h2 id="h2-5">动态搜索</h2>
+            <!-- x264 教程副本，更改需手动同步 { -->
             <p>用于在连续帧间进行运动估计。这个过程涉及逐个像素块在相邻帧之间寻找最小失真朝向/最小失真方向 Direction of minimal distortion DMD，从而在每帧之间都生成一张向量表。如果这个过程缺失或不够理想，参考帧与分块的建立就可能会出现问题，从而导致潜在的压缩率损失或画质下降。</p>
-            <p>简化的模型下，动态搜索得到帧间向量表，帧间向量表加上上帧的画面就得到预测帧，原始帧减去预测帧得到残差帧，残差帧储存为参考帧，得到帧间结构</p>
+            <p>简化模型下，动态搜索得到帧间向量表，帧间向量表加上上帧的画面得到预测帧，原始帧减去预测帧得到残差帧，残差帧储存为参考帧，得到帧间结构。</p>
+            <!-- } -->
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
             <div class="coll-content">
                 <div class="align-items-center">
@@ -238,14 +240,30 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--hme-range</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;三整数，<span class="text-red-emph">需 hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt; 对应 1/16，¼和全分辨率三画面。</p>
             
-            <h2 id="h2-6">子像素运动补偿</h2>
-            <p>动态预测 ME 推演 P/B/I 帧（见 <a href="https://www.nazorip.site/archives/63">x264 教程</a>）之外，视频编码还需要动态补偿 Motion Compensation MC 来消除由噪点，动态预测精度不足等问题导致的细节损失。大体上是「允动之移，防静所变」，即允许真正移动的物件有运动向量，拦截噪点在静止画面上的假运动向量：</p>
+            <h3>绝对变换差和 SATD</h3>
+            <p>Sum of absolute transformed difference 为两个变换块间做差，取和，取绝对值的步骤：</p>
             <ol>
-                <li>“上帧画面 + 帧间向量表中的动态向量 =‘一系列粗加工 PU’”</li>
-                <li>将“粗加工 PU”与源视频所对应的画面做差，并使用有限冲激响应滤镜 FIR filter 放大这些残差</li>
-                <li>用绝对变换差 Sum of Absolute Transformed Differences SATD 来的动态搜索算法校正导致残差的动态向量</li>
-                <li>得到误差小到可接受的“精加工 PU”</li>
+                <li>首先计算两个块 B 的插值，记做残差块 D：<span class="text-blue-math">\(\text{D}(x,y) = B(x,y) - B\prime(x,y)\)</span></li>
+                <li>然后通过如 DCT 变换，得到变换残差块：<span class="text-blue-math">\(T(D)\)</span></li>
+                <li>最后，变换残差块的每个像素取绝对值和：<span class="text-blue-math">\(\text{SATD}(B,B\prime) = \sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}}| T(D(x,y)) |\)</span></li>
             </ol>
+            <p class="text-gray-side">注：为了简化所以写作 <span class="text-blue-math">\(T(D(x,y))\)</span>，实际这样相当于每加一个像素值就要变换一遍</p>
+
+            <h2 id="h2-6">子像素运动补偿</h2>
+            <p>动态预测的精度比起原画还差一点（最高 1px）导致了预测帧相比原画会欠缺大量的纹理细节；在此之上还常遭到动态噪点的干扰劫持。动态补偿 Motion Compensation MC 通过对比原画与预测块得到残差，并根据残差的分布动态向量的精度到¼子像素，使“精加工预测块”的画面残差尽可能地缩小，得到足够准确的预测帧。</p>
+            <p>至于对抗动态噪点，大体上是允许真正移动的物件（所涵盖的分块）有运动向量，拦截噪点在静止画面上的孤立运动向量，即「允动之移，防静所变」解决。</p>
+            <ol class="overflow-auto">
+                <li>此处省略<span class="text-blue-math">上帧画面 + 帧间向量表中的动态向量 = 一系列粗加工预测块</span>的步骤</li>
+                <li>使用有限冲激响应插值滤镜 FIR filter 放大画面以便后面对齐</li>
+                <li>将“粗加工预测块”与源视频所对应的画面使用 SATD 做差，得到当前的误差程度</li>
+                <li>当前向量的 x，y 分量分别加减 ½，¼ 像素（插值放大的画面中是整数像素），即分别让这些块对比原画跑一遍 SATD：
+                    <ul class="text-smaller">
+                        <li><span class="text-blue-math">\(B\prime(x+½,y),B\prime(x,y+½),B\prime(x+½,y+½),B\prime(x+¼,y),B\prime(x,y+¼),B\prime(x+¼,y+¼),B\prime(x+¼,y+½),B\prime(x+½,y+¼)\)</span></li>
+                    </ul>
+                </li>
+                <li>选出 SATD 误差值最小的块——中的 x,y 分量，纠正帧间向量表的动态矢量，完成补偿</li>
+            </ol>
+            <p class="text-gray-side">注：在参数值强度给高后，上述的对比步骤改成用 me hex 之类的动态搜索算法来找对齐</p>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
             <div class="coll-content">
                 <div class="row">
@@ -525,7 +543,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>码率超过缓冲区域则视频必然会卡顿，所以加大视频中「码率大于带宽处」的压缩强度。因此 VBV 对画质的破坏较大</li>
                 <li>与 CRF 一并使用时叫可变码率 Variable Bitrate VBR 模式</li>
             </ul>
-
+            <!-- x264 教程副本，更改需手动同步 { -->
             <code><b>--vbv-bufsize</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt; 编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>
             <code><b>--vbv-maxrate</b></code>
@@ -537,6 +555,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>欠：GOP 大小&gt;bufsize=1~2×maxrate，超码率限制后直接压，但因视频大/crf 小所以全都糊掉</li>
             </ul>
             <p class="font-monospace pl-5 m-0 overflow-auto">由于 gop 多样，4 种状态可以出现在同一视频中。buf/max 实际控制了这些状态的出现概率</p>
+            <!-- } -->
             <code><b>--crf-max</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt; 防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
 

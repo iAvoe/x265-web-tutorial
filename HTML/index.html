@@ -714,7 +714,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--constrained-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt; 缺少生成参考点的 CB 时用帧内块或默认值，不用帧间块生成参考点。降低参考错误传播距离，降低压缩率和速度，增加数据损坏的恢复概率。</p>
             <code><b>--fast-intra</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; 先查夹角模式 2,10,18,26,34，再加精度到 5，15，21，31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt;夹角模式优化。先查夹角模式 2,10,18,26,34，再加精度到 5，15，21，31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
             <code><b>--b-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt; B 条带同样进行帧内预测。关闭可以提速，但相对浪费压缩率。</p>
             <code><b>--no-strong-intra-smoothing</b></code>
@@ -4593,181 +4593,181 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt; 见下：</p>
             <div class="overflow-auto">
                 <table class="table-fit-container text-xs">
-                    <thead class="thead-no-border">
-                        <tr class="t-invert-dark">
-                            <th> </th>
-                            <th class="px-1"> superfast </th>
-                            <th class="px-1"> veryfast </th>
-                            <th class="px-1"> faster </th>
-                            <th class="px-1"> fast </th>
-                            <th class="px-1"> medium </th>
-                            <th class="px-1"> slow </th>
-                            <th class="px-1"> slower </th>
-                            <th class="px-1"> Very slow </th>
-                            <th class="px-1"> placebo </th>
+                    <thead>
+                        <tr>
+                            <th>参数\预设</th>
+                            <th>superfast</th>
+                            <th>veryfast</th>
+                            <th>faster</th>
+                            <th>fast</th>
+                            <th>medium</th>
+                            <th>slow</th>
+                            <th>slower</th>
+                            <th>veryslow</th>
+                            <th>placebo</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="px-1"> ctu </td>
-                            <td class="px-1"> 32 </td>
-                            <td class="px-1 t-invert-light" colspan="8"> 64 </td>
+                        <tr class="border-lr">
+                            <th class="px-1">ctu</th>
+                            <td class="px-1">32</td>
+                            <td class="px-1 t-invert-light" colspan="8">64</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> min-cu </td>
-                            <td colspan="9" class="px-1"> 8 </td>
+                        <tr class="border-lr">
+                            <th>min-cu</th>
+                            <td colspan="9" class="px-1">8</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> bframes </td>
-                            <td class="px-1"> 3 </td>
-                            <td class="px-1 t-invert-light" colspan="5"> 4 </td>
-                            <td class="px-1 t-invert-dark" colspan="3"> 8 </td>
+                        <tr class="border-lr">
+                            <th>bframes</th>
+                            <td class="px-1">3</td>
+                            <td class="px-1 t-invert-light" colspan="5">4</td>
+                            <td class="px-1 t-invert-dark" colspan="3">8</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> b-adapt </td>
-                            <td class="px-1" colspan="4"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="5"> 2 </td>
+                        <tr class="border-lr">
+                            <th>b-adapt</th>
+                            <td class="px-1" colspan="4">0</td>
+                            <td class="px-1 t-invert-light" colspan="5">2</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> rc-lookahead </td>
-                            <td class="px-1"> 10 </td>
-                            <td class="px-1 t-light-gray" colspan="3"> 15 </td>
-                            <td class="px-1 t-invert-light"> 20 </td>
-                            <td class="px-1 t-invert-light"> 25 </td>
-                            <td class="px-1 t-invert-light" colspan="2"> 40 </td>
-                            <td class="px-1 t-invert-dark"> 60 </td>
+                        <tr class="border-lr">
+                            <th>rc-lookahead</th>
+                            <td class="px-1">10</td>
+                            <td class="px-1 t-light-gray" colspan="3">15</td>
+                            <td class="px-1 t-invert-light">20</td>
+                            <td class="px-1 t-invert-light">25</td>
+                            <td class="px-1 t-invert-light" colspan="2">40</td>
+                            <td class="px-1 t-invert-dark">60</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> lookahead-slices </td>
-                            <td class="px-1" colspan="5"> 8 </td>
-                            <td class="px-1 t-invert-light"> 4 </td>
-                            <td class="px-1 t-invert-dark" colspan="3"> 1 </td>
+                        <tr class="border-lr">
+                            <th>lookahead-slices</th>
+                            <td class="px-1" colspan="5">8</td>
+                            <td class="px-1 t-invert-light">4</td>
+                            <td class="px-1 t-invert-dark" colspan="3">1</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> ref </td>
-                            <td class="px-1"> 1 </td>
-                            <td class="px-1 t-light-gray" colspan="2"> 2 </td>
-                            <td class="px-1 t-invert-light" colspan="2"> 3 </td>
-                            <td class="px-1 t-invert-light"> 4 </td>
-                            <td class="px-1 t-invert-dark" colspan="3"> 5 </td>
+                        <tr class="border-lr">
+                            <th>ref</th>
+                            <td class="px-1">1</td>
+                            <td class="px-1 t-light-gray" colspan="2">2</td>
+                            <td class="px-1 t-invert-light" colspan="2">3</td>
+                            <td class="px-1 t-invert-light">4</td>
+                            <td class="px-1 t-invert-dark" colspan="3">5</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> limit-refs </td>
-                            <td class="px-1"> 0 </td>
-                            <td class="px-1 t-light-gray" colspan="5"> 3 </td>
-                            <td class="px-1 t-invert-light"> 1 </td>
-                            <td class="px-1 t-invert-dark" colspan="2"> 0 </td>
+                        <tr class="border-lr">
+                            <th>limit-refs</th>
+                            <td class="px-1">0</td>
+                            <td class="px-1 t-light-gray" colspan="5">3</td>
+                            <td class="px-1 t-invert-light">1</td>
+                            <td class="px-1 t-invert-dark" colspan="2">0</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> me </td>
-                            <td class="px-1" colspan="5"> hex </td>
-                            <td class="px-1 t-invert-light" colspan="4"> star </td>
+                        <tr class="border-lr">
+                            <th>me</th>
+                            <td class="px-1" colspan="5">hex</td>
+                            <td class="px-1 t-invert-light" colspan="4">star</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> merange </td>
-                            <td class="px-1 t-invert-light" colspan="8"> 57 </td>
-                            <td class="px-1 t-invert-dark"> 92 </td>
+                        <tr class="border-lr">
+                            <th>merange</th>
+                            <td class="px-1 t-invert-light" colspan="8">57</td>
+                            <td class="px-1 t-invert-dark">92</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> subme </td>
-                            <td class="px-1" colspan="2"> 1 </td>
-                            <td class="px-1 t-invert-light" colspan="3"> 2 </td>
-                            <td class="px-1 t-invert-light"> 3 </td>
-                            <td class="px-1 t-invert-light" colspan="2"> 4 </td>
-                            <td class="px-1 t-invert-dark"> 5 </td>
+                        <tr class="border-lr">
+                            <th>subme</th>
+                            <td class="px-1" colspan="2">1</td>
+                            <td class="px-1 t-invert-light" colspan="3">2</td>
+                            <td class="px-1 t-invert-light">3</td>
+                            <td class="px-1 t-invert-light" colspan="2">4</td>
+                            <td class="px-1 t-invert-dark">5</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> rect </td>
-                            <td class="px-1" colspan="5"> 0 </td>
-                            <td class="px-1 t-invert-dark" colspan="4"> 1 </td>
+                        <tr class="border-lr">
+                            <th>rect</th>
+                            <td class="px-1" colspan="5">0</td>
+                            <td class="px-1 t-invert-dark" colspan="4">1</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> amp </td>
-                            <td class="px-1" colspan="6"> 0 </td>
-                            <td class="px-1 t-invert-dark" colspan="3"> 1 </td>
+                        <tr class="border-lr">
+                            <th>amp</th>
+                            <td class="px-1" colspan="6">0</td>
+                            <td class="px-1 t-invert-dark" colspan="3">1</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> limit-modes </td>
-                            <td class="px-1" colspan="5"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="2"> 11 </td>
-                            <td class="px-1 t-invert-dark" colspan="2"> 0 </td>
+                        <tr class="border-lr">
+                            <th>limit-modes</th>
+                            <td class="px-1" colspan="5">0</td>
+                            <td class="px-1 t-invert-light" colspan="2">11</td>
+                            <td class="px-1 t-invert-dark" colspan="2">0</td>
                         </tr>
-                        <tr>
-                            <td> max-merge </td>
-                            <td class="px-1" colspan="5"> 2 </td>
-                            <td class="px-1 t-light-gray"> 3 </td>
-                            <td class="px-1 t-invert-light"> 4 </td>
-                            <td class="px-1 t-invert-dark" colspan="2"> 5 </td>
+                        <tr class="border-lr">
+                            <th>max-merge</th>
+                            <td class="px-1" colspan="5">2</td>
+                            <td class="px-1 t-light-gray">3</td>
+                            <td class="px-1 t-invert-light">4</td>
+                            <td class="px-1 t-invert-dark" colspan="2">5</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> early-skip </td>
-                            <td class="px-1" colspan="3"> 1 </td>
-                            <td class="px-1 t-light-gray"> 0 </td>
-                            <td class="px-1 t-invert-light"> 1 </td>
-                            <td class="px-1 t-invert-dark" colspan="4"> 0 </td>
+                        <tr class="border-lr">
+                            <th>early-skip</th>
+                            <td class="px-1" colspan="3">1</td>
+                            <td class="px-1 t-light-gray">0</td>
+                            <td class="px-1 t-invert-light">1</td>
+                            <td class="px-1 t-invert-dark" colspan="4">0</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> rskip </td>
-                            <td class="px-1" colspan="8"> 1 </td>
-                            <td class="px-1 t-invert-light"> 0 </td>
+                        <tr class="border-lr">
+                            <th>rskip</th>
+                            <td class="px-1" colspan="8">1</td>
+                            <td class="px-1 t-invert-light">0</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> 帧内夹角模式优化 </td>
-                            <td class="px-1" colspan="4"> 1 </td>
-                            <td class="px-1 t-invert-light" colspan="5"> 0 </td>
+                        <tr class="border-lr">
+                            <th>夹角模式提速 fast-intra</th>
+                            <td class="px-1" colspan="4">1</td>
+                            <td class="px-1 t-invert-light" colspan="5">0</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> B 条带帧内搜索 b-intra </td>
-                            <td class="px-1" colspan="6"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="3"> 1 </td>
+                        <tr class="border-lr">
+                            <th>B 条带帧内搜索 b-intra</th>
+                            <td class="px-1" colspan="6">0</td>
+                            <td class="px-1 t-invert-light" colspan="3">1</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> 取样迁就偏移 sao </td>
-                            <td class="px-1"> 关 </td>
-                            <td class="px-1 t-invert-light" colspan="8"> 开 </td>
+                        <tr class="border-lr">
+                            <th>取样迁就偏移 sao</th>
+                            <td class="px-1">关</td>
+                            <td class="px-1 t-invert-light" colspan="8">开</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> P 帧权重 weightp </td>
-                            <td class="px-1"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="8"> 1 </td>
+                        <tr class="border-lr">
+                            <th>P 帧权重 weightp</th>
+                            <td class="px-1">0</td>
+                            <td class="px-1 t-invert-light" colspan="8">1</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> B 帧权重 weightb </td>
-                            <td class="px-1" colspan="6"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="3"> 1 </td>
+                        <tr class="border-lr">
+                            <th>B 帧权重 weightb</th>
+                            <td class="px-1" colspan="6">0</td>
+                            <td class="px-1 t-invert-light" colspan="3">1</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> 自适应量化 aq-mode </td>
-                            <td class="px-1"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="8"> 2 </td>
+                        <tr class="border-lr">
+                            <th>aq-mode</th>
+                            <td class="px-1">0</td>
+                            <td class="px-1 t-invert-light" colspan="8">2</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> cutree </td>
-                            <td class="px-1" colspan="9"> 开 </td>
+                        <tr class="border-lr">
+                            <th>cutree</th>
+                            <td class="px-1" colspan="9">开</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> 率失真优化 rd </td>
-                            <td class="px-1" colspan="4"> 2 </td>
-                            <td class="px-1 t-light-gray"> 3 </td>
-                            <td class="px-1 t-invert-light"> 4 </td>
-                            <td class="px-1 t-invert-dark" colspan="3"> 6 </td>
+                        <tr class="border-lr">
+                            <th>率失真优化 rd</th>
+                            <td class="px-1" colspan="4">2</td>
+                            <td class="px-1 t-light-gray">3</td>
+                            <td class="px-1 t-invert-light">4</td>
+                            <td class="px-1 t-invert-dark" colspan="3">6</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> 心率失优程度 rdoq-level </td>
-                            <td class="px-1" colspan="5"> 0 </td>
-                            <td class="px-1 t-invert-light" colspan="4"> 2 </td>
+                        <tr class="border-lr">
+                            <th>rdoq-level</th>
+                            <td class="px-1" colspan="5">0</td>
+                            <td class="px-1 t-invert-light" colspan="4">2</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> tu 帧内/间上限 tu-intra-depth </td>
-                            <td class="px-1" colspan="6"> 1 </td>
-                            <td class="px-1 t-invert-light" colspan="2"> 3 </td>
-                            <td class="px-1 t-invert-dark"> 4 </td>
+                        <tr class="border-lr">
+                            <th>tu 帧内/间上限 tu-intra-depth</th>
+                            <td class="px-1" colspan="6">1</td>
+                            <td class="px-1 t-invert-light" colspan="2">3</td>
+                            <td class="px-1 t-invert-dark">4</td>
                         </tr>
-                        <tr>
-                            <td class="px-1"> tu 分裂上限 tu-inter-depth </td>
-                            <td class="px-1" colspan="6"> 0 </td>
-                            <td class="px-1 t-invert-light"> 4 </td>
-                            <td class="px-1 t-invert-dark" colspan="2"> 0 </td>
+                        <tr class="border-lr">
+                            <th>tu 分裂上限 tu-inter-depth</th>
+                            <td class="px-1" colspan="6">0</td>
+                            <td class="px-1 t-invert-light">4</td>
+                            <td class="px-1 t-invert-dark" colspan="2">0</td>
                         </tr>
                     </tbody>
                 </table>
@@ -4863,55 +4863,16 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </tbody>
             </table>
 
-            <h3>下载 x264</h3>
-            <table class="table-center">
-                <tbody>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://www.mediafire.com/folder/arv5xmdqyiczc">Patman</a></th>
-                        <td class="px-1">支持 Lavf 编解码 [8~10bit]</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://www.mediafire.com/?bxvu1vvld31k1">LigH</a></th>
-                        <td class="px-1">支持 Lavf 编解码 [8~10bit]</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://github.com/jpsdr/x264/releases/">jspdr (tMod)</a></th>
-                        <td class="px-1">支持 Lavf 编解码，MCF 线程管理库</td>
-                    </tr>
-                    <tr>
-                        <th class="px-3 t-light-gray">x264 7mod</th>
-                        <td class="px-1">支持 Lavf 编解码，支持 hqdn3d 降噪，镜像链接：<a href="https://drive.google.com/drive/folders/1kFCeNGA_wiiLt-DSeI3cyY8vxlffgQcy?usp=sharing">谷歌盘</a>/<a href="https://pan.baidu.com/s/1sbz8WztGTz3lcLzirHW_2w">百度云</a></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>下载 x264 GUI</h3>
-            <table class="table-center">
-                <tbody>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://shana.pe.kr/shanaencoder_download">ShanaEncoder</a></th>
-                        <td class="px-1">ffmpeg-CLI 或 GUI 控制少量选项，高级功能 (水印，高级字幕) 用 ffmpeg 参数控制，上手需要时间。ffmpeg 内嵌编码器，不能替换文件</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://bitbucket.org/muldersoft/simple-x264-launcher/downloads/">Simple x264 Launcher</a></th>
-                        <td class="px-1">英文软件，适合批量压制，需自行封装音频。只能压视频</td>
-                    </tr>
-                    <tr>
-                        <th class="px-3 t-light-gray">小丸工具箱</th>
-                        <td class="px-1">操作简单，适合入门的中文软件。网上能搜到详细教程。内嵌 MediaInfo，mp4box，Mkvtoolnix。镜像：<a href="https://pan.baidu.com/s/1VHonGHoZ0DmQBNZaRjML2A&pwd=crhu">百度云</a> 提取码"crhu"</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>x264 的下载为临时内容，x264 教程网页版写到对应地点后会转移。</p>
-
             <h3>VapourSynth 帧服务器滤镜工具</h3>
             <p>临时内容，具体是否应该，以及如何放于 x264/5 教程内有待讨论。</p>
         </div>
 
         <!-- Footer -->
-        <footer class="py-3 my-4 px-1 align-items-center border-top">
-            <p>联系：<a href='https://github.com/iAvoe/'>Github</a>，<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>QQ 群：691892901</a></p>
-
+        <footer class="py-3 my-4 align-items-center border-top">
+            <p>联系：
+                <a href='https://github.com/iAvoe/'>Github</a>，
+                <a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>QQ 群：691892901</a>
+            </p>
             &#x24B8; iAvoe，2024
         </footer>
 	</body>

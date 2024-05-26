@@ -501,14 +501,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--hist-scenecut</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，会关 scenecut，<span class="text-blue-emph">10 与 12bit 源可能会导致崩溃</span>，推荐 8bit 下用&gt; 亮度平面边缘 + 颜色直方图 SAD 阈值触发转场。x265 v3.5+69 后编码彩色视频，尤其<a href="https://forum.doom9.org/showthread.php?p=1978502">HDR 源中超越 scenecut 精度~20%</a>，降低了正误判（设 I 帧，closed-gop 下帧间冗余效益降低）和负误判（不设 I 帧，分为多个带 I 块的 P 帧预测效益降低），因此除黑白视频外推荐。缺点是超过 8bit 后不稳定，且理论上不应对画质/压缩率有太大影响</p>
             <p class="text-gray-side pl-5 m-0">注：hist-threshold 参数于 x265 v3.5+69 被删。</p>
+            <!-- x264 教程副本，需要手动同步更改 { -->
             <code><b>--rc-lookahead</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;帧数量，范围 1~250，推荐 keyint÷2&gt; 指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
-            <p class="text-gray-side pl-5 m-0 overflow-auto">注：cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right) \div \text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数。</p>
-            <code><b>--rc-lookahead</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;帧数量，范围 1~250，推荐 keyint÷2&gt; 指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
-            <p class="text-gray-side pl-5 m-0 overflow-auto">注：cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
+            <p class="text-gray-side pl-5 m-0 overflow-auto">注：mbtree/cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
+            <!-- } -->
             <code><b>--no-cutree</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt; 关闭少见 CTU 量化增强偏移。可能只有近无损，crf 小于 16 才用的到。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt; 关闭少见 CTU 量化增强偏移。可能只有近无损，<code>--crf</code> 小于 16 才用的到。</p>
 
             <h3 class="mb-0">P/B 帧推演 - Viterbi 最短路径算法</h3>
             <p class="mt-0">见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
@@ -799,21 +798,20 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
                 <p>因此，帧内画面复杂则 qp 低，简则高；同时据用户设定的（对数）强度的动态变化。这种质量判断只有两帧而不宏观，所以引出了各种各样的优化步骤，如 mb/cutree，rdoq 等。</p>
             </div>
-
-            <h3>CRF 上层模式</h3>
-
+            <!-- x264 教程副本，更改需手动同步 { -->
+            <h3>质量呼应码率 Constant Rate Factor CRF 上层模式</h3>
             <code><b>--crf</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;浮点范围 0~51，默认 23&gt; 据 cplxBlur，cutree，B 帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称 crf。素材级画质设在 16~18，收藏~高压画质设在 19~20.5，YouTube 是 23。由于动画和录像的内容差距，动画比录像要给低点。理论上 crf 高=量化损失多→率失真优化慢；但测试出来是 crf+2 则 4k 4:4:4 12bit 会快~0.5fps。</p>
             <code><b>--qpmin</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数 0~51&gt; 由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14。</p>
             <code><b>--qpmax</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数 0~51&gt; 在要用到颜色键，颜色替换等需要清晰物件边缘的滤镜时，可以设<span class="text-blue-emph">26</span>防止录屏时物件的边缘被压缩的太厉害，其他情况永远不如关 cu/mbtree。</p>
-            <code><b>--qcomp</b></code>
+            <code><b>--rc-grain</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;开关，tune grain 时开启&gt; 通过 cplxBlur 抑制 qp 判断被噪声带偏，胶片颗粒片源用。</p>
             <code><b>--cplxblur</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;浮点 0~100，默认 20&gt; 第 -1 帧不存在，无法算出第 0 帧的 cplxBlur 所以直接指定。</p>
 
-            <h3>ABR 上层模式</h3>
+            <h3>平均码率 Average Bitrate ABR 上层模式</h3>
             <p>编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
 
             <code><b>--bitrate</b></code>
@@ -841,7 +839,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;路径，默认在 x264/5 所在目录下&gt; 设定导出和导入 stats 数据文件的路径和文件名</p>
             <code><b>--slow-firstpass</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;开关&gt; pass1 里不用 fast-intra no-rect no-amp early-skip ref 1 max-merge 1 me dia subme 2 rd 2，或者手动覆盖掉。</p>
-
+            <!-- } -->
             <h3>Analysis-2pass-ABR 双层模式</h3>
             <p>于普通 2pass 基础上让 pass1 的帧内帧间分析结果给到 pass2。</p>
             <code><b>--analysis-save --analysis-load</b></code>

@@ -817,6 +817,34 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--bitrate</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt; 平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。如果给太低则会得到码率不达标，同时画质差的片子。平均码率模式，除 2pass 分隔，一般推流用的"码率选项"就是这个参数，速度快但同时妥协了压缩。</p>
 
+            <h3>CQP 双层模式</h3>
+            <code><b>--qp</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数 0~69，<span class="text-red-emph">禁用 crf/abr+ 模式决策 + 率失真优化</span>&gt; 直接设定全局量化强度。影响其后的综合画质下降或码率暴涨，所以除非 yuv4:4:4 情况下有既定目的，都不建议。</p>
+
+            <!-- x264 教程副本，更改需手动同步 { -->
+            <h3>FTQP 下层模式</h3>
+            <p>手动通过文件制定帧类型和 qp 值。</p>
+            <code><b>--qpfile</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径到文件&gt;手动指定帧类型和 qp 值 closed-gop 下 K 帧的 frame type qp 下层模式。qpfile 文件内的格式为"帧号 帧类型 QP"</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>帧类型可以选 [I,i,K,P,B,b]</li>
+                <li>大写 B 代表 B-Pyramid</li>
+                <li>大写 I 代表 IDR 帧</li>
+                <li>K 在 <code>--no-open-gop</code> 时代表 IDR 帧</li>
+                <li>K 在  <code>--open-gop</code> 时代表 i 帧</li>
+                <li>x265 中，QP 值可以不填，代表使用上层率控制模式</li>
+                <li>x264 中，QP 值填<span class="text-blue-emph">-1</span> 代表使用上层率控制模式</li>
+            </ul>
+            <p class="font-monospace pl-5 m-0 overflow-auto">qpfile 例：</p>
+            <ul class="font-monospace pl-5 text-smaller list-dotless">
+                <li>0 I 18</li>
+                <li>1 P 20</li>
+                <li>2 B 22</li>
+                <li>3 i 21</li>
+                <li>4 b 18</li>
+            </ul>
+            <!-- } -->
+            
             <h3>SBRC 下层模式 - 可搭配 CRF/ABR/CRF-VBR/ABR-VBR</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
@@ -824,10 +852,6 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <code><b>--sbrc</b></code>
                 <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;开关，<span class="text-red-emph">需 min-keyint=keyint</span>，<span class="text-red-emph">no-open-gop</span>&gt; 由于提高了初始 CRF 值的利用率，所以建议搭配--cplxblur=crf 使用。</p>
             </div>
-
-            <h3>CQP 双层模式</h3>
-            <code><b>--qp</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto"> &lt;整数 0~69，<span class="text-red-emph">禁用 crf/abr+ 模式决策 + 率失真优化</span>&gt; 直接设定全局量化强度。影响其后的综合画质下降或码率暴涨，所以除非 yuv4:4:4 情况下有既定目的，都不建议。</p>
 
             <h3>2pass-ABR 双层模式</h3>
             <p>先用 CRF 模式分析整个视频总结可压缩信息，后根据 ABR 模式的码率限制统一分配量化值。有 pass 2 给特别高的平均码率，输出最小损失的最小体积近无损模式，以及 pass2 给码率硬限的全局整体压缩模式</p>
@@ -1074,15 +1098,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>像素风：<span class="text-blue-emph">据像素变大的程度决定</span>。如分辨率宽÷2，分辨率高÷2 会回到 1x1 像素大小，则使默认值乘以 2 以提速</li>
                 <li>抗涂抹：<span class="text-blue-emph">rskip 2 rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比 rskip 0 快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</li>
             </ul>
-
             <div class="align-items-center">
                 <img src="files/rate-control/rSkip-Edge-Threshold.png" alt="image28" class="img-small" >
                 <p class="text-gray-side">图：影响 DCT 系子分布的块中像素，而 DCT 系子的密度影响 rskip-edge-threshold 的设置</p>
             </div>
-
-            <h2 id="h2-13">率失真优化控制</h2>
-            <h3>率失真优化 Rate distortion optimization</h3>
-            <p>原本有损压缩视频编码器的策略就是码率越小越好——所以量化强度越大越好。但实际情况是量化压缩相当程度的破坏了 P-B 帧原本可以参考 I 帧的部分——因为量化后差异太大而只能放弃参考，换成 I 块。解决这种乱量化问题的方法是将失真，码率分别看成两种越大越差的程度；将其中一个程度乘以一个缩放值以对齐另一个（使两值权重对等）以相互牵制出平衡点。再将这个“新的程度”应用到原本的编码器策略里，就是率失真优化。</p>
+            <!-- x264 教程副本，更改需手动同步 { -->
+            <h2 id="h2-13">率失真优化</h2>
+            <p>Rate distortion optimization，RDO。原本有损压缩视频编码器的策略就是码率越小越好——所以量化强度越大越好。但实际情况是量化压缩相当程度的破坏了 P-B 帧原本可以参考 I 帧的部分——因为量化后差异太大而只能放弃参考，换成 I 块。解决这种乱量化问题的方法是将失真，码率分别看成两种越大越差的程度；将其中一个程度乘以一个缩放值以对齐另一个（使两值权重对等）以相互牵制出平衡点。再将这个“新的程度”应用到原本的编码器策略里，就是率失真优化。</p>
             <p>“编码器策略”就是模式决策。率失真程度由代价函数「开销=失真+λ⋅码率」（越小越好）得出：</p>
             <span class="text-blue-math">\[J = D + \lambda \cdot R\]</span>
             <p>由于这个式子是一元一次函数（ <span class="text-blue-math">\(y = mx + b\)</span> ），所以可画图表示为每个方案 J 作为位于 D，R 坐标系，斜度 λ 线上的点；其中失真 D 用平方差 SSE 或总差异 SAD 判断（SSE 多取一步平方，使较大的差异呈指数增长）进而分到更多补偿的码率。拉格朗日值 λ 源于 qp，即 crf，abr 指定的率失真斜度区间。qp 越大斜度越小：</p>
@@ -1098,7 +1120,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/rate-distorsion-optimization/RDO-qStep-Chart.png" alt="image31" class="img-medium" >
                 <p class="text-gray-side">图：率 - 失真表格中不断调整并得到“×”的实际效果</p>
             </div>
-
+            <!-- } -->
             <p>x265 的失真（块间差异）用均方差 Mean Squared Error（MSE）判断：</p>
             <span class="text-blue-math">$$\frac{1}{n^2}\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ |f(x,y) - f\prime(x,y)|^2}}$$</span>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：
@@ -1275,6 +1297,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h2 id="h2-14">环路滤波</h2>
+            <!-- x264 教程副本，更改需手动同步 { -->
             <h3>去块滤镜</h3>
             <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
             <div class="align-items-center">
@@ -1300,7 +1323,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>平滑<span class="text-blue-emph">-3~-2</span>适合高码动画源/桌面录屏。增块失真，但观感仍比 1 好</li>
                 <li>搜索<span class="text-blue-emph">大于 2</span>易误判；<span class="text-blue-emph">小于 1</span>会遗漏。建议保持<span class="text-blue-emph">0~-1</span>，除非 qp 大于 26 时设设<span class="text-blue-emph">1</span></li>
             </ul>
-
+            <!-- } -->
             <h3>取样迁就偏移滤镜 Sample adaptive offset</h3>
             <div class="row">
                 <p id="LR-UD-025" class="col-10">沿着每个编码树单元 CTU 的划分，应用边缘偏移 Edge offset EO，带状偏移 Band offset BO 和融合 merge 滤镜。用于缓解量化或去块丢失所导致的边缘振铃失真，以及平面蠕虫失真。<span class="text-gray-side">图：上为边缘振铃失真，下为平面蠕虫失真</span></p>

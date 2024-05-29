@@ -215,27 +215,33 @@ pre { overflow: auto; margin: 0; }
     margin-right: auto;
     margin-left: auto;
 }
+.container-title {
+    padding-right: var(--bs-gutter-x, 0.75rem);
+    padding-left: var(--bs-gutter-x, 0.75rem);
+    margin-right: auto;
+    margin-left: auto;
+}
 /* Desktop Only Resizing */
-@media (min-width: 850px) { .container-desktop { max-width: 93vw; }}
-@media (min-width: 921px) { .container-desktop { max-width: 92vw; }}
-@media (min-width: 992px) { .container-desktop { max-width: 91vw; }}
-@media (min-width: 1200px) { .container-desktop { max-width: 90vw; }}
-@media (min-width: 1300px) { .container-desktop { max-width: 89vw; }}
-@media (min-width: 1400px) { .container-desktop { max-width: 88vw; }}
-@media (min-width: 1500px) { .container-desktop { max-width: 87vw; }}
-@media (min-width: 1600px) { .container-desktop { max-width: 86vw; }}
-@media (min-width: 1700px) { .container-desktop { max-width: 84vw; }}
-@media (min-width: 1800px) { .container-desktop { max-width: 82vw; }}
-@media (min-width: 1900px) { .container-desktop { max-width: 80vw; }}
-@media (min-width: 2000px) { .container-desktop { max-width: 78vw; }}
-@media (min-width: 2100px) { .container-desktop { max-width: 76vw; }}
-@media (min-width: 2200px) { .container-desktop { max-width: 74vw; }}
-@media (min-width: 2300px) { .container-desktop { max-width: 72vw; }}
-@media (min-width: 2400px) { .container-desktop { max-width: 70vw; }}
-@media (min-width: 2500px) { .container-desktop { max-width: 68vw; }}
-@media (min-width: 2600px) { .container-desktop { max-width: 66vw; }}
-@media (min-width: 2700px) { .container-desktop { max-width: 64vw; }}
-@media (min-width: 2800px) { .container-desktop { max-width: 62vw; }}
+@media (min-width: 850px) { .container-desktop, .container-title { max-width: 93vw; }}
+@media (min-width: 921px) { .container-desktop, .container-title { max-width: 92vw; }}
+@media (min-width: 992px) { .container-desktop, .container-title { max-width: 91vw; }}
+@media (min-width: 1200px) { .container-desktop, .container-title { max-width: 90vw; }}
+@media (min-width: 1300px) { .container-desktop, .container-title { max-width: 89vw; }}
+@media (min-width: 1400px) { .container-desktop, .container-title { max-width: 88vw; }}
+@media (min-width: 1500px) { .container-desktop, .container-title { max-width: 87vw; }}
+@media (min-width: 1600px) { .container-desktop, .container-title { max-width: 86vw; }}
+@media (min-width: 1700px) { .container-desktop, .container-title { max-width: 84vw; }}
+@media (min-width: 1800px) { .container-desktop, .container-title { max-width: 82vw; }}
+@media (min-width: 1900px) { .container-desktop, .container-title { max-width: 80vw; }}
+@media (min-width: 2000px) { .container-desktop, .container-title { max-width: 78vw; }}
+@media (min-width: 2100px) { .container-desktop, .container-title { max-width: 76vw; }}
+@media (min-width: 2200px) { .container-desktop, .container-title { max-width: 74vw; }}
+@media (min-width: 2300px) { .container-desktop, .container-title { max-width: 72vw; }}
+@media (min-width: 2400px) { .container-desktop, .container-title { max-width: 70vw; }}
+@media (min-width: 2500px) { .container-desktop, .container-title { max-width: 68vw; }}
+@media (min-width: 2600px) { .container-desktop, .container-title { max-width: 66vw; }}
+@media (min-width: 2700px) { .container-desktop, .container-title { max-width: 64vw; }}
+@media (min-width: 2800px) { .container-desktop, .container-title { max-width: 62vw; }}
 
 /* Rows and columns */
 .row {

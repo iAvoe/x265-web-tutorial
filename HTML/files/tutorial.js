@@ -179,7 +179,7 @@ for (let i=0; i<anchors.length; i++) { anchors[i].setAttribute("target", "_blank
 
 /* Accordion collapse support */
 var collapseBtns = document.getElementsByClassName('collapsible');
-
+/* Register collapse event to all buttons */
 for (let i = 0; i < collapseBtns.length; i++) {
     collapseBtns[i].addEventListener("click", function() {
         this.classList.toggle("active");
@@ -187,4 +187,16 @@ for (let i = 0; i < collapseBtns.length; i++) {
         if (collContent.style.display === "block") { collContent.style.display = "none"; }
         else { collContent.style.display = "block"; }
     });
+}
+
+/**
+ * Un-collapse all collapsed contents
+ */
+function uncollpaseAll() {
+    "use strict";
+    for (let i = 0; i < collapseBtns.length; i++) {
+        if (collapseBtns[i].classList.toggle("active")) {
+            collapseBtns[i].click();
+        }
+    }
 }

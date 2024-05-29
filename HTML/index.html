@@ -19,8 +19,21 @@
 	<body class="text-gray-main">
         <div class="px-1 mb-3">
             <h1>x265 教程<span class="text-blue-emph"> HTML 完整版</span></h1>
-            <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
+            <p class="px-3">欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。<span class="text-red-emph">点击图片即可更改桌面和移动端的适配排版</span>。</p>
         </div>
+        <!-- x264 教程副本，更改需手动同步 { -->
+        <span class="px-3"><b>地图</b></span>
+        <ol class="font-monospace pl-5">
+            <li><a href="../../x264-web-tutorial/HTML/index.html" class="disabled">x264 教程网页版（尔于此地）</a></li>
+            <li><a href="../../x264-web-tutorial/HTML/index.html">x265 教程网页版</a></li>
+            <li>附录 α：<a href="https://www.nazorip.site/archives/44/">QAAC 音频压缩教程</a> 或 <a href="https://github.com/iAvoe/QAAC-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a></li>
+            <li>附录 β：<a href="https://nazorip.site/archives/334/">x264，libx264，x265，libx265 压制教程急用版</a> 或 <a href=""> Github 副本</a></li>
+            <li>附录 γ：<a href="https://nazorip.site/archives/169/">ffprobe 教程</a> 或 <a href="https://github.com/iAvoe/FFprobe-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a></li>
+            <li>附录 δ：<a href="https://nazorip.site/archives/1068/">ffprobe + Excel 绘制码率曲线，帧类型饼图</a></li>
+            <li>附录 ε：<a href="../../deint-ivtc-web-tutorial/HTML/index.html">交错转逐行与 IVTC 处理</a></li>
+            <li>相关：<a href="https://nazorip.site/archives/1052/">mpv 播放器的安装与设置</a></li>
+        </ol>
+        <!-- } -->
         <div class="container-mobile rounded-9 border-main">
             <h2 id="h2-1">命令行调用参考</h2>
 
@@ -4304,10 +4317,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </tbody>
                 </table>
             </div>
-            <!-- x264 教程副本，更改需手动同步 {-->
+            <!-- x264 教程副本，更改需手动同步 { -->
             <h3>高动态范围 High Dynamic Range HDR</h3>
             <p>原本是高端音响的标准，代表最小音量下没有一点电流噪声，最大音量可以和真实场景媲美。与扬声器的大小和材质是否匹配场景相关，即「重硬件轻软件」。因为只要硬件达到 HDR 1000 规格，那么只要调高亮度就可以了；而随便一个中位水平的电视/显示器/手机屏幕亮度都能达到 HDR 400 标准。</p>
-            <p>注意高亮度的显示只适合电影和部分游戏场景，在工作学习用途下高亮度极其伤眼。</p>
+            <p>注意高亮度的显示只适合电影和部分游戏场景。在工作学习用途下，高亮度会使眼部刺痛流泪。</p>
 
             <h3>HDR 元数据设置</h3>
             <p>x264/5 皆支持的元数据设置。但因为 HDR 分为硬件标准，软件标准，以及数据标准，所以很乱。为了保证色彩正确，必须参考片源的元数据。如：</p>
@@ -4354,228 +4367,231 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;←,↑,→,↓&gt;指定黑边宽度，从而跳过加速编码，或者用--overscan crop 直接裁掉。</p>
 
             <h3>杜比视界 Dolby vision / DV</h3>
-            <p>一种通过嵌入高频信号层来强化播放效果的私有格式。有单流/DV-MEL 和双流/DV-FEL 两种，两者皆含有参考单元 Reference picture unit RPU。</p>
-            <ul class="text-gray-side">
-                <li>双视频流代表 Base layer 视频层 BL 和 Enhance layer 强化层 EL</li>
-                <li>双视频流下，EL 可被一般的解码器丢弃而正常播放</li>
-                <li>单视频流下，使用专利色彩空间（ICtCp）的源应依法使用专利授权的解码器解码</li>
-                <li>存在假源和假设备，但没有办法验证</li>
-                <li>即使是样式为 7 时，EL 也可以为空，等效于仅 BL</li>
-            </ul>
-            <table class="table-fit-container align-items-center text-xs">
-                <thead>
-                    <tr class="t-invert-dark">
-                        <th class="px-1">样式 Profile</th>
-                        <th class="px-1">编码</th>
-                        <th class="px-1">流标记</th>
-                        <th class="px-1">BL 兼容 ID</th>
-                        <th class="px-1">BL:EL 大小比例</th>
-                        <th class="px-1">x265 支持</th>
-                        <th class="px-1">伽马兼容</th>
-                        <th class="px-1">色彩空间</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">4</td>
-                        <td class="px-1">10bit hevc</td>
-                        <td class="px-1">dvhe.04</td>
-                        <td class="px-1">2</td>
-                        <td class="px-1">1:¼</td>
-                        <td class="px-1"> </td>
-                        <td class="px-1">SDR</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">5</td>
-                        <td class="px-1">10bit hevc</td>
-                        <td class="px-1">dvhe.05</td>
-                        <td class="px-1">0</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
-                        <td class="px-1">√</td>
-                        <td class="px-1">无（私有色彩空间）</td>
-                        <td class="px-1">ICtCp</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">7</td>
-                        <td class="px-1">10bit hevc</td>
-                        <td class="px-1">dvhe.07</td>
-                        <td class="px-1">6</td>
-                        <td class="px-1">UHD = 1:¼, FullHD = 1:1</td>
-                        <td class="px-1"> </td>
-                        <td class="px-1">UHD 蓝光</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">8.1</td>
-                        <td class="px-1">10bit hevc</td>
-                        <td class="px-1">dvhe.08</td>
-                        <td class="px-1">1</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
-                        <td class="px-1">√</td>
-                        <td class="px-1">HDR10</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">8.2</td>
-                        <td class="px-1">10bit hevc</td>
-                        <td class="px-1">dvhe.08</td>
-                        <td class="px-1">2</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
-                        <td class="px-1">√</td>
-                        <td class="px-1">SDR</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">8.4</td>
-                        <td class="px-1">10bit hevc</td>
-                        <td class="px-1">dvhe.08</td>
-                        <td class="px-1">4</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
-                        <td class="px-1"> </td>
-                        <td class="px-1">HLG</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">9</td>
-                        <td class="px-1">8bit avc</td>
-                        <td class="px-1">dvav.09</td>
-                        <td class="px-1">2</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
-                        <td class="px-1"> </td>
-                        <td class="px-1">SDR</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">10</td>
-                        <td class="px-1">10bit av1</td>
-                        <td class="px-1">dav1.10</td>
-                        <td class="px-1">0,1,2,4</td>
-                        <td class="px-1">仅 BL（DV-MEL）</td>
-                        <td class="px-1"> </td>
-                        <td class="px-1">无/SDR/<br>HDR10/HLG</td>
-                        <td class="px-1">YCbCr</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>RPU 是含有动态元数据的特殊 NALU，类似（到现在还没几个播放器能正常解码的）<code>opt-qp-pps</code>，<code>opt-ref-list-length-pps</code>的功能。</p>
-            <p>像素流量每秒 Pixel per second PPS：像素宽，像素高，帧数每秒的商。</p>
-            <table class="table-fit-container align-items-center text-xs">
-                <thead>
-                    <tr class="t-invert-dark">
-                        <th class="px-1">级别 Level</th>
-                        <th class="px-1">PPS</th>
-                        <th class="px-1">pps 相符的格式</th>
-                        <th class="px-1">Main tier 码率</th>
-                        <th class="px-1">High tier 码率</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">01</td>
-                        <td class="px-1">22118400</td>
-                        <td class="px-1">1280x720 24fps</td>
-                        <td class="px-1">20Mbps</td>
-                        <td class="px-1">50Mbps</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">02</td>
-                        <td class="px-1">27648000</td>
-                        <td class="px-1">1280x720 30fps</td>
-                        <td class="px-1">20Mbps</td>
-                        <td class="px-1">50Mbps</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">03</td>
-                        <td class="px-1">49766400</td>
-                        <td class="px-1">1920x1080 24fps</td>
-                        <td class="px-1">20Mbps</td>
-                        <td class="px-1">70Mbps</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">04</td>
-                        <td class="px-1">62208000</td>
-                        <td class="px-1">1920x1080 30fps</td>
-                        <td class="px-1">20Mbps</td>
-                        <td class="px-1">70Mbps</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">05</td>
-                        <td class="px-1">12441600</td>
-                        <td class="px-1">1920x1080 60fps</td>
-                        <td class="px-1">20Mbps</td>
-                        <td class="px-1">70Mbps</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">06</td>
-                        <td class="px-1">199065000</td>
-                        <td class="px-1">3840x2160 24fps</td>
-                        <td class="px-1">25Mbps</td>
-                        <td class="px-1">130Mbps</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">07</td>
-                        <td class="px-1">248832000</td>
-                        <td class="px-1">3840x2160 30fps</td>
-                        <td class="px-1">25Mbps</td>
-                        <td class="px-1">130Mbps</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">08</td>
-                        <td class="px-1">398131200</td>
-                        <td class="px-1">3840x2160 48fps</td>
-                        <td class="px-1">40Mbps</td>
-                        <td class="px-1">130Mbps</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">09</td>
-                        <td class="px-1">497664000</td>
-                        <td class="px-1">3840x2160 60fps</td>
-                        <td class="px-1">40Mbps</td>
-                        <td class="px-1">130Mbps</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">10</td>
-                        <td class="px-1">995328000</td>
-                        <td class="px-1">3840x2160 120fps</td>
-                        <td class="px-1">60Mbps</td>
-                        <td class="px-1">240Mbps</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">11</td>
-                        <td class="px-1">995328000</td>
-                        <td class="px-1">7680x4320 30fps</td>
-                        <td class="px-1">60Mbps</td>
-                        <td class="px-1">240Mbps</td>
-                    </tr>
-                    <tr class="border-lr">
-                        <td class="px-1">12</td>
-                        <td class="px-1">1990656000</td>
-                        <td class="px-1">7680x4320 60fps</td>
-                        <td class="px-1">120Mbps</td>
-                        <td class="px-1">480Mbps</td>
-                    </tr>
-                    <tr class="t-light-gray border-lr">
-                        <td class="px-1">13</td>
-                        <td class="px-1">3981312000</td>
-                        <td class="px-1">7680x4320 120fps</td>
-                        <td class="px-1">240Mbps</td>
-                        <td class="px-1">800Mbps</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
-            <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <div class="coll-content">
+                <p>一种通过嵌入高频信号层来强化播放效果的私有格式。有单流/DV-MEL 和双流/DV-FEL 两种，两者皆含有参考单元 Reference picture unit RPU。</p>
+                <ul class="text-gray-side">
+                    <li>双视频流代表 Base layer 视频层 BL 和 Enhance layer 强化层 EL</li>
+                    <li>双视频流下，EL 可被一般的解码器丢弃而正常播放</li>
+                    <li>单视频流下，使用专利色彩空间（ICtCp）的源应依法使用专利授权的解码器解码</li>
+                    <li>存在假源和假设备，但没有办法验证</li>
+                    <li>即使是样式为 7 时，EL 也可以为空，等效于仅 BL</li>
+                </ul>
+                <table class="table-fit-container align-items-center text-xs">
+                    <thead>
+                        <tr class="t-invert-dark">
+                            <th class="px-1">样式 Profile</th>
+                            <th class="px-1">编码</th>
+                            <th class="px-1">流标记</th>
+                            <th class="px-1">BL 兼容 ID</th>
+                            <th class="px-1">BL:EL 大小比例</th>
+                            <th class="px-1">x265 支持</th>
+                            <th class="px-1">伽马兼容</th>
+                            <th class="px-1">色彩空间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">4</td>
+                            <td class="px-1">10bit hevc</td>
+                            <td class="px-1">dvhe.04</td>
+                            <td class="px-1">2</td>
+                            <td class="px-1">1:¼</td>
+                            <td class="px-1"> </td>
+                            <td class="px-1">SDR</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">5</td>
+                            <td class="px-1">10bit hevc</td>
+                            <td class="px-1">dvhe.05</td>
+                            <td class="px-1">0</td>
+                            <td class="px-1">仅 BL（DV-MEL）</td>
+                            <td class="px-1">√</td>
+                            <td class="px-1">无（私有色彩空间）</td>
+                            <td class="px-1">ICtCp</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">7</td>
+                            <td class="px-1">10bit hevc</td>
+                            <td class="px-1">dvhe.07</td>
+                            <td class="px-1">6</td>
+                            <td class="px-1">UHD = 1:¼, FullHD = 1:1</td>
+                            <td class="px-1"> </td>
+                            <td class="px-1">UHD 蓝光</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">8.1</td>
+                            <td class="px-1">10bit hevc</td>
+                            <td class="px-1">dvhe.08</td>
+                            <td class="px-1">1</td>
+                            <td class="px-1">仅 BL（DV-MEL）</td>
+                            <td class="px-1">√</td>
+                            <td class="px-1">HDR10</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">8.2</td>
+                            <td class="px-1">10bit hevc</td>
+                            <td class="px-1">dvhe.08</td>
+                            <td class="px-1">2</td>
+                            <td class="px-1">仅 BL（DV-MEL）</td>
+                            <td class="px-1">√</td>
+                            <td class="px-1">SDR</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">8.4</td>
+                            <td class="px-1">10bit hevc</td>
+                            <td class="px-1">dvhe.08</td>
+                            <td class="px-1">4</td>
+                            <td class="px-1">仅 BL（DV-MEL）</td>
+                            <td class="px-1"> </td>
+                            <td class="px-1">HLG</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">9</td>
+                            <td class="px-1">8bit avc</td>
+                            <td class="px-1">dvav.09</td>
+                            <td class="px-1">2</td>
+                            <td class="px-1">仅 BL（DV-MEL）</td>
+                            <td class="px-1"> </td>
+                            <td class="px-1">SDR</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">10</td>
+                            <td class="px-1">10bit av1</td>
+                            <td class="px-1">dav1.10</td>
+                            <td class="px-1">0,1,2,4</td>
+                            <td class="px-1">仅 BL（DV-MEL）</td>
+                            <td class="px-1"> </td>
+                            <td class="px-1">无/SDR/<br>HDR10/HLG</td>
+                            <td class="px-1">YCbCr</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>RPU 是含有动态元数据的特殊 NALU，类似（到现在还没几个播放器能正常解码的）<code>opt-qp-pps</code>，<code>opt-ref-list-length-pps</code>的功能。</p>
+                <p>像素流量每秒 Pixel per second PPS：像素宽，像素高，帧数每秒的商。</p>
+                <table class="table-fit-container align-items-center text-xs">
+                    <thead>
+                        <tr class="t-invert-dark">
+                            <th class="px-1">级别 Level</th>
+                            <th class="px-1">PPS</th>
+                            <th class="px-1">pps 相符的格式</th>
+                            <th class="px-1">Main tier 码率</th>
+                            <th class="px-1">High tier 码率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">01</td>
+                            <td class="px-1">22118400</td>
+                            <td class="px-1">1280x720 24fps</td>
+                            <td class="px-1">20Mbps</td>
+                            <td class="px-1">50Mbps</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">02</td>
+                            <td class="px-1">27648000</td>
+                            <td class="px-1">1280x720 30fps</td>
+                            <td class="px-1">20Mbps</td>
+                            <td class="px-1">50Mbps</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">03</td>
+                            <td class="px-1">49766400</td>
+                            <td class="px-1">1920x1080 24fps</td>
+                            <td class="px-1">20Mbps</td>
+                            <td class="px-1">70Mbps</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">04</td>
+                            <td class="px-1">62208000</td>
+                            <td class="px-1">1920x1080 30fps</td>
+                            <td class="px-1">20Mbps</td>
+                            <td class="px-1">70Mbps</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">05</td>
+                            <td class="px-1">12441600</td>
+                            <td class="px-1">1920x1080 60fps</td>
+                            <td class="px-1">20Mbps</td>
+                            <td class="px-1">70Mbps</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">06</td>
+                            <td class="px-1">199065000</td>
+                            <td class="px-1">3840x2160 24fps</td>
+                            <td class="px-1">25Mbps</td>
+                            <td class="px-1">130Mbps</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">07</td>
+                            <td class="px-1">248832000</td>
+                            <td class="px-1">3840x2160 30fps</td>
+                            <td class="px-1">25Mbps</td>
+                            <td class="px-1">130Mbps</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">08</td>
+                            <td class="px-1">398131200</td>
+                            <td class="px-1">3840x2160 48fps</td>
+                            <td class="px-1">40Mbps</td>
+                            <td class="px-1">130Mbps</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">09</td>
+                            <td class="px-1">497664000</td>
+                            <td class="px-1">3840x2160 60fps</td>
+                            <td class="px-1">40Mbps</td>
+                            <td class="px-1">130Mbps</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">10</td>
+                            <td class="px-1">995328000</td>
+                            <td class="px-1">3840x2160 120fps</td>
+                            <td class="px-1">60Mbps</td>
+                            <td class="px-1">240Mbps</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">11</td>
+                            <td class="px-1">995328000</td>
+                            <td class="px-1">7680x4320 30fps</td>
+                            <td class="px-1">60Mbps</td>
+                            <td class="px-1">240Mbps</td>
+                        </tr>
+                        <tr class="border-lr">
+                            <td class="px-1">12</td>
+                            <td class="px-1">1990656000</td>
+                            <td class="px-1">7680x4320 60fps</td>
+                            <td class="px-1">120Mbps</td>
+                            <td class="px-1">480Mbps</td>
+                        </tr>
+                        <tr class="t-light-gray border-lr">
+                            <td class="px-1">13</td>
+                            <td class="px-1">3981312000</td>
+                            <td class="px-1">7680x4320 120fps</td>
+                            <td class="px-1">240Mbps</td>
+                            <td class="px-1">800Mbps</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
+                <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
 
-            <code><b>--dolby-vision-profile</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;选择 5/8.1（HDR10）/8.2（SDR）&gt;<span class="text-red-emph">大于 8.1 需 master-display 和 HDR10-opt</span>。</p>
-            <code><b>--dolby-vision-rpu</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;导入 RPU 二进制文件（.bin）。</p>
-            <p class="text-gray-side pl-5 m-0">注：杜比视界 8.1 需要 <code>--dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code>。</p>
+                <code><b>--dolby-vision-profile</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;选择 5/8.1（HDR10）/8.2（SDR）&gt;<span class="text-red-emph">大于 8.1 需 master-display 和 HDR10-opt</span>。</p>
+                <code><b>--dolby-vision-rpu</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;导入 RPU 二进制文件（.bin）。</p>
+                <p class="text-gray-side pl-5 m-0">注：杜比视界 8.1 需要 <code>--dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code>。</p>
 
-            <h3>RPU 元数据获取</h3>
-            <p>可以用<a href="https://github.com/quietvoid/dovi_tool">dovi_tool</a>提取 RPU，<a href="https://github.com/saindriches/dovi_meta">dovi_meta</a>创建 RPU。ffmpeg 提取源视频 RPU 用：</p>
-            <pre><code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code></pre>
+                <h3>RPU 元数据的获取</h3>
+                <p>可以用<a href="https://github.com/quietvoid/dovi_tool">dovi_tool</a>提取 RPU，<a href="https://github.com/saindriches/dovi_meta">dovi_meta</a>创建 RPU。ffmpeg 提取源视频 RPU 用：</p>
+                <pre><code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code></pre>
+            </div>
 
             <h2 id="h2-19">输入输出 Input-output IO</h2>
 
@@ -4612,7 +4628,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
             <h2 id="h2-20">预设参数</h2>
-
+            
             <code><b>--preset</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt;见下：</p>
             <div class="overflow-auto">

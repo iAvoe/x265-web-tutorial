@@ -288,13 +288,18 @@ a {
 }
 a:hover {
     color: white;
-    background:#3C4042;
+    background: #3C4042;
     text-decoration: none;
     transition: 300ms;
 }
 a:active {
     border-radius: 1em;
     transition: 25ms;
+}
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+  color: var(--hex-light-gray);
 }
 td.px-1.t-invert-light a { 
     color: whitesmoke;

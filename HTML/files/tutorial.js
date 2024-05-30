@@ -26,7 +26,7 @@ window.MathJax = {
  */
 function switchPlatform() {
     "use strict";
-    if (window.innerWidth+10 <= window.innerHeight) { // Mobile / Vertical Layout
+    if (window.innerWidth+16 <= window.innerHeight) { // Mobile / Vertical Layout
         // Set class for the main container div for Mobile only
         let rootDivs = document.querySelectorAll('div.container-desktop.rounded-9.border-main');
         for (let i=0; i<rootDivs.length; i++) {

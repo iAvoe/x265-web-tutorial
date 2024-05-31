@@ -29,12 +29,21 @@
 - 公式段的字体为 [KaTeX Math Regular](https://github.com/KaTeX/katex-fonts/blob/master)（英文）附件（适配安卓）  
   - 辅以 Cochin，Georgia，Times，Times New Roman，serif
 
-
 ### 公式转换
 
 - 目前引入了 [MathJax JavaScript]("https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js") 附件做公式转换，同时因为 MathML Tag 占据 HTML 源码的面积太大而重写为 LaTex。工具为 [Text2Latex.com]("https://www.text2latex.com")
 - 一开始因为没有转换 LaTex 的工具链而使用了手写转 MathML 的处理。工具为 [ConvertMathToLaTexMathML]("https://webdemo.myscript.com/views/math/index.html")
-- 注：Word 2016 不支持复制 LaTex 格式的公式，也不支持 Word 2010 支持的第三方转换插件...
+- 注：刚好只有 Word 2016 不支持复制 LaTex 格式的公式，也不支持 Word 2010 支持的第三方转换插件...
+
+### 打赏
+
+<p align="center"><img src="bmc_qr.png"><br><img src="pp_tip_qr.png"></p>
+
+——[Buy me a coffee 链接](https://buymeacoffee.com/iavoe)
+
+——[PayPal 链接](https://www.paypal.com/qrcodes/managed/3e3e8b7f-27ed-4edc-a0fa-1b469e854a3c?utm_source=consapp)
+
+——新纪录！这玩意现在年收入 20 人民币
 
 -----
 

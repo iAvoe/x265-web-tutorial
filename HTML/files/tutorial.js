@@ -22,11 +22,17 @@ window.MathJax = {
  * Increase line height in Desktop
  * Change main container class on the fly (window Width > window Height)
  * This only changes style, not class, otherwise it would break class detection on image click re-formating
- * @returns Updated class configuration for the root <div> which contains main content
+ * The internal variable "rootDiv" is reserved for multiple content div (container-mobile/desktop rounded-9 border-main) layout, but unused so far
+ * @param {number} widthOffset The width offset for window width <= height check, decides whether change to mobile (taller) or desktop (wider) styling
+ * @returns New class configuration for the content div which contains main content
  */
-function switchPlatform() {
+let widthOffset = 18;
+function switchPlatform(widthOffset) {
     "use strict";
-    if (window.innerWidth+16 <= window.innerHeight) { // Mobile / Vertical Layout
+    if (isNaN(widthOffset)) {
+        console.error("function switchPlatform(): width offset parameter is not a number")
+    }
+    if (window.innerWidth+widthOffset <= window.innerHeight) { // Mobile / Vertical Layout
         // Set class for the main container div for Mobile only
         let rootDivs = document.querySelectorAll('div.container-desktop.rounded-9.border-main');
         for (let i=0; i<rootDivs.length; i++) {
@@ -65,13 +71,13 @@ function switchPlatform() {
         }
     }
 }
-window.addEventListener('resize', switchPlatform);
-switchPlatform(); // Call this function onload as well
+window.addEventListener('resize', ()=>{switchPlatform(widthOffset)}, false);
+window.
+switchPlatform(widthOffset); // Call this function during load as well
 
 /**
- * Click image to enlarge - up to 3 digits
- * 1. Updates class configuration for the root <div> which contains main content
- * 2. Get the alt attribute and paste as title attribute
+ * Click image to enlarge && copy 'alt' attribute to 'title' so I don't have to manual write everything painstakingly
+ * The 'Click image to enlarge' has many edge cases as left-right to top-down layout changes with edge cases are considered because all image should support it
  */
 const imgs = document.querySelectorAll('img');
 for (let i=0; i<imgs.length; i++) {
@@ -168,7 +174,8 @@ for (let i=0; i<imgs.length; i++) {
                 break;
         }
     }, false);
-    imgs[i].setAttribute('title', imgs[i].getAttribute('alt')); // Set title attribute with alt attribute
+    // Set title attribute with alt attribute
+    imgs[i].setAttribute('title', imgs[i].getAttribute('alt'));
 }
 
 /**
@@ -182,7 +189,7 @@ var collapseBtns = document.getElementsByClassName('collapsible');
 /* Register collapse event to all buttons */
 for (let i = 0; i < collapseBtns.length; i++) {
     collapseBtns[i].addEventListener("click", function() {
-        this.classList.toggle("active");
+        this.classList.toggle("active"); // Change button text from "-" to "+"
         var collContent = this.nextElementSibling;
         if (collContent.style.display === "block") { collContent.style.display = "none"; }
         else { collContent.style.display = "block"; }
@@ -190,13 +197,58 @@ for (let i = 0; i < collapseBtns.length; i++) {
 }
 
 /**
- * Un-collapse all collapsed contents
+ * Printing support 1-2 - Collapse & Un-collapse all collapsed contents
+ * @returns All collapsed content are expanded
  */
-function uncollpaseAll() {
+function toggleCollapseAll() {
     "use strict";
-    for (let i = 0; i < collapseBtns.length; i++) {
-        if (collapseBtns[i].classList.toggle("active")) {
+    for (let i=0; i < collapseBtns.length; i++) {
+        if (collapseBtns[i].classList.contains("collapsible")) {
             collapseBtns[i].click();
+            // Syncronize all collapsing/expanding content, in case some collapsed content are expanded and some are not
+            if (collapseBtns[0].classList.length != collapseBtns[i].classList.length) {
+                collapseBtns[i].click();
+            }
         }
     }
 }
+
+let printT = document.querySelector('div.container-title');
+let printC = document.querySelector('div.container-desktop.rounded-9.border-main') || document.querySelector('div.container-mobile.rounded-9.border-main');
+/**
+ * Printing support 3 - Remove main div class and background
+ * @param {object} title The title div which was captured earlier
+ * @param {object} content The content div which was captured earlier
+ * @returns New class configuration for the title & content div which contains main content
+ */
+function printMode(title, content) {
+    if (title.tagName != 'DIV' || content.tagName != 'DIV') { 
+        console.error("function printMode(): parameter must be title and container divs")
+    }
+    title.setAttribute("class", "");
+    content.setAttribute("class", "");
+}
+
+/**
+ * Printing support 4 - Restore original page
+ * Deactivate printing mode by restoring class atttributes of title and main div
+ * @param {object} title The title div which was captured earlier
+ * @param {object} content The content div which was captured earlier
+ * @param {number} widthOffset The width offset for window width <= height check, decides whether change to mobile (taller) or desktop (wider) styling
+ * @returns New class configuration for the title & content div which contains main content
+ */
+function printModeOff(title, content, widthOffset) {
+    if (title.tagName != 'DIV' || content.tagName != 'DIV') { 
+        console.error("function printMode(): parameter must be title and container divs")
+    }
+    title.setAttribute("class", "container-title");
+    if (window.innerWidth+widthOffset <= window.innerHeight) { // Mobile / Vertical Layout
+        content.setAttribute("class", "container-mobile rounded-9 border-main");
+    }
+    else {
+        content.setAttribute("class", "container-desktop rounded-9 border-main");
+    }
+}
+
+// printMode(printT, printC);
+// printModeOff(printT, printC, widthOffset); // Call this function

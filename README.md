@@ -45,11 +45,11 @@ ffmpeg，Vapoursynth，avs2yuv 传递参数，ffmpeg 字幕渲染，IPCM-CU，U 
 
 ### 暗黑模式支持
 
-设计上通过将图片的白色背景改为透明，并给剩下的内容添加白色描边实现。目前已验证了 [Dark Reader](https://darkreader.org) 的效果。如果转换效果不理想则请截图，并发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
+设计上通过将图片的白色背景改为透明，并给剩下的内容添加白色描边实现。目前已验证了 [Dark Reader](https://darkreader.org) 的效果。转换效果不理想时请截图发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
 
 ### 打印机支持
 
-TODO
+打开教程后，在标题栏中可以将当前内容切换到打印排版。并切换回一般排版。转换效果不理想时请截图发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
 
 ### 打赏
 

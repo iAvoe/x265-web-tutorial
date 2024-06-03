@@ -3827,6 +3827,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </table>
             </div>
 
+            <h2 id="h2-16">优化熵编码</h2>
             <h3>汉明距离与欧几里得距离</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
@@ -3859,30 +3860,31 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </button>
             <div class="coll-content">
                 <p>原指北欧建筑的白墙木条棋盘格子装修。在动态规划编程 Dynamic programming 中代表过程的可视化——各状态为节点，且都遵循一种从左推演到右的规则而相互连成的网格，视频编码中包括：</p>
-                <ul id="10">
+                <ul>
                     <li>Psy-trellis 心理学优化，于 x264 的 --psy-rd</li>
                     <li>Viterbi-trellis，解决最短路径，隐马尔科夫问题的导航寻路算法，用于推演 B 帧位置</li>
                     <li>Trellis-coded quantization（TCQ，h.263+，trellis 卷积内核的有限状态机）中涉及的量化优化，停留在理论</li>
-                    <li>软判决率失真优化 CABAC 的再量化，于 x264 --trellis 参数</li>
+                    <li>软判决率失真游程走线优化，于 x264 <code>--trellis</code> 参数</li>
                 </ul>
             </div>
 
-            <h3>软判决率失真优化 CABAC 的再量化-SDQ trellis</h3>
+            <h3>软判决率失真游程走线优化 - SDQ trellis</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：
                 <span class="text-red-emph">补充因难度过高而跳过的 x264 教程 <code>--trellis</code> 参数相关科普，可略。</span>
             </button>
             <div class="coll-content">
-                <p>算数编码行游标编码之倒序——先编码最大概率的 0，后编码低概的绝对值强度 absolute level（因为含负强度/DCT 系子波形的反相）。得从各个可能路线整合出 trellis 所有上下文可能性以及变更（如下图）。由于文本编码是动态程序（一次编一字），所以路线一次只能改一条，且会保持出字概率而得斜线。</p>
+                <p>算数编码的运行顺序是沿着游程/游标编码（从左上到右下）的倒序——先途经编码高频信号中，出字概率最大的一串连续 0、后途经编码概率越来越低的非 0 DCT 系子。可见算数编码累计单个 CTU/宏块中上下文的走线结构是一种只能增加，或维持不变的状态。将其组合起来，即可得到各个走线所组成的网格——trellis。这张网格代表了最小到最大的所有可能上下文 CTX 长度，以及所有（只能增不能减）的路线变更（下图）。由于文本编码是动态程序（一次编一字），所以路线一次只能改一条，且会保持出字概率而得斜线。</p>
                 <div class="align-items-center">
                     <img src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image46" class="img-medium" ><br>
                 </div>
                 <p>4x4 块的 16 个倒序 zig-zag 系子中，预测与总结系子强度（等于 1_大于 1，或<span class="text-blue-math">NumEq1_NumLg1</span>）的数量归纳为 8 种 CABAC 上下文长度的节点（0_0~any_any），如 2_0 对应<span class="text-blue-math">NumLg1×2</span>，<span class="text-blue-math">NumEq1×1</span>，即 2_0 线。</p>
                 <p>若<span class="text-blue-math">NumLg1 &gt;0</span>，则从当前系子节点切到下个系子的 ×_1 线并不再回到<span class="text-blue-math">NumEq1</span></p>
                 <p>若<span class="text-blue-math">NumLg1≥4</span>则构成 any_any 或 x_x，若<span class="text-blue-math">(NumEq1≥4 && NumLg1==0)</span>时则构成 any_0 或 x_0，为两种上下文长 4(最大) 的 CABAC 路线，一种只编码 0 和 1，另一种编码 0，1，&lt;其它&gt;。各线路上的率即强度 level，失真就是其系子节点平方差 SSE，而率失真最优的线路就是 SSE（失真）+ λ⋅R（码率）最小的线路</p>
-                <p>叫软判决量化是因为此处 SSE 测了欧几里得距离，相对的硬判决量化为 qp 值所对应的 DCT 除法表。</p>
+                <p>叫软判决量化是因为此处 SSE 相当于测量了欧几里得距离，相对的硬判决量化为 qp 值所对应的 DCT 除法表，死区量化器 deadzone quantizer 等局部统计出的判决条件。</p>
             </div>
+            <p>应用于量化步骤之后，所以叫“再量化”。</p>
 
-            <h2 id="h2-16">SEI 补充与优化消息</h2>
+            <h2 id="h2-17">SEI 补充与优化消息</h2>
             <p>Supplemental enhance info 记录每帧的补充信息。主要有正确解码新 GOP 用的缓冲 SEI，解码校正时间戳的 pic timing SEI，让显示主控切边的 SEI，cc 字幕 SEI，HDR-SEI 等等。缓冲 SEI 记录对应 SPS 的号；待解码图像缓冲 Coded picture buffer CPB 的延迟安全区等信息；时戳 SEI 记录哪些帧上/下场优先的变化；连帧/三连帧的位置等信息。</p>
 
             <code><b>--hrd</b></code>
@@ -3905,7 +3907,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--dup-threshold</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~99，默认 70&gt;相似度判定值，默认达 70% 重复就判为相似。</p>
 
-            <h2 id="h2-17">线程与节点控制</h2>
+            <h2 id="h2-18">线程与节点控制</h2>
             <h3>设置创建比电脑处理器更多的线程会不会更快</h3>
             <p>每个 CPU 线程能占用的算力最高只有 100%，因此会导致处理器随机并发的特性，从任务数量上冲淡如参考帧建立等需要之前步骤算完才能开始运行的时间窗口，造成编码器跳过一部分参考压缩，码率增加，画质降低。</p>
 
@@ -3998,7 +4000,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>非<span class="text-blue-emph">1</span>则因为编码顺序，只有 ctu 下方的一行 ctu 可供参考，损失一半可能的参考范围</li>
             </ul>
 
-            <h2 id="h2-18">色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
+            <h2 id="h2-19">色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
             <p>Video usability information 是有工具就可以随时改的元数据。HDR 电视只读取 maxcll 和 maxfall，所以实际情况是 master-display 可略。光强/光压 Candela 等于尼特，即<span class="text-blue-math">\(1 \text{cd} = 1 \text{nit}\)</span>。因 bt601，709，HDR-PQ，HLG 标准重视的亮度范围，曲线所异（偏亮或偏暗），故需要量化曲线，心理学优化，模式决策的重适配。</p>
             
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：色彩格式的具体转换变量与算法标准</button>
@@ -4602,7 +4604,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <pre><code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code></pre>
             </div>
 
-            <h2 id="h2-19">输入输出 Input-output IO</h2>
+            <h2 id="h2-20">输入输出 Input-output IO</h2>
 
             <code><b>--seek</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第 x 帧开始压缩。</p>
@@ -4636,7 +4638,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>编解码图像序列</h3>
             <p>见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
-            <h2 id="h2-20">预设参数</h2>
+            <h2 id="h2-21">预设参数</h2>
             
             <code><b>--preset</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt;见下：</p>
@@ -4832,7 +4834,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">psnr</span> 尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大：<code>--aq-mode 0 --rd 0 --no cutree</code></li>
             </ul>
 
-            <h2 id="h2-21">附录：下载</h2>
+            <h2 id="h2-22">附录：下载</h2>
             <h3>LibavFormat / lavf</h3>
             <p>一种用于处理封装和解封装的动态链接库，同时阅读封装文件的元数据并传给嵌入该库的程序。x264 一般都嵌入了 lavf，x265 则不多。由于只是复制元数据的值而没有做检测，所以元数据写错（情况不罕见）的源会导致编码跟着错，主要错在色彩空间和 HDR 设置上。</p>
             <p class="text-gray-side">注：.hevc 代表不含 lavf 解码封装库，只能导出.hevc 视频流，需自行封装为 .mp4 .mkv 等格式；含 lavf 或使用 ffmpeg 内置的 libx265 则可以直接导出，使用见 x264/5 <a href="https://nazorip.site/archives/334/">急用版教程</a></p>

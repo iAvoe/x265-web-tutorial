@@ -23,13 +23,86 @@
             <!-- x264 教程副本，更改需手动同步 { -->
             <h2>地图</h2>
             <ol class="font-monospace">
-                <li><a href="../../x264-web-tutorial/HTML/index.html">x264 教程网页版</a></li>
-                <li><a href="../../x265-web-tutorial/HTML/index.html" class="disabled">x265 教程网页版（你在这里）</a></li>
-                <li>附录 α：<a href="https://www.nazorip.site/archives/44/">QAAC 音频压缩教程</a> 或 <a href="https://github.com/iAvoe/QAAC-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a></li>
+                <li>
+                    <a href="../../x264-web-tutorial/HTML/index.html">x264 教程网页版</a>
+                    <ul class="text-xs">
+                        <li>基础：
+                            <a toSelf href="#h2-1">封装/解封装</a>，
+                            <a toSelf href="#h2-2">编解码过程</a>，
+                            <a toSelf href="#h2-3">视频结构</a>
+                        </li>
+                    </ul>
+                    <ul class="text-xs">
+                        <li>编码：<a toSelf href="#h2-4">前瞻</a>，
+                            <a toSelf href="#h2-5">动搜</a>，
+                            <a toSelf href="#h2-6">动补</a>，
+                            <a toSelf href="#h2-7">变换量化</a>，
+                            <a toSelf href="#h2-8">率控制模式</a>，
+                            <a toSelf href="#h2-9">自适应量化</a>，
+                            <a toSelf href="#h2-10">去块滤波</a>，
+                            <a toSelf href="#h2-11">模式决策</a>，
+                            <a toSelf href="#h2-12">优化策略</a>，
+                            <a toSelf href="#h2-13">熵编码</a>，
+                            <a toSelf href="#h2-14">优化熵编码</a>，
+                            <a toSelf href="#h2-15">色彩信息</a>
+                        </li>
+                    </ul>
+                    <ul class="text-xs">
+                        <li>附录：
+                            <a toSelf href="#h2-16">预设参数</a>，
+                            <a toSelf href="#h2-17">线程控制</a>，
+                            <a toSelf href="#h2-18">内置滤镜</a>，
+                            <a toSelf href="#h2-19">工具下载</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="../../x265-web-tutorial/HTML/index.html" class="disabled">x265 教程网页版（你在这里）</a>
+                    <ul class="text-xs">
+                        <li>基础：
+                            <a toSelf href="#h2-1">命令参考</a>，<a toSelf href="#h2-2">视频的压制</a>
+                        </li>
+                        <li>编码：
+                            <a toSelf href="#h2-3">分块</a>，
+                            <a toSelf href="#h2-4">变换</a>，
+                            <a toSelf href="#h2-5">动搜</a>，
+                            <a toSelf href="#h2-6">补偿</a>，
+                            <a toSelf href="#h2-7">时域架网搜索</a>，
+                            <a toSelf href="#h2-8">溯块向量搜索</a>，
+                            <a toSelf href="#h2-9">前瞻</a>，
+                            <a toSelf href="#h2-10">帧内预测</a>，
+                            <a toSelf href="#h2-11">率控制</a>，
+                            <a toSelf href="#h2-12">自适应量化</a>，
+                            <a toSelf href="#h2-13">率失真优化</a>，
+                            <a toSelf href="#h2-14">环路滤波</a>，
+                            <a toSelf href="#h2-15">熵编码</a>，
+                            <a toSelf href="#h2-16">优化熵编码</a>，
+                            <a toSelf href="#h2-17">SEI</a>，
+                            <a toSelf href="#h2-18">线程与节点控制</a>，
+                            <a toSelf href="#h2-19">色彩，VUI，HDR</a>，
+                            <a toSelf href="#h2-20">输入输出</a>
+                        </li>
+                        <li>附录：
+                            <a toSelf href="#h2-21">预设参数</a>
+                            <a toSelf href="#h2-21">下载</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>附录 α：
+                    <a href="https://www.nazorip.site/archives/44/">QAAC 音频压缩教程</a> 或 <a href="https://github.com/iAvoe/QAAC-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a>
+                    <ul class="text-xs">
+                        <li>下载安装，用例，Pipe 导入，流格式，封装格式，多声道编辑，压缩强度与占用，章节处理，缓入缓出，音频标识，音频编辑，滤镜，已知报错，多参数储存和调用，采样率的选择，采样率的验证</li>
+                    </ul>
+                </li>
                 <li>附录 β：<a href="https://nazorip.site/archives/334/">x264，libx264，x265，libx265 压制教程急用版</a> 或 <a href=""> Github 副本</a></li>
                 <li>附录 γ：<a href="https://nazorip.site/archives/169/">ffprobe 教程</a> 或 <a href="https://github.com/iAvoe/FFprobe-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a></li>
                 <li>附录 δ：<a href="https://nazorip.site/archives/1068/">ffprobe + Excel 绘制码率曲线，帧类型饼图</a></li>
-                <li>附录 ε：<a href="../../deint-ivtc-web-tutorial/HTML/index.html">交错转逐行与 IVTC 处理</a></li>
+                <li>
+                    附录 ε：<a href="../../deint-ivtc-web-tutorial/HTML/index.html">交错转逐行与 IVTC 处理</a>
+                    <ul class="text-xs">
+                        <li>逐行与交错扫描，帧率与场率，仅交错，A:B Pulldown / telecine，2:2:2:4，3:2:3:2，Euro-pulldown，0.5:0.5，特殊情况，去交错的算法与滤镜，IVTC 滤镜用例，p/c/n/u/b，AviSynth 例，TFM-TDecimate 例，VapourSynth 例</li>
+                    </ul>
+                </li>
                 <li>附录 ζ：<a href="../../img-sequence-enc-web-tutorial/HTML/index.html">图像序列的处理</a></li><!-- 后续顺序：η θ ι κ λ μ -->
                 <li>相关：<a href="https://nazorip.site/archives/1052/">mpv 播放器的安装与设置</a></li>
             </ol>

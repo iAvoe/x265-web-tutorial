@@ -182,7 +182,15 @@ for (let i=0; i<imgs.length; i++) {
  * Change all anchor behavior to open external page
  */
 anchors = document.querySelectorAll('a');
-for (let i=0; i<anchors.length; i++) { anchors[i].setAttribute("target", "_blank"); }
+for (let i=0; i<anchors.length; i++) {
+    if (anchors[i].hasAttribute('toSelf')) {
+        anchors[i].setAttribute("target", "_self");
+        anchors[i].removeAttribute('toSelf');
+    }
+    else {
+        anchors[i].setAttribute("target", "_blank");
+    }
+}
 
 /* Accordion collapse support */
 var collapseBtns = document.getElementsByClassName('collapsible');

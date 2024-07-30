@@ -228,6 +228,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                                 <li>可以使用工具如 <a href="http://ffmpeg.org/download.html">ffmpeg</a>、<a href="https://www.videohelp.com/software/MP4Box">MP4Box</a>，<a href="https://mkvtoolnix.download/">MKVToolNix</a> 等来进行封装。</li>
                             </ul>
                         </li>
+                        <li>此处包括了封装音频，字幕和字体文件</li>
                     </ul>
                 </li>
             </ol>
@@ -258,10 +259,21 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--ctu</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;64/32/16，默认 64&gt;编码树单元最大大小。大则有损压缩效率高，速度慢。一般建议保持默认，除非片有类似 jpeg 边缘损失的老片设<span class="text-blue-emph">32</span>，分辨率特别小的老片设<span class="text-blue-emph">16</span>。</p>
             <code><b>--min-cu-size</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16，默认 8&gt;限制最小 cu 大小，简化计算步骤，因为使往后步骤 pu，tu 的划分也会更大。用多一点码率换取编码速度的参数。建议日常环境使用<span class="text-blue-emph">16</span>或快速编码环境使用<span class="text-blue-emph">32</span>。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16，默认 8&gt;通过限制最小 CU 大小以简化计算。其副作用是导致后续步骤中 PU，TU 的划分更大。按照画面细节程度和编码策略设置。</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>4x4 细分块能够有效地隔离动静态画面——默认</li>
+                <li>8x8 细分块能够有效地隔离动静态画面——<span class="text-blue-emph">16</span></li>
+                <li>16x16 细分块能够有效地隔离动静态画面——<span class="text-blue-emph">32</span></li>
+                <li>快速编码——<span class="text-blue-emph">16</span> 或 <span class="text-blue-emph">32</span></li>
+            </ul>
             <code><b>--rect --amp</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，受 limit-modes 限制，<span class="text-red-emph">amp 需 rect</span>&gt;限制最小 cu 大小，简化计算步骤，因为使往后步骤 pu，tu 的划分也会更大。用多一点码率换取编码速度的参数。建议日常环境使用<span class="text-blue-emph">16</span>或快速编码环境使用<span class="text-blue-emph">32</span>。</p>
-
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，受 limit-modes 限制，<span class="text-red-emph">amp 需 rect</span>&gt;PU 的对称与不对称细分块，用较大到大量的时间换取画质和压缩率。使用前考虑：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>画面中有大量面积小于 4x4 细分块的细节——<code><span class="text-blue-emph">--rect</span></code></li>
+                <li>画面中有大量动态细节，包括文本、棱角、纹理、破片等 4x4 细分块也难以隔离的高低频画面——<code><span class="text-blue-emph">--amp</span></code></li>
+                <li>大写 I 代表 IDR 帧</li>
+            </ul>
+            
             <h2 id="h2-4">变换</h2>
             <h3>傅里叶级数 Fourier Series</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>

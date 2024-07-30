@@ -1,5 +1,8 @@
 # 原创 x265 压制教程 HTML 网页版
 
+本教程的目的是略深入介绍视频编码器的基本原理，以及略深入解释 x265（以及 x264）编码器对于这些原理的实现方法，以及参数说明。内容相比于 x264 教程要难一些。
+本教程的目标用户是已经看过 x264 教程的人。阅后可以下载教程页尾提供的 x264 编码器及编码工具，或急用版 x265 教程以方便地使用 x265 编码器。
+
 ## [点此打开](https://iavoe.github.io/x265-web-tutorial/HTML/index.html)
 
 - 建立于 [x264-x265-QAAC-ffprobe-Ultimatetutorial](https://github.com/iAvoe/x264-x265-QAAC-ffprobe-Ultimatetutorial) 的 x265 教程 2024.60 版，并大幅改进了内容
@@ -14,15 +17,15 @@
 - [x] 解决了难以通过 git 的变更跟踪系统检查更改内容的版本管理问题，尤其影响协作检查和撰写
 - [x] 大幅改良了内容，包括多平台自动排版适配，JavaScript 排版切换互动，CSS 响应式设计，语法去简练化（不再需要通过字数限制控制排版），错误纠正
 - [x] 100% LaTex 公式（使用 MathJax 实现，支持复制为 MathML 以及 LaTex，见下）
-- [x] 高速 CI/CD。摆脱传统 docx-PDF 版教程的网盘和 QQ 群等间接发布，间接下载，每次更新要重复下载的困难
-- [x] 利用 Github 透明化的代码区别检查
+- [x] 高速 CI/CD。摆脱传统 docx-PDF 版教程受到网盘和 QQ 群等间接发布，间接下载，每次更新要重复下载的困难
+- [x] 利用了 Github 的透明化代码提交差异检查系统
 
 ### 字体系统
 
 分为正文黑体，注解圆体和代码段字体共三套字体集。
 
 - 正文黑体为首选[煮豆黑体 Zhudou Sans](https://github.com/Buernia/Zhudou-Sans)（中文）附件  
-  - 辅以系统 Sans Serif（英文
+  - 辅以系统 Sans Serif（英文）
 - 注解圆体为 Windows 的幼圆（中英文）附件
 - 代码段的字体为传统代码段的 SFMono-Regular，Menlo，Monaco，Consolas（英文）  
 辅以[狮尾圆体 Light](https://github.com/max32002/swei-gothic/blob/master)（中文）附件
@@ -41,11 +44,11 @@ ffmpeg，Vapoursynth，avs2yuv 传递参数，ffmpeg 字幕渲染，IPCM-CU，U 
 
 ### 繁体中文支持
 
-本教程由简体中文编写，设计上通过自行安装浏览器插件转换为繁体。转换效果不理想则请截图，并发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
+本教程由简体中文编写，可以通过安装浏览器插件来转换繁体及变体。效果不理想则请截图，并发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
 
 ### 暗黑模式支持
 
-设计上通过将图片的白色背景改为透明，并给剩下的内容添加白色描边实现。目前已验证了 [Dark Reader](https://darkreader.org) 的效果。转换效果不理想时请截图发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
+设计上通过将图片的白色背景改为透明，并给剩下的内容添加白色描边实现。目前已验证了 [Dark Reader](https://darkreader.org) 的效果。效果不理想时请截图发送到本教程 Github 仓库中的 Issues，或 QQ 群里。
 
 ### 打印机支持
 

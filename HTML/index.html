@@ -115,10 +115,9 @@
             <button type="button" class="border-main rounded-3 ms-1 px-1" onclick="printModeOff(printT, printC, widthOffset)">4. 点击退出打印排版</button>
             <button type="button" class="border-main rounded-3 ms-1 px-1" onclick="toggleCollapseAll()">1/5. 点击同步展开/折叠所有内容</button>
             <!-- } -->
-            <p class="font-monospace">页数：A4 纸需 62 页，US Letter 纸需 66 页。建议使用双面打印 + 侧面钉装，或只打印需要的部分以节约纸张。</p>
-
             <h3>移动端支持</h3>
-            <p>点击图片即可轮询三种图片大小。当窗口宽度 +18 像素后大于窗口高度后，切换到宽屏/桌面端排版，否则切换到窄屏/移动端排版</p>
+            <p>点击图片即可轮询三种图片大小。窗口宽度大于窗口高度则切换到宽屏/桌面端/平板电脑排版，否则切换到窄屏/移动端排版。</p>
+            <p>安卓 12 或更高版本中，如 Edge，Brave，Kiwi，Arc，Dragon，Opera 的 Chromium 内核网页浏览器有着中文字体过细的显示问题（谷歌早已知晓却从未修复）建议使用 Firefox 以确保舒适的观看体验。</p>
         </div>
         <div class="container-mobile rounded-9 border-main">
             <h2 id="h2-1">命令行调用参考</h2>
@@ -964,7 +963,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>FTQP 下层模式</h3>
             <p>手动通过文件制定帧类型和 qp 值。</p>
             <code><b>--qpfile</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径到文件&gt;手动指定帧类型和 qp 值 closed-gop 下 K 帧的 frame type qp 下层模式。qpfile 文件内的格式为"帧号 帧类型 QP"</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径到文件&gt;手动指定 closed-gop 下 帧类型和 qp 值。qpfile 文件内的格式为<code>帧号 帧类型 QP值</code></p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>帧类型可以选 [I,i,K,P,B,b]</li>
                 <li>大写 B 代表 B-Pyramid</li>
@@ -974,13 +973,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>x265 中，QP 值可以不填，代表使用上层率控制模式</li>
                 <li>x264 中，QP 值填<span class="text-blue-emph">-1</span> 代表使用上层率控制模式</li>
             </ul>
-            <p class="font-monospace pl-5 m-0 overflow-auto">qpfile 例：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">qpfile.txt 例：</p>
             <ul class="font-monospace pl-5 text-smaller list-dotless">
                 <li>0 I 18</li>
                 <li>1 P 20</li>
                 <li>2 B 22</li>
-                <li>3 i 21</li>
-                <li>4 b 18</li>
+                <li>3 K 21</li>
+                <li>9 b 18</li>
             </ul>
             <!-- } -->
             

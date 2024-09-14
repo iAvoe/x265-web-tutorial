@@ -236,14 +236,14 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>将帧内的像素组合成大的整体，以更多地冗余单个像素的帧间/帧内信息；同时要根据动静态以及图像边缘的变化，将图像细分为足够小的区域，以精确分配量化的强度。可以说既要大，又要小。</p>
             <p>在 High Efficiency Video Coding HEVC 中，帧的下级结构按照分辨率大小分为帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss）→ CTU 树单元 Coding Tree Unit → 编码单元 Coding Unit CU</p>
             <div class="align-items-center">
-                <img src="files/block-splitting/Coding-Tree-Unit.png" alt="image1" class="img-medium" >
+                <img src="files/block-splitting/Coding-Tree-Unit.png" alt="image1" class="img-medium">
                 <p class="text-gray-side mt-0">图：Coding Tree Unit 以及其下 Coding Unit 的划分</p>
             </div>
             <p>编码单元 Coding Unit CU 的大小有 64x64，32x32，16x16 和 8x8，代表逻辑上粗略划分的待编码区域。是 CTU 通过动态搜索 ME 与运动补偿 MC 隔离分块得到的初步细分结构。其中的 U/unit 代表 YCbCr 一体的结构。</p>
             <p>编码块 Coding Block CB 代表单指编码单元中的 Y，Cb 或 Cr 平面。</p>
             <p>每个 CU 通常包含一个或多个预测单元 Prediction unit PU，从而精确地划分出更小的区间。这个区间相对于当前 CU 的大小，所以不用像素值大小表示。具体为默认的 2Nx2N，NxN、启用 rectangle 划分后添加 2NxN，Nx2N、启用不对称划分后添加 2Nx1.5N+2Nx0.5N，0.5Nx2N+1.5Nx2N，2Nx0.5N+2Nx1.5N，1.5Nx2N+0.5Nx2N。亮度 PB 与色度 PB 的划分方法可以是不同的。</p>
             <div class="align-items-center">
-                <img src="files/block-splitting/Prediction-Unit.png" alt="image2" class="img-medium" >
+                <img src="files/block-splitting/Prediction-Unit.png" alt="image2" class="img-medium">
                 <p class="text-gray-side mt-0">图：pu 的 4 种对称 rectangular 和 4 种不对称 asymmetric 划分</p>
             </div>
             
@@ -458,11 +458,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法细节：</button>
             <div class="coll-content">
                 <div class="align-items-center">
-                    <img src="files/motion-compensation/7tap-8tap-interpolation-1.png" alt="image13" class="img-medium" >
+                    <img src="files/motion-compensation/7tap-8tap-interpolation-1.png" alt="image13" class="img-medium">
                     <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
                 </div>
                 <div class="align-items-center">
-                    <img src="files/motion-compensation/7tap-8tap-interpolation-2.png" alt="image14" class="img-medium" >
+                    <img src="files/motion-compensation/7tap-8tap-interpolation-2.png" alt="image14" class="img-medium">
                     <p class="text-gray-side mt-0">图：Y 平面 FIR 插值和 subme 并行，调用 8²或 16²块的横/纵向参考源。若 subme 所得动态的：</p>
                 </div>
                 <ul>
@@ -535,10 +535,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </tbody>
             </table>
 
-            <h3>加权预测 Weighted Prediction</h3>
+            <h3>量化值加权预测 Weighted Prediction</h3>
             <div class="row">
                 <div id="LR-UD-007" class="col-10">
-                    <p>解决淡入淡出 fade 过程中，部分 PU 因误参考，亮度变化不一的块失真问题；分为 P-B 条带用的显加权，和 B 条带用的隐加权。</p>
+                    <p>解决画面淡入淡出（fade）过程中，部分 PU（预测单元，待编码的 Y，Cb，Cr 块）因误参考，导致量化值不统一或参考源指向错误，导致亮度变化不一的块失真问题；分为 P-B 条带用的显加权，和 B 条带用的隐加权。</p>
                     <ul class="text-gray-side">
                         <li>显 Explicit：原画和编码过的参考帧做差，差距越小权重越高</li>
                         <li>隐 Implicit：用参考帧距离做加权平均插值，距离越近权重越高</li>
@@ -551,8 +551,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;启用 B 条带的隐加权预测。注意光线变化和淡入淡出在公开课，电脑录屏，低成本/旧动漫等片源中几乎不存在，这种情况下打开只会浪费性能。</p>
 
             <h2 id="h2-7">帧间 - 时域架网搜索</h2>
-            <h3>一维小波变换 1D Wavelet Transform</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：一维小波变换 1D Wavelet Transform</button>
             <div class="coll-content">
                 <p>让短波像拉链一样划过一维信号，短波所到的时间域与源信号匹配（波形重合）的程度会变化，而变化本身记为时间频域信息。支持更换波形以提取特征（如特征采样式音频降噪滤镜）。解决了傅里叶变换只有空间频域，无法描述信号随时间变化过程的原生缺陷，缺点是分辨率低。详见<a href="https://www.youtube.com/watch?v=jnxqHcObNK4">科普视频</a>。一般用于检测特征片段，如将小波本身塑性为需要的特征，然后划过源波形，得到这些特征的时间域分布和强度变化。</p>
                 <div class="align-items-center">
@@ -561,8 +560,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
             </div>
 
-            <h3>基于提升式小波变换的时域动态补偿 lifting-scheme temporal MC</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：基于提升式小波变换的时域动态补偿 lifting-scheme temporal MC</button>
             <div class="coll-content">
                 <div class="row">
                     <div id="LR-UD-009" class="col-8">
@@ -574,56 +572,67 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
             </div>
 
-            <h3>高斯模糊 Gaussian blur</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：高斯模糊 Gaussian blur</button>
             <div class="coll-content">
                 <p>利用正态分布函数面积不变的特性，通过设定偏差程度 σ 决定正态分布钟型线的梯度：σ 大则钟扁——滤镜中心分到的权重/面积越被更多分到权/面积的旁像素冲淡模糊掉，设计行业常用。见<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A">维基百科</a>和<a href="https://www.desmos.com/calculator/jxzs8fz9qr">Desmos 互动例</a>。2D 高斯模糊写作：<span class="text-blue-math">
                     $${\displaystyle G(x,y)={\frac {1}{2\pi \sigma ^{2}}}e^{-{\frac {x^{2}+y^{2}}{2\sigma ^{2}}}}}$$
                 </span></p>
             </div>
 
-            <h3>中值滤镜 Median filter</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：中值滤镜 Median filter</button>
             <div class="coll-content">
                 <p>和卷积滤镜一样用 n×n 的滤镜格子逐像素扫图，区别在于滤镜中心会被替换为旁像素的中值。如此一来在扫描窗口任意两端几乎一致的像素值会被识别为线段或边缘，中间的像素值会被同化，而平面上的噪点/颗粒就会被抹除，生成仅有平/斜面和完整线条边缘的“模糊”结果。</p>
                 <div class="align-items-center">
-                    <img src="files/bilateral-filter/Median-Filter.png" alt="image18" class="img-medium" >
+                    <img src="files/bilateral-filter/Median-Filter.png" alt="image18" class="img-medium">
                     <p class="text-gray-side">图：中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate - Andrzej Bargiela</a></p>
-                    <img src="files/bilateral-filter/Median-Filter-Example.jpg" alt="image19" class="img-medium" >
+                    <img src="files/bilateral-filter/Median-Filter-Example.jpg" alt="image19" class="img-medium">
                     <p class="text-gray-side">图：中值滤镜效果。见<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2%E5%99%A8">维基百科</a></p>
                 </div>
             </div>
 
-            <h3>双边滤镜 Bilateral filter</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：双边滤镜 Bilateral filter</button>
             <div class="coll-content">
                 <p>将中值滤镜输出作为（2D）高斯模糊的权重蒙版（通过矩阵点除实现动态干涉滤镜强度）；因此平面/斜面/线条本身会决定高斯模糊正态分布钟在对应位置被保留/干涉/隔断的程度</p>
                 <div class="align-items-center">
-                    <img src="files/bilateral-filter/Bilateral-Filter.png" alt="image20" class="img-medium" >
+                    <img src="files/bilateral-filter/Bilateral-Filter.png" alt="image20" class="img-medium">
                 </div>
                 <code><b>--mcstf</b></code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">会关多线程</span>&gt;时域动态补偿滤镜 mctf 搭配双阈滤镜的自动降噪，理论上提高细节保真。关多线程会大幅削弱性能。</p>
             </div>
 
-            <h2 id="h2-8">溯块向量搜索</h2>
-            <p>与帧内预测并行给动态搜索提供溯块向量（cu 帧内/帧间朝向以及大小）的步骤。由于移动的物件会跨越多个 PU，所以将涉及同个移动物件的 PB 合到一起就能冗余一群 PB 的动态向量。x264/5 用 <span class="text-blue-emph">--ref</span> 参数于时域上划区，逐 PU 创建 L<sub>0</sub> 和 L<sub>1</sub> 左右两排参考列表。x265 在 x264 <span class="text-blue-emph">--direct auto</span> 的基础上添加了 AMVP 与 Merge mode 两个方案</p>
+            <h2 id="h2-8">帧间动态向量先预测/溯块向量预搜索</h2>
+            <p>“动态搜索”与“动态预测”的全称分别是 Motion Estimation 和 Motion Prediction，两者不同但都可译作“预测”，“估计”（<a href="https://stats.stackexchange.com/questions/17773/what-is-the-difference-between-estimation-and-prediction">其实很容易混淆，不能怪翻译</a>）。因此为了简化，此处将 Prediction 译作预搜索/先预测/预估计（代表 Estimation 之前的 Estimation），Estimation 译作搜索/预测/估计。</p>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：Estimate 与 Predict 的定义</button>
+            <div class="coll-content">
+                <ul>
+                    <li>Estimator 用现有数据推导参悟出最可能的值（Parameter）。例如在有限数据下对人口平均年龄、身高的预测</li>
+                    <li>Predictor 用现有数据预计未知——任何可能的数，包括对未来天气、经济、人口的预测</li>
+                </ul>
+            </div>
+            <p>预搜索有缩小搜索/预测/估计范围的性能优化作用，且比单用搜索本身更适合多线程分工（尽管实际可能会被进程跨核心，跨 CCD 等延迟限制）。x264 中使用 <span class="text-blue-emph">--direct spatial / temporal / auto</span> 指定从帧内/帧间/同时作为动态/帧内预测的起点。x265 中则引入了专门的算法：高级动态向量预搜索和并合模式对比相邻编码块的搜索结果，缩小了动态搜索/预测/估计算法的计算范围（cu 帧内/帧间朝向以及大小）。</p>
 
-            <h3>高级动态向量搜索 Advanced Motion Vector Prediction</h3>
+            <h3>高级动态向量预搜索 AMVP</h3>
+            <p>全称 Advanced Motion Vector Prediction。</p>
+            <div class="align-items-center">
+                <img src="files/amvp-merge/Simplified-AMVP.png" alt="image21" class="img-medium">
+            </div>
+
             <ol class="mt-0">
-                <li>在帧内看当前 PU 左下的邻 PU，优先匹配向量往帧内指的邻 PU</li>
-                <li>参考向量指向其它帧的临 PU；并等比缩放，对齐到邻 PU 已按帧间差异对齐好的向量</li>
+                <li>在帧内看当前 PU（预测单元，待编码的 Y，Cb，Cr 块）左下的邻 PU，优先匹配向量往帧内指的邻 PU</li>
+                <li>参考向量指向参考帧范围内（<code>--ref</code>）的临帧 PU，包括尝试等比缩放到大小相异邻 PU 的匹配方法</li>
                 <li>若以上步骤没找到参选向量，就把同样的步骤于当前 PU 右上角进行一次</li>
                 <li>若应了如早批 PU 刚开始算，找不到参选向量的情况下就直接从时域搜索：
                     <ul>
-                        <li class="text-gray-side">照帧间参考图像变化的内容差异做缩放调整，从右下角的相邻 PU 找参选</li>
+                        <li class="font-monospace pl-5 text-smaller">照帧间参考图像变化的内容差异做缩放调整，从右下角的相邻 PU 找参选</li>
                     </ul>
                 </li>
-                <li>若仍不可用，就找当前 PU 中心位置的其它同位 PU；若最后没凑不齐两个参选向量，代入 v=0,0</li>
+                <li>若仍匹配不到有效向量，就查找当前 PU 中心位置的邻帧同位 PU</li>
+                <li>最后凑不齐两个参选向量则留空（代入 <span class="text-blue-math">vector = 0,0</span>）</li>
             </ol>
             <div class="row">
                 <h3>并合搜索模式 Merge Mode</h3>
                 <p id="LR-UD-011" class="col-8">然后用相对简单含糊算法接手剩余块的向量：从帧间，帧内凑五个参选块 candidate，两个备选，少服从多地并和动态向量。（该模式会跳过 PU 的边缘及当前向量以提速）</p>
-                <img src="files/amvp-merge/Merge-Mode.png" alt="image21" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/amvp-merge/Merge-Mode.png" alt="image22" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
             </div>
 
             <code><b>--max-merge</b></code>
@@ -671,37 +680,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;在流未封装的情况下提供 SPS，PPS 等信息，正常播放 HEVC 源码</p>
             <p class="text-gray-side pl-5 m-0">注：封装文件的科普<a href="https://www.nazorip.site/archives/63">见 x264 教程</a>。</p>
 
-            <h3>缓冲区 Buffer</h3>
-            <p>网速在实际情况下是随机变化的，因此一旦网络，硬盘或内存带宽慢于当前视频码率，视频就会卡顿。为了解决这个问题，流媒体在播放前会设置一段缓冲区，利用了网速可能快于当前视频码率的随机条件，提前缓存一些数据使得播放流畅。具体上是一种“缸里一端加水、另一端放水，注水量变化，缸里一直有水，求缸的大小”的问题。这样一来，只要平均传输带宽大于视频的平均码率，就可以保证播放流畅。</p>
-
-            <h3>基于缓冲区的量化控制 Video Buffer Verifier</h3>
-            <ul>
-                <li>检查 <code>--rc-lookahead</code> 范围内，用户通过 <code>--vbv-bufsize --vbv-maxrate</code> 指定网络/设备元器件带宽所能及的缓冲速度是否大于等于码率流量</li>
-                <li>码率超过缓冲区域则视频必然会卡顿，所以加大视频中「码率大于带宽处」的压缩强度。因此 VBV 对画质的破坏较大</li>
-                <li>与 CRF 一并使用时叫可变码率 Variable Bitrate VBR 模式</li>
-            </ul>
-            <!-- x264 教程副本，更改需手动同步 { -->
-            <code><b>--vbv-bufsize</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt;编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>
-            <code><b>--vbv-maxrate</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关 0&gt;峰值红线。用「出缓帧码率 - 入缓帧码率必≤maxrate"」限制编码器在 GOP 码率超 bufsize，即缓存跑满时压缩超载帧（提高 qp 值 + 强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超 maxrate 也会因缓存有空而不被压缩。所以有四种状态，需经验判断：</p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li>大：GOP 大小=bufsize=2×maxrate，超限后等缓存满再压，避开多数涨落，适合限平均率的串流</li>
-                <li>小：GOP 大小=bufsize=1×maxrate，超码率限制后直接压，避开部分涨落，适合限峰值的串流</li>
-                <li>超：GOP 大小&lt;bufsize=1~2×maxrate，超码率限制后直接压，但因视频小/crf 大所以没啥作用</li>
-                <li>欠：GOP 大小&gt;bufsize=1~2×maxrate，超码率限制后直接压，但因视频大/crf 小所以全都糊掉</li>
-            </ul>
-            <p class="font-monospace pl-5 m-0 overflow-auto">由于 gop 多样，4 种状态可以出现在同一视频中。buf/max 实际控制了这些状态的出现概率</p>
-            <!-- } -->
-            <code><b>--crf-max</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
-
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：HLS 与 Chunked Encoding 串流</button>
+            <h3>HLS 与 Chunked Encoding 串流</h3>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
-                <h3>HTTP 数据块编码协议 Chunked Encoding（1997 年）</h3>
+                <h4>HTTP 数据块编码协议 Chunked Encoding（1997 年）</h4>
                 <p>HTTP/1.1 的一部分。数据块编码允许服务器分段传输视频流的数据块，实现视频的直播、实时聊天等场合。理论上所有平台都支持该协议。</p>
 
-                <h3>HTTP 直播协议 HTTP Live Streaming HLS（2009 年）</h3>
+                <h4>HTTP 直播协议 HTTP Live Streaming HLS（2009 年）</h4>
                 <p>适用于视频直播和点播，可以根据网络条件和设备性能动态调整视频质量。HLS 还提供了媒体播放列表（M3U8）和分段（TS）的机制，使得它更适合跨互联网传输视频。主流的浏览器、视频播放器和移动设备都兼容 HLS。</p>
             
                 <p>总的来说，HTTP Live Streaming（HLS）和 Chunked Encoding 都是 HTTP 协议的一部分。Chunked Encoding 优点在于容易实现以及冷门设备更可能支持，但是在专门的流媒体应用中不如 HTTP Live Streaming（HLS）的功能强大。</p>
@@ -774,7 +759,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h2 id="h2-10">帧内预测/单图压缩</h2>
             <div class="row">
                 <div id="LR-UD-013" class="col-8">
-                    <p>在帧间编码跑完，内容大部分重复的帧变成 P-B 参考帧后，它们所参考的数据都在 I 帧/I 块上。这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。冗余分为补偿参考源，平滑（3-tap/ss），和编码预测块 PB 三步。参考源由预测块的左，上两排像素构成。</p>
+                    <p>在帧间编码完成，重复内容较多的帧变成 P-B 参考帧后，这些 P/B 帧所冗余的数据都会指向 I 帧/I 块上。这些 I 帧帧内也有像大平面，大斜面之类的空间可供冗余。冗余分为补偿参考源，平滑（3-tap/ss），和编码预测块 PB 三步。参考源由预测块的左，上两排像素构成。</p>
                     <ul>
                         <li>补偿解决参考源（因为编码顺序等原因而）缺失，无法判断 PB 与 CB 参考关系的问题</li>
                         <li>平滑预处理据参考源自身像素值的分布特征选择 3-tap FIR 或强力平滑滤镜，卷积插值出「纯预测 PU」</li>
@@ -790,11 +775,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <ol>
                         <li>预测块 C 的大小小于 32x32</li>
                         <li>底 - 中 - 顶，及左 - 中 - 右三个纵/横向参考源两两差之和小于视频位深，如 8bit 下为 8</li>
-                        <li>非 DC，非平行（夹角 10），非垂直（夹角 26）的帧内编码模式</li>
+                        <li>非 DC，非平行（夹角 10），非垂直（夹角 26）的帧内预测模式</li>
                     </ol>
                     <p class="text-gray-side mt-0">图：强力平滑滤镜的启用条件。</p>
                 </div>
-                <img src="files/intra-prediction/Strong-Intra-Smoothing-Condition.png" alt="image23" id="LR-UD-016" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/intra-prediction/Strong-Intra-Smoothing-Condition.png" alt="image24" id="LR-UD-016" class="img-medium img-right col-4 mb-auto" >
                 
                 <div id="LR-UD-017" class="col-8">
                     <h3>强力平滑滤镜 Strong intra smoothing</h3>
@@ -804,7 +789,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </ol>
                     <p class="text-gray-side mt-0">图：强力平滑滤镜。</p>
                 </div>
-                <img src="files/intra-prediction/Strong-Intra-Smoothing.png" alt="image24" id="LR-UD-018" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/intra-prediction/Strong-Intra-Smoothing.png" alt="image25" id="LR-UD-018" class="img-medium img-right col-4 mb-auto" >
                 
                 <div id="LR-UD-019" class="col-8">
                     <h3>3-tap 有限冲击响应 Finite Impulse Reponse 滤镜</h3>
@@ -812,12 +797,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <p class="text-gray-side mt-0">图：3tap FIR 滤镜。</p>
                     <p>预处理后，用趋平，夹角，或 DC 模式初步编码 PB 到 CB。</p>
                 </div>
-                <img src="files/intra-prediction/3tap-FIR-Filter.png" alt="image25" id="LR-UD-020" class="img-small img-right col-4 mb-auto" >
+                <img src="files/intra-prediction/3tap-FIR-Filter.png" alt="image26" id="LR-UD-020" class="img-small img-right col-4 mb-auto" >
 
                 <h3>趋平模式 Planar</h3>
                 <div id="LR-UD-021" class="col-8">
                     <p>
-                        用双线性插值 Bi-lerp，让左 - 上过渡为右 - 下平面。由
+                        用双线性插值 Bi-lerp，让左，上过渡为右，下平面。由
                         <span class="text-blue-math">
                             <span class="text-blue-pure">底β</span>
                             ×
@@ -835,16 +820,16 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </p>
                     <p class="text-gray-side mt-0">图：得到一个平均预测像素 p(x,y) 的过程。</p>
                 </div>
-                <img src="files/intra-prediction/Planar-Intra-Coding-Mode.png" alt="image26" id="LR-UD-022" class="img-medium img-right col-4 mb-auto" >
+                <img src="files/intra-prediction/Planar-Intra-Coding-Mode.png" alt="image27" id="LR-UD-022" class="img-medium img-right col-4 mb-auto" >
 
                 <h3>夹角模式 Direct（35 种）</h3>
                 <div id="LR-UD-023" class="col-10">
                     <p>将渐变（斜面）PB 无损压缩为编码块 CB 中全部画面与参考源共角的夹角<span class="text-blue-math">\(\theta\)</span>拓补结构。通过穷举所有<span class="text-blue-math">\(p(x,y)\)</span>的夹角以尝试对齐上方横向参考源<span class="text-blue-math">\(t(x)\)</span>，或左侧纵向参考源<span class="text-blue-math">\(l(y)\)</span>中差异最小的点<span class="text-blue-math">\(t(x\pm n)\)</span>或纵向的<span class="text-blue-math">\(l(y\pm n)\)</span>构成直角三角。用三角函数<span class="text-blue-math">\(\frac{opp}{adj} = \tan\theta\)</span>得预测像素<span class="text-blue-math">\(p\)</span>的夹角<span class="text-blue-math">\(\theta\)</span>
                 </div>
 
-                <img src="files/intra-prediction/Directional-Coding-Modes.png" alt="image27" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
+                <img src="files/intra-prediction/Directional-Coding-Modes.png" alt="image28" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
                 <div class="align-items-center">
-                    <img src="files/intra-prediction/Directional-Angle-Algebra.png" alt="image28" class="img-small" >
+                    <img src="files/intra-prediction/Directional-Angle-Algebra.png" alt="image29" class="img-small" >
                     <p class="text-gray-side mt-0">图：大体的精确夹角测算。见<a href="https://www.elecard.com/page/spatial_intra_prediction_in_hevc">Elecard 参考书</a></p>
                 </div>
             </div>
@@ -859,13 +844,14 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，不推荐&gt;条件苛刻，强力平滑滤镜平滑的是参考点而非 pu，还能去色带，所以不推荐关。</p>
 
             <h3 class="same-line">量化</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
+
             <h2 id="h2-11">率控制</h2>
             <h3>算出量化值</h3>
             <p>人眼对明暗变化与画面细节程度的感知呈对数㏒状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
             <div class="align-items-center">
-                <img src="files/rate-control/Logrithm-QP-to-qScale.png" alt="image29" class="img-medium" >
+                <img src="files/rate-control/Logrithm-QP-to-qScale.png" alt="image30" class="img-medium">
             </div>
-            <p>由于当前帧此时还未编码（码率未知），故寻已编码前帧的量化失真程度（越高则后帧理应越复杂），做推演复杂度/模糊复杂度。CRF 越高则除进推演复杂度的分母越大/ABR 越低则分子越小，得到的推演复杂度越低，推演出的 qp 就越高。</p>
+            <p>由于当前帧此时还未编码（码率未知），故寻已编码前帧的量化失真程度（越高则后帧理应越复杂），做推演复杂度/模糊复杂度。CRF 越高则除进推演复杂度的分母越大/ABR 越低则分子越小，得到的推演复杂度越低，推演出的量化值就越高。</p>
 
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容 CRF/ABR 模式推演量化值 qp 的简略方法</button>
             <div class="coll-content">
@@ -875,7 +861,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                             <th class="t-light-gray px-1">
                                 cplxSum<span class="text-blue-math">$$\frac{cplxSum\lbrack L_{-1}\rbrack}{2} + SATD\lbrack L_{-1}\rbrack$$</span>
                             </th>
-                            <td>一直于当前与上帧帧间做差并累积，总差异先减半一次再添加新的差异程度</td>
+                            <td>重复将当前帧 <span class="text-blue-math">\(L\)</span> 与旧帧 <span class="text-blue-math">\(L_{-1}\)</span> 做帧间差（SATD）并与已有的总复杂度累计到一起，（累计复杂度通过除以二来降低权重），成为新的累计复杂度 <span class="text-blue-math">\(cplxSum\lbrack L_{-1}\rbrack\)</span>，扫完 GOP 内所有帧后完成</td>
                         </tr>
                         <tr class="border-bottom">
                             <th class="t-light-gray px-1">
@@ -887,7 +873,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                             <th class="t-light-gray px-1">
                                 cplxBlur<span class="text-blue-math">$$\frac{cplxSum}{cplxCount}$$</span>
                             </th>
-                            <td>模糊复杂度。据帧所处推演加权的新 SATD。近似 100% 则当前帧复杂度推高（涨势复杂度）可扭转 cplxCount 默认的跌势</td>
+                            <td>模糊复杂度。据帧所处于 GOP 中的先后位置 cplxCount 为权重，推演加权出新的帧间差复杂度（SATD）。差异近似 100% 则当前帧复杂度推高（复杂度呈涨势）可扭转 cplxCount 越高，分母越大，分配质量越低，量化值越高的跌势</td>
                         </tr>
                         <tr class="border-bottom">
                             <th class="t-light-gray px-1">
@@ -936,62 +922,86 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
                 <p>因此，帧内画面复杂则 qp 低，简则高；同时据用户设定的（对数）强度的动态变化。这种质量判断只有两帧而不宏观，所以引出了各种各样的优化步骤，如 mb/cutree，rdoq 等。</p>
             </div>
+
+            <h3>上层，下层与双层模式</h3>
+            <p>见 <a href="../../x264-web-tutorial/HTML/index.html#h2-8">x264 教程网页版</a></p>
+
             <!-- x264 教程副本，更改需手动同步 { -->
-            <h3>质量呼应码率 Constant Rate Factor CRF 上层模式</h3>
+            <h3>上层 - 质量呼应码率 CRF 模式</h3>
+            <p>全称 Constant Rate Factor。压制三角形下，距离妥协中心点最近的模式。因此也是压制最常用的模式。</p>
             <code><b>--crf</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0~51，默认 23&gt;据 cplxBlur，cutree，B 帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称 crf。素材级画质设在 16~18，收藏~高压画质设在 19~20.5，YouTube 是 23。由于动画和录像的内容差距，动画比录像要给低点。理论上 crf 高=量化损失多→率失真优化慢；但测试出来是 crf+2 则 4k 4:4:4 12bit 会快~0.5fps。</p>
-            <code><b>--qpmin</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14。</p>
-            <code><b>--qpmax</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;在要用到颜色键，颜色替换等需要清晰物件边缘的滤镜时，可以设<span class="text-blue-emph">26</span>防止录屏时物件的边缘被压缩的太厉害，其他情况永远不如关 cu/mbtree。</p>
-            <code><b>--rc-grain</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，tune grain 时开启&gt;通过 cplxBlur 抑制 qp 判断被噪声带偏，胶片颗粒片源用。</p>
-            <code><b>--cplxblur</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur 所以直接指定。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0~51，默认 23&gt;据 cplxBlur，cutree，B 帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称 crf。素材级画质设在 16~18，收藏~高压画质设在 19~20.5，YouTube 是 23。由于动画和录像的内容差距，动画比录像要给低点</p>
 
-            <h3>平均码率 Average Bitrate ABR 上层模式</h3>
-            <p>编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
-
+            <h3>上层 - 平均码率 ABR 模式</h3>
+            <p>全称 Average Bitrate。编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
             <code><b>--bitrate</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt;平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。如果给太低则会得到码率不达标，同时画质差的片子。平均码率模式，除 2pass 分隔，一般推流用的"码率选项"就是这个参数，速度快但同时妥协了压缩。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt;平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。如果给太低则会得到码率不达标，同时画质差的片子。平均码率模式，除 2pass 分隔，一般推流用的"码率选项"就是这个参数，速度快但同时妥协了压缩</p>
 
-            <h3>CQP 双层模式</h3>
+            <h3>双层 - 恒定量化值 CQP 模式</h3>
+            <p>全称 Constant Quantizer Parameter</p>
             <code><b>--qp</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~69，<span class="text-red-emph">禁用 crf/abr+ 模式决策 + 率失真优化</span>&gt;直接设定全局量化强度。影响其后的综合画质下降或码率暴涨，所以除非 yuv4:4:4 情况下有既定目的，都不建议。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~69，<span class="text-red-emph">禁用 CRF/ABR/模式决策/率失真优化</span>&gt;设定全局量化强度。除非有既定目的，否则不建议使用。如果要手动指定特定范围的帧类型和量化值，则应使用 SBRC 下层模式</p>
 
             <!-- x264 教程副本，更改需手动同步 { -->
-            <h3>FTQP 下层模式</h3>
-            <p>手动通过文件制定帧类型和 qp 值。</p>
-            <code><b>--qpfile</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径到文件&gt;手动指定 closed-gop 下 帧类型和 qp 值。qpfile 文件内的格式为<code>帧号 帧类型 QP值</code></p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li>帧类型可以选 [I,i,K,P,B,b]</li>
-                <li>大写 B 代表 B-Pyramid</li>
-                <li>大写 I 代表 IDR 帧</li>
-                <li>K 在 <code>--no-open-gop</code> 时代表 IDR 帧</li>
-                <li>K 在  <code>--open-gop</code> 时代表 i 帧</li>
-                <li>x265 中，QP 值可以不填，代表使用上层率控制模式</li>
-                <li>x264 中，QP 值填<span class="text-blue-emph">-1</span> 代表使用上层率控制模式</li>
-            </ul>
-            <p class="font-monospace pl-5 m-0 overflow-auto">qpfile.txt 例：</p>
-            <ul class="font-monospace pl-5 text-smaller list-dotless">
-                <li>0 I 18</li>
-                <li>1 P 20</li>
-                <li>2 B 22</li>
-                <li>3 K 21</li>
-                <li>9 b 18</li>
-            </ul>
-            <!-- } -->
-            
-            <h3>SBRC 下层模式 - 可搭配 CRF/ABR/CRF-VBR/ABR-VBR</h3>
+            <h3>下层 - FTQP 半自动模式</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
-                <p>分段式率控制 Segment based rate control，实现 DASH，M3U8 串流（视频平台）用。</p>
+                <p>手动通过文件制定一部分帧的帧类型和量化值，实现全部手动或半手动指定。</p>
+                <code><b>--qpfile</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径到文件&gt;手动指定帧类型和 qp 值 closed-gop 下 K 帧的 frame type qp 下层模式。qpfile 文件内的格式为"帧号 帧类型 QP"</p>
+                <ul class="font-monospace pl-5 text-smaller">
+                    <li>帧类型可以选 [I,i,K,P,B,b]</li>
+                    <li>大写 B 代表 B-Pyramid</li>
+                    <li>大写 I 代表 IDR 帧</li>
+                    <li>K 在 <code>--no-open-gop</code> 时代表 IDR 帧</li>
+                    <li>K 在  <code>--open-gop</code> 时代表 i 帧</li>
+                    <li>x265 中，QP 值可以不填，代表使用上层率控制模式</li>
+                    <li>x264 中，QP 值填 <span class="text-blue-emph">-1</span> 代表使用上层率控制模式</li>
+                </ul>
+                <p class="font-monospace pl-5 m-0 overflow-auto">qpfile.txt 例：</p>
+                <ul class="font-monospace pl-5 text-smaller list-dotless">
+                    <li>0 I 18</li>
+                    <li>1 P 20</li>
+                    <li>2 B 22</li>
+                    <li>3 i 21</li>
+                    <li>4 b 28</li>
+                </ul>
+            </div>
+            <!-- } -->
+            <h3>下层 - VBR，CBR 模式</h3>
+            <p>带宽是有限资源。一旦网络、硬盘、内存、PCIE 通道等等带宽无论原因慢于当前视频码率，视频就一定会卡顿。因此，在播放各种流媒体前，播放器会根据用户指定的大小设置一段内存缓冲区，利用了传输速度有时会快于当前视频码率的随机条件，预加载一些数据以求播放不卡顿。此时问题变成了“缸里一端加水、另一端放水，注水量变化，缸里一直有水，求缸的大小”的问题。这样一来，只要平均传输带宽大于视频的平均码率，就可以保证播放流畅。有的大型 3D 游戏中没有加载缓冲区，导致无论电脑内存多大，只要玩家移动到触发地图加载的区域后，游戏才会开始读盘，导致游戏突然卡顿。</p>
+            <p>基于缓冲区的量化控制 VBV 全称 Video Buffer Verifier：</p>
+            <ol>
+                <li>保证 <code>rc-lookahead</code> 范围内，用户通过 <code>vbv-bufsize vbv-maxrate</code> 指定网络/设备元器件带宽所能及的缓冲速度是否大于等于码率流量</li>
+                <li>码率超过缓冲区域则视频必然会卡顿，所以加大视频中「码率大于带宽处」的压缩强度。因此 VBV 对画质的破坏较大</li>
+                <li>与 CRF 上层模式一并使用时叫可变码率 Variable BitRate（VBR），或 Capped-CRF 模式</li>
+                <li>与 ABR 上层模式一并使用时叫固定码率 Constant BitRate（CBR），或 Capped-ABR 模式</li>
+            </ol>
+            <!-- x264 教程副本，更改需手动同步 { -->
+            <code><b>--vbv-bufsize</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt;编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>
+            <code><b>--vbv-maxrate</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关 0&gt;峰值红线。用「出缓帧码率 - 入缓帧码率必≤maxrate"」限制编码器在 GOP 码率超 bufsize，即缓存跑满时压缩超载帧（提高 qp 值 + 强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超 maxrate 也会因缓存有空而不被压缩。所以有四种状态，需经验判断：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li>大：GOP 大小=bufsize=2×maxrate，视频码率超出 maxrate 后等缓存满再压缩，避开多数涨落，适合限平均率的串流</li>
+                <li>小：GOP 大小=bufsize=1×maxrate，视频码率超出 maxrate 后直接压缩，避开部分涨落，适合限峰值的串流</li>
+                <li>超：GOP 大小&lt;bufsize=1~2×maxrate，视频码率超出 maxrate 后直接压缩，但因视频小/crf 大所以作用不大</li>
+                <li>欠：GOP 大小&gt;bufsize=1~2×maxrate，视频码率超出 maxrate 后直接压缩，但因视频大/crf 小所以全都糊掉</li>
+            </ul>
+            <p class="font-monospace pl-5 m-0 overflow-auto">由于 gop 多样，4 种状态可以出现在同一视频中。buf/max 实际控制了这些状态的出现概率</p>
+            <!-- } -->
+            <code><b>--crf-max</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
+
+            <h3>下层 - SBRC 分段控制模式</h3>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <div class="coll-content">
+                <p>Segment based rate control，实现 DASH，M3U8 串流（视频平台）用。可搭配 CRF/ABR/CRF-VBR/ABR-VBR。</p>
                 <code><b>--sbrc</b></code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需 min-keyint=keyint</span>，<span class="text-red-emph">no-open-gop</span>&gt;由于提高了初始 CRF 值的利用率，所以建议搭配--cplxblur=crf 使用。</p>
             </div>
 
-            <h3>2pass-ABR 双层模式</h3>
+            <h3>双层 - 2pass-ABR 模式</h3>
             <p>先用 CRF 模式分析整个视频总结可压缩信息，后根据 ABR 模式的码率限制统一分配量化值。有 pass 2 给特别高的平均码率，输出最小损失的最小体积近无损模式，以及 pass2 给码率硬限的全局整体压缩模式</p>
             <code><b>--pass 1</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;挡位，导出 stats 数据文件&gt;</p>
@@ -999,51 +1009,54 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;挡位，导入 stats 数据文件&gt;</p>
             <code><b>--stats</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径，默认在 x264/5 所在目录下&gt;设定导出和导入 stats 数据文件的路径和文件名</p>
+            <!-- } 额外参数（与 x264 教程不同）：-->
             <code><b>--slow-firstpass</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;pass1 里不用 fast-intra no-rect no-amp early-skip ref 1 max-merge 1 me dia subme 2 rd 2，或者手动覆盖掉。</p>
-            <!-- } -->
-            <h3>Analysis-2pass-ABR 双层模式</h3>
-            <p>于普通 2pass 基础上让 pass1 的帧内帧间分析结果给到 pass2。</p>
-            <code><b>--analysis-save --analysis-load</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;指定导入/出 analysis 信息文件的路径，文件名。</p>
-            <code><b>--analysis-save-reuse-level --analysis-load-reuse-level</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~10，默认 5&gt;指定 analysis-save 和 load 的信息量，配合 pass1 的动态搜索，帧内搜索，参考帧等参数。推荐 8</p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">1</span>储存 lookahead 信息</li>
-                <li><span class="text-blue-emph">2==4</span>同时储存帧内/帧间向量格式 + 参考信息</li>
-                <li><span class="text-blue-emph">5==6</span>加 rect/amp 分块信息</li>
-                <li><span class="text-blue-emph">7</span>加 8x8cu 分块优化信息</li>
-                <li><span class="text-blue-emph">8==9</span>加完整 8x8cu 分块信息</li>
-                <li><span class="text-blue-emph">10</span>加所有 cu 分析信息</li>
-            </ul>
-            <code><b>--dynamic-refine</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径，默认在 x264/5 所在目录下&gt;设定导出和导入 stats 数据文件的路径和文件名</p>
-            <code><b>--refine-inter</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0&gt;限制帧间块的向量格式，<span class="text-blue-emph">取决于 pass1 分析结果是否可信，如 pass 1 只跑了快速搜索的情况</span>。</p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">0</span>完全遵从 pass1 的分块深度和向量格式</li>
-                <li><span class="text-blue-emph">1</span>分析所有 pass2 中与 pass1 相同分块的向量格式，除 2pass 中比 1pass 更大的分块</li>
-                <li><span class="text-blue-emph">2</span>一旦找出最佳的动态向量格式就应用于全部的块，2Nx2N 块的 rect/amp 分块全部遵从 pass1，仅对 merge 和 2Nx2N 划分的块的动态向量信息进行分析</li>
-                <li><span class="text-blue-emph">3</span>保持使用 pass1 的分块程度，仍然搜索向量格式</li>
-            </ul>
-            <code><b>--refine-intra</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0&gt;限制帧间块的向量格式，<span class="text-blue-emph">取决于 pass1 分析结果是否可信，如 pass 1 只跑了快速搜索的情况</span>。</p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">0~2</span>同上</li>
-                <li><span class="text-blue-emph">3</span>保持使用 pass1 的分块程度，但优化动态向量</li>
-                <li><span class="text-blue-emph">4</span>pass1 丢弃不用</li>
-            </ul>
-            <code><b>--refine-mv</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~3&gt;优化分辨率变化情况下 pass2 的最优动态向量，<span class="text-blue-emph">1</span>仅搜索动态向量周围的动态，<span class="text-blue-emph">2</span>增加搜索 AMVP 的顶级候选块，<span class="text-blue-emph">3</span>再搜索更多 AMVP 候选。</p>
-            <code><b>--scale-factor</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-blue-emph">需 analysis-reuse-level 10</span>&gt;若 1pass 和 2pass 视频的分辨率不一致，就使用这个参数。</p>
-            <code><b>--refine-mv-type avc</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto"> 读取 API 调用的动态信息，目前支持 avc 大小，使用 analyse-reuse 模块就用这个参数+avc。</p>
-            <code><b>--refine-ctu-distortion</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~1&gt;pass 1 下用 0 写，pass 2 下用 1 读取 ctu 失真信息。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;pass1 里自动关闭以下提速，或自动提高以下参数的强度，以保证 pass1 模式中 CRF 模式计算量化值的准确度：<code>fast-intra，no-rect，no-amp，early-skip，ref 1，max-merge 1，me dia，subme 2 rd 2</code>，可手动覆盖为强度更高的参数</p>
 
-            <h3>2pass 转场优化</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <h3>双层 - Analysis-2pass-ABR 模式</h3>
+            <p>于普通 2pass 基础上，将 pass1 的帧内和帧间的分析结果传给 pass2。</p>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-2pass</button>
+            <div class="coll-content">
+                <code><b>--analysis-save --analysis-load</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;指定导入/出 analysis 信息文件的路径，文件名。</p>
+                <code><b>--analysis-save-reuse-level --analysis-load-reuse-level</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~10，默认 5&gt;指定 analysis-save 和 load 的信息量，配合 pass1 的动态搜索，帧内搜索，参考帧等参数。推荐 8</p>
+                <ul class="font-monospace pl-5 text-smaller">
+                    <li><span class="text-blue-emph">1</span>储存 lookahead 信息</li>
+                    <li><span class="text-blue-emph">2==4</span>同时储存帧内/帧间向量格式 + 参考信息</li>
+                    <li><span class="text-blue-emph">5==6</span>加 rect/amp 分块信息</li>
+                    <li><span class="text-blue-emph">7</span>加 8x8cu 分块优化信息</li>
+                    <li><span class="text-blue-emph">8==9</span>加完整 8x8cu 分块信息</li>
+                    <li><span class="text-blue-emph">10</span>加所有 cu 分析信息</li>
+                </ul>
+                <code><b>--dynamic-refine</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径，默认在 x264/5 所在目录下&gt;设定导出和导入 stats 数据文件的路径和文件名</p>
+                <code><b>--refine-inter</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0&gt;限制帧间块的向量格式，<span class="text-blue-emph">取决于 pass1 分析结果是否可信，如 pass 1 只跑了快速搜索的情况</span>。</p>
+                <ul class="font-monospace pl-5 text-smaller">
+                    <li><span class="text-blue-emph">0</span>完全遵从 pass1 的分块深度和向量格式</li>
+                    <li><span class="text-blue-emph">1</span>分析所有 pass2 中与 pass1 相同分块的向量格式，除 2pass 中比 1pass 更大的分块</li>
+                    <li><span class="text-blue-emph">2</span>一旦找出最佳的动态向量格式就应用于全部的块，2Nx2N 块的 rect/amp 分块全部遵从 pass1，仅对 merge 和 2Nx2N 划分的块的动态向量信息进行分析</li>
+                    <li><span class="text-blue-emph">3</span>保持使用 pass1 的分块程度，仍然搜索向量格式</li>
+                </ul>
+                <code><b>--refine-intra</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0&gt;限制帧间块的向量格式，<span class="text-blue-emph">取决于 pass1 分析结果是否可信，如 pass 1 只跑了快速搜索的情况</span>。</p>
+                <ul class="font-monospace pl-5 text-smaller">
+                    <li><span class="text-blue-emph">0~2</span>同上</li>
+                    <li><span class="text-blue-emph">3</span>保持使用 pass1 的分块程度，但优化动态向量</li>
+                    <li><span class="text-blue-emph">4</span>pass1 丢弃不用</li>
+                </ul>
+                <code><b>--refine-mv</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~3&gt;优化分辨率变化情况下 pass2 的最优动态向量，<span class="text-blue-emph">1</span>仅搜索动态向量周围的动态，<span class="text-blue-emph">2</span>增加搜索 AMVP 的顶级候选块，<span class="text-blue-emph">3</span>再搜索更多 AMVP 候选。</p>
+                <code><b>--scale-factor</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-blue-emph">需 analysis-reuse-level 10</span>&gt;若 1pass 和 2pass 视频的分辨率不一致，就使用这个参数。</p>
+                <code><b>--refine-mv-type avc</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto"> 读取 API 调用的动态信息，目前支持 avc 大小，使用 analyse-reuse 模块就用这个参数+avc。</p>
+                <code><b>--refine-ctu-distortion</b></code>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~1&gt;pass 1 下用 0 写，pass 2 下用 1 读取 ctu 失真信息。</p>
+            </div>
+
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-2pass 转场优化</button>
             <div class="coll-content">
                 <code><b>--scenecut-aware-qp</b></code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认关，<span class="text-red-emph">仅 pass2</span>&gt;降低转场前/后 qp 以增加转场画质，类似 fades 和 weightb。</p>
@@ -1064,24 +1077,22 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p class="text-gray-side pl-5 m-0"> 注：x265 v3.5 移除了 scenecut-window，max-qp-delta，qe-delta-ref，qp-delta-nonref。</p>
             </div>
 
-            <h3>Analysis-Npass 间调优</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-Npass 间调优</button>
             <div class="coll-content">
                 <p>在 Analysis-pass 1 和 Analysis-pass 2 之间引入一步优化计算，实现比普通的 2pass 编码更精细的码率控制。“优化”代表更详细的分析和统计视频内容，以便在第二次编码时更准确地分配码率。</p>
 
                 <code><b>--multi-pass-opt-analysis</b></code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认生成 x265_analysis.dat，<span class="text-red-emph">需关闭 pme/pmode/analysis-save|load</span>&gt;储存/导入每个 CTU 的参考帧/分块/向量等信息。将信息优化，细化并省去多余计算。</p>
                 <code><b>--multi-pass-opt-distortion</b></code>
-                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需关闭 pme/pmode/analysis-save|load</span>&gt;根据失真（编码前后画面差）进一步分析 qp。</p>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需关闭 pme/pmode/analysis-save|load</span>&gt;根据失真（编码前后画面差）进一步分析 qp</p>
                 <code><b>--multi-pass-opt-rps</b></code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;将 pass1 常用的率参数集保存在序列参数集 SPS 里以加速。</p>
             </div>
 
-            <h3>Analysis-pass2-ABR 天梯模式</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-2pass pass2 梯级多视频流导出</button>
             <div class="coll-content">
                 <code><b>--abr-ladder</b></code>
-                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名.txt，<a href="https://streaminglearningcenter.com/blogs/the-evolving-encoding-ladder-what-you-need-to-know.html">苹果 TN2224</a>，<span class="text-red-emph">实验性</span>&gt;编码器内部实现 analysis 模式 2pass abr 多规格压制输出。方便平台布置多分辨率版本用。可以把不变参数写进 pass1+2，变化的写进 txt。</p>
+                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名.txt，<a href="https://streaminglearningcenter.com/blogs/the-evolving-encoding-ladder-what-you-need-to-know.html">苹果 TN2224</a>，<span class="text-red-emph">实验性</span>&gt;编码器内部实现 Analysis-2pass 中，pass2-ABR 阶段的多规格输出。方便平台布置多分辨率视频版本用。可以把不变的参数写进 pass1+2，变化的写进 txt。</p>
                 <p class="font-monospace pl-5 m-0 overflow-auto">格式为："[压制名:analysis-load-reuse-level:analysis-load] &lt;参数 1+ 输出文件名 1&gt;" 例：</p>
                 <pre class="mt-3"><code>x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-dep例th 8 --input-csp i420 --min-keyint 60 --keyint 60 --no-open-gop --cutree
 1440p8kb_2160p11kb_2160p16kb.txt {
@@ -1089,13 +1100,24 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 [2160p1:0:nil] --input 视频.yuv --input-res 3840x2160 --bitrate 11000 --ssim --psnr --csv 10.csv --csv-log-level 2 --output 2.hevc --scale-factor 2
 [2160p2:10:Anld存档3] --input视频.yuv --input-res 3840x2160 --bitrate 16000 --ssim --psnr --csv 11.csv --csv-log-level 2 --output 3.hevc --scale-factor 0 }</code></pre>
             </div>
-            <h3>近无损与真无损压缩双层模式</h3>
+            <h3>双层 - 近无损，真无损模式</h3>
             <code><b>--lossless</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;过分块，动/帧/参搜索，量/自适量化等影响画质的步骤，保留率失真优化以增强参考性能。输出体积特大的原画。相比锁定量化方法，这样更能满足影业与科研用，但不适合个人和一般媒体。真无损导出有很小几率因为参考质量提升而会比近无损小。</p>
-            <code><b>--tskip</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;4x4 tu 上跳过 DCT 变换，可保留深度分块/纹理密集处的放大细节。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;过分块，动/帧/参搜索，量/自适量化等影响画质的步骤，保留率失真优化以增强参考性能。输出体积特大的原画。相比锁定量化方法，这样更能满足影业与科研用，但不适合个人和一般媒体。真无损导出有很小几率因为参考质量提升而会比近无损小</p>
             <code><b>--cu-lossless</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;将无损量化 cu（qp 4）作为率失真优化的结果选项之一，只要码率管够（符合λ=R/D）就不量化。用更多码率换取原画相似度，无损源能提高参考冗余。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;将无损量化 cu（qp 4）作为率失真优化的结果选项之一，只要码率管够（符合<span class="text-blue-math">\(λ=R/D\)</span>）就不量化。用更多码率换取原画相似度，无损源能提高参考冗余</p>
+
+            <h3>其它率控制</h3>
+            <p>可以搭配除 CQP 以外的上下层模式使用，决定了视频各处的最终量化值</p>
+            <code><b>--tskip</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;4x4 tu 上跳过 DCT 变换，可保留深度分块/纹理密集处的放大细节；也可算作一种近无损模式</p>
+            <code><b>--qpmin</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14</p>
+            <code><b>--qpmax</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;在要用到颜色键，颜色替换等需要清晰物件边缘的滤镜时，可以设<span class="text-blue-emph">26</span>防止录屏时物件的边缘被压缩的太厉害，其他情况永远不如关 <code>--cutree/--mbtree</code></p>
+            <code><b>--rc-grain</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<code>--tune grain</code> 时开启&gt;通过抑制 cplxBlur 的累积，从而保证一定场景下，GOP 分配量化值呈跌势以保证整个视频的码率受控。如果视频中的大多数高频信号都是细节而非噪点，且策略为画质编码则关</p>
+            <code><b>--cplxblur</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur，所以保留默认值或手动指定，如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
 
             <h2 id="h2-12">自适应量化</h2>
             <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 qp 分配过程。讨论时注意 aq 与 vaq 的混淆。见 <a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
@@ -1206,7 +1228,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>在视频编码中根据帧间（Inter）和帧内（Intra）搜索所得的信息，综合考虑宏观和微观特征，以定制分块的参考量化和其他细分方案。在这一过程中有率失真优化的参与，即在保持视觉质量的前提下尽可能减小编码后视频的码率。</p>
             <p>对于明显边缘失真的源，编码时反而需要减少率失真优化的影响。因为优化的最终目标是降低与原画的差异，因此“保持画质”的意义不再重要。</p>
             <div class="align-items-center">
-                <img src="files/rate-control/Mode-Decision.png" alt="image30" class="img-medium" >
+                <img src="files/rate-control/Mode-Decision.png" alt="image31" class="img-medium">
             </div>
 
             <code><b>--rd</b></code>
@@ -1237,7 +1259,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>抗涂抹：<span class="text-blue-emph">rskip 2 rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比 rskip 0 快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</li>
             </ul>
             <div class="align-items-center">
-                <img src="files/rate-control/rSkip-Edge-Threshold.png" alt="image31" class="img-small" >
+                <img src="files/rate-control/rSkip-Edge-Threshold.png" alt="image32" class="img-small" >
                 <p class="text-gray-side">图：影响 DCT 系子分布的块中像素，而 DCT 系子的密度影响 rskip-edge-threshold 的设置</p>
             </div>
             <!-- x264 教程副本，更改需手动同步 { -->
@@ -1252,10 +1274,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-math">\(\lambda &gt;0\)</span>则开销大于失真——保画质收益大于压缩收益，应该保画质</li>
             </ul>
             <div class="align-items-center">
-                <img src="files/rate-distorsion-optimization/x264-JM-RDO-Lambda.png" alt="image32" class="img-medium" >
-                <img src="files/rate-distorsion-optimization/RDO-Lambda-Slopes.png" alt="image33" class="img-medium" >
+                <img src="files/rate-distorsion-optimization/x264-JM-RDO-Lambda.png" alt="image33" class="img-medium">
+                <img src="files/rate-distorsion-optimization/RDO-Lambda-Slopes.png" alt="image34" class="img-medium">
                 <p class="text-gray-side">图：率失真优化中λ的斜度变化与效果</p>
-                <img src="files/rate-distorsion-optimization/RDO-qStep-Chart.png" alt="image34" class="img-medium" >
+                <img src="files/rate-distorsion-optimization/RDO-qStep-Chart.png" alt="image35" class="img-medium">
                 <p class="text-gray-side">图：率 - 失真表格中不断调整并得到“×”的实际效果</p>
             </div>
             <!-- } -->
@@ -1303,7 +1325,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--rd-refine</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需 rd 5，见下图斜面上出现的随机块失真</span>&gt;率失真优化分析帧内预测 CU 的最佳量化和分块结果，耗时换压缩率和画质。x264 中还包括了最优动态向量的分析</p>
             <div class="align-items-center">
-                <img src="files/rate-distorsion-optimization/RD-Refine-Random-Distortion.jpg" alt="image35" class="img-small" >
+                <img src="files/rate-distorsion-optimization/RD-Refine-Random-Distortion.jpg" alt="image36" class="img-small" >
             </div>
 
             <h3>优化量化</h3>
@@ -1339,7 +1361,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <div class="align-items-center">
-                    <img src="files/rate-distorsion-optimization/RDO-Settings-Reference.jpg" alt="image36" class="img-medium" >
+                    <img src="files/rate-distorsion-optimization/RDO-Settings-Reference.jpg" alt="image37" class="img-medium">
                     <p class="text-gray-side">图：左 1 源有微量边缘失真以及颗粒。2~4=高量化导致块失真，worm，蚊噪等。5 对应失真用 psy-rd(oq)，(limit)sao，deblock，aq，降 crf 抑制</p>
                 </div>
                 <table class="table-center">
@@ -1439,8 +1461,8 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>去块滤镜</h3>
             <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
             <div class="align-items-center">
-                <img src="files/deblocking-sao/Deblock-detection-visualization.png" alt="image37" class="img-medium" >
-                <img src="files/deblocking-sao/Deblock-edge-visualization.png" alt="image38" class="img-medium" >
+                <img src="files/deblocking-sao/Deblock-detection-visualization.png" alt="image38" class="img-medium">
+                <img src="files/deblocking-sao/Deblock-edge-visualization.png" alt="image39" class="img-medium">
                 <p class="text-gray-side">图：取最小 8x8 范围（两个 4x4 CU）间的界线举例。</p>
             </div>
 
@@ -1465,12 +1487,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>取样迁就偏移滤镜 Sample adaptive offset</h3>
             <div class="row">
                 <p id="LR-UD-025" class="col-10">沿着每个编码树单元 CTU 的划分，应用边缘偏移 Edge offset EO，带状偏移 Band offset BO 和融合 merge 滤镜。用于缓解量化或去块丢失所导致的边缘振铃失真，以及平面蠕虫失真。<span class="text-gray-side">图：上为边缘振铃失真，下为平面蠕虫失真</span></p>
-                <img src="files/deblocking-sao/Sample-Adaptive-Offset-Case.jpg" alt="image39" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
+                <img src="files/deblocking-sao/Sample-Adaptive-Offset-Case.jpg" alt="image40" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
             </div>
             <h4>边缘振铃失真</h4>
             <div class="row">
                 <p id="LR-UD-027" class="col-10">表现为高对比度边缘附近的波纹重影效应，因为量化减少了遮盖低频信号，以使信号整体逼近方形波的高频信号。详见<a href="https://en.wikipedia.org/wiki/Ringing_artifacts">维基百科</a></p>
-                <img src="files/deblocking-sao/Ringing-Distortion.png" alt="image40" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
+                <img src="files/deblocking-sao/Ringing-Distortion.png" alt="image41" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
             </div>
             <ol>
                 <li><b>边缘偏移滤镜</b>：
@@ -1519,7 +1541,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
 
             <div class="align-items-center">
-                <img src="files/entropy-coding/CABAC-Flow-Chart.png" alt="image41" class="" >
+                <img src="files/entropy-coding/CABAC-Flow-Chart.png" alt="image42" class="" >
                 <p class="text-gray-side">图：简化的上下文自适应二进制算数编码<a href="https://iphome.hhi.de/marpe/cabac.html">CABAC 流程</a>，分转二进制，出字概率统计和算数编码三步</p>
             </div>
 
@@ -1528,7 +1550,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
                 <div class="align-items-center">
-                    <img src="files/entropy-coding/Arithmetic-Coding.png" alt="image42" class="" >
+                    <img src="files/entropy-coding/Arithmetic-Coding.png" alt="image43" class="" >
                     <p class="text-gray-side">图：编码即逐字按出字概率缩窄概率条到最后一个字的出字概率，取上/下区间为编码结果，解码照概率位置（蓝线）的落点反推实现。</p>
                 </div>
     
@@ -3724,10 +3746,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <div class="row">
                     <p id="LR-UD-029" class="col-10">以状态描述程序/机器。如 1~2 间可过渡出无限个数字，代表机械运动到位的中间过程；去掉过程后（如取整后）剩下圆圈数字表示的①↔②两种状态，就足以抽象地表示按动式圆珠笔；将两态联系起来的操作表示为箭头，即按下笔的按钮，而输出就是下一状态。若需要将笔伸出（需②）而笔已收拢则写作 ①→⓶；若需收拢而笔已伸出则 ②→⓵</p>
-                    <img src="files/entropy-coding/Double-Action-Ball-Point-Pen.png" alt="image43" id="LR-UD-030" class="img-small img-right col-2 mb-auto" >
+                    <img src="files/entropy-coding/Double-Action-Ball-Point-Pen.png" alt="image44" id="LR-UD-030" class="img-small img-right col-2 mb-auto" >
                 </div>
                 <div class="align-items-center">
-                    <img src="files/entropy-coding/Finite-State-Machine-on-DB-Pen.png" alt="image44" class="img-medium" >
+                    <img src="files/entropy-coding/Finite-State-Machine-on-DB-Pen.png" alt="image45" class="img-medium">
                 </div>
             </div>
             
@@ -3741,7 +3763,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p>视频编码器中，MPS 和 LPS 的分布由人工筛选，所以具体逻辑要看编码器源码。x264 中大体为输入 LPS 为 0/为 1 时的状态切换：若大于 0.5 则变成 MPS，LPS 最小为 0.01875；MPS 最大为
                     0.98125</p>
                 <div class="align-items-center">
-                    <img src="files/entropy-coding/Finite-State-Machine-Context-Adaptation.png" alt="image45" class="img-medium">
+                    <img src="files/entropy-coding/Finite-State-Machine-Context-Adaptation.png" alt="image46" class="img-medium">
                 </div>
             </div>
 
@@ -3838,7 +3860,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </li>
                 </ol>
                 <div class="align-items-center">
-                    <img src="files/entropy-coding/Golomb-Rice-Coding-Variations.png" alt="image46" class="img-medium" >
+                    <img src="files/entropy-coding/Golomb-Rice-Coding-Variations.png" alt="image47" class="img-medium">
                     <p class="text-gray-side">图：M=1~32 时，<span class="text-blue-math">\(2^K - M\)</span> 的边界变化，见<a href="https://www.desmos.com/calculator/2gonwxfc1m">Desmos 例</a></p>
                 </div>
             </div>
@@ -3950,7 +3972,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p>前者在不考虑大小的情况下测量数字信号的差距，如<span class="text-blue-math">100</span>与<span class="text-blue-math">010</span>的汉明距离为 2，数值误差为 90，很明显信号偏差的程度并不如数值误差所说的那么离谱。汉明距离以累计各位数的异或门 ⊻ 得到，“累计”代表误差和 SAD。</p>
                 <p>欧几里得距离测量更高维度下，至少两点分别取值的平方差 SSE，如 GPS 的定位误差</p>
                 <div class="align-items-center">
-                    <img src="files/entropy-coding/Euclidean-distance.svg" alt="image47" class="img-medium">
+                    <img src="files/entropy-coding/Euclidean-distance.svg" alt="image48" class="img-medium">
                     <p class="text-gray-side">图：欧几里得距离利用平方差的算法，见<a href="https://en.wikipedia.org/wiki/Euclidean_distance">维基百科</a></p>
                 </div>
                 <h3>软判决与硬判决解码 Soft/Hard Decision decoding</h3>
@@ -3967,7 +3989,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h3>游程/游标编码 Run-length/run-level coding</h3>
             <div class="align-items-center">
-                <img src="files/entropy-coding/Run-Length-Coding.png" alt="image48" class="img-medium" >
+                <img src="files/entropy-coding/Run-Length-Coding.png" alt="image49" class="img-medium">
             </div>
 
             <h3>Trellis</h3>
@@ -3991,7 +4013,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <p>算数编码的运行顺序是沿着游程/游标编码（从左上到右下）的倒序——先途经编码高频信号中，出字概率最大的一串连续 0、后途经编码概率越来越低的非 0 DCT 系子。可见算数编码累计单个 CTU/宏块中上下文的走线结构是一种只能增加，或维持不变的状态。将其组合起来，即可得到各个走线所组成的网格——trellis。这张网格代表了最小到最大的所有可能上下文 CTX 长度，以及所有（只能增不能减）的路线变更（下图）。由于文本编码是动态程序（一次编一字），所以路线一次只能改一条，且会保持出字概率而得斜线。</p>
                 <div class="align-items-center">
-                    <img src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image49" class="img-medium" ><br>
+                    <img src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image50" class="img-medium"><br>
                 </div>
                 <p>4x4 块的 16 个倒序 zig-zag 系子中，预测与总结系子强度（等于 1_大于 1，或<span class="text-blue-math">NumEq1_NumLg1</span>）的数量归纳为 8 种 CABAC 上下文长度的节点（0_0~any_any），如 2_0 对应<span class="text-blue-math">NumLg1×2</span>，<span class="text-blue-math">NumEq1×1</span>，即 2_0 线。</p>
                 <p>若<span class="text-blue-math">NumLg1 &gt;0</span>，则从当前系子节点切到下个系子的 ×_1 线并不再回到<span class="text-blue-math">NumEq1</span></p>
@@ -4452,9 +4474,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>HDR 元数据设置</h3>
             <p>x264/5 皆支持的元数据设置。但因为 HDR 分为硬件标准，软件标准，以及数据标准，所以很乱。为了保证色彩正确，必须参考片源的元数据。如：</p>
             <div class="align-items-center">
-                <img src="files/video-usability-information/Metadata-for-VUI-HDR-1.png" alt="image50" class="" >
+                <img src="files/video-usability-information/Metadata-for-VUI-HDR-1.png" alt="image51" class="" >
                 <p class="text-gray-side">图 1: cll 1000,640. master-display 由 G(13250…) 开头，L(10000000,1) 结尾</p>
-                <img src="files/video-usability-information/Metadata-for-VUI-HDR-2.png" alt="image51" class="img-medium" >
+                <img src="files/video-usability-information/Metadata-for-VUI-HDR-2.png" alt="image52" class="img-medium">
                 <p class="text-gray-side">图 2: cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
 

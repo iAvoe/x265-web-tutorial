@@ -724,7 +724,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 25&gt;判断新发现的转场距上个 IDR 帧的距离是否短于此值。有两种设定逻辑，而它们给出的画质都一样：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>设 5 或更高，省了设立一些 IDR 帧拖慢速度。快速编码/直播环境直接设=keyint</li>
-                <li>设 1 来增加 IDR 帧的数量，一帧被判转场本来就意味着前后溯块价值不高。而 P/B 帧内可以放置 I 宏块，x264/5 倾向插 P/B 帧。好处是进度条落点在激烈的动作场面更密集</li>
+                <li>设 1 来增加 IDR 帧的数量，一帧被判转场本来就意味着前后溯块价值不高。而单/双向参考（P/B）帧内可以放置 I 宏块，x264/5 倾向插 P/B 帧。好处是进度条落点在激烈的动作场面更密集</li>
             </ul>
             <code><b>--fades</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;找流中的虚实渐变 fade-in，给小到帧间条带，大到整个帧间范围改用 I 条带，并根据渐变后最亮的帧重设码率控制历史记录，解决转场致模糊的问题</p>
@@ -763,7 +763,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <ul>
                         <li>补偿解决参考源（因为编码顺序等原因而）缺失，无法判断 PB 与 CB 参考关系的问题</li>
                         <li>平滑预处理据参考源自身像素值的分布特征选择 3-tap FIR 或强力平滑滤镜，卷积插值出「纯预测 PU」</li>
-                        <li>编码即根据参考源像素值分布的特征和 CB 像素值的相性选用趋平/夹角/DC 三种方案之一编码 PB</li>
+                        <li>编码即根据参考源像素值分布的特征和编码块 CB 像素值的相性选用趋平/夹角/DC 三种方案之一编码预测块 PB</li>
                     </ul>
                     <p>以下图预测块 C 为例：编码块 B 处缺少参考源就用编码块 A 的最右侧存在参考源做副本。编码块 D 补充 A-B 两块参考源的逻辑同上；若 EDAB 四个编码块都没有参考源，就用编码块 F 的顶部参考源替代；若 EDABF 五个编码块都没有参考源，则给所有参考源填像素中值。</p>
                     <p class="text-gray-side mt-0">图：补充参考源的检查顺序。</p>
@@ -824,7 +824,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
                 <h3>夹角模式 Direct（35 种）</h3>
                 <div id="LR-UD-023" class="col-10">
-                    <p>将渐变（斜面）PB 无损压缩为编码块 CB 中全部画面与参考源共角的夹角<span class="text-blue-math">\(\theta\)</span>拓补结构。通过穷举所有<span class="text-blue-math">\(p(x,y)\)</span>的夹角以尝试对齐上方横向参考源<span class="text-blue-math">\(t(x)\)</span>，或左侧纵向参考源<span class="text-blue-math">\(l(y)\)</span>中差异最小的点<span class="text-blue-math">\(t(x\pm n)\)</span>或纵向的<span class="text-blue-math">\(l(y\pm n)\)</span>构成直角三角。用三角函数<span class="text-blue-math">\(\frac{opp}{adj} = \tan\theta\)</span>得预测像素<span class="text-blue-math">\(p\)</span>的夹角<span class="text-blue-math">\(\theta\)</span>
+                    <p>将渐变（斜面）预测块 PB 无损压缩为编码块 CB 中全部画面与参考源共角的夹角<span class="text-blue-math">\(\theta\)</span>拓补结构。通过穷举所有<span class="text-blue-math">\(p(x,y)\)</span>的夹角以尝试对齐上方横向参考源<span class="text-blue-math">\(t(x)\)</span>，或左侧纵向参考源<span class="text-blue-math">\(l(y)\)</span>中差异最小的点<span class="text-blue-math">\(t(x\pm n)\)</span>或纵向的<span class="text-blue-math">\(l(y\pm n)\)</span>构成直角三角。用三角函数<span class="text-blue-math">\(\frac{opp}{adj} = \tan\theta\)</span>得预测像素<span class="text-blue-math">\(p\)</span>的夹角<span class="text-blue-math">\(\theta\)</span>
                 </div>
 
                 <img src="files/intra-prediction/Directional-Coding-Modes.png" alt="image28" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
@@ -837,7 +837,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--constrained-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;缺少生成参考点的 CB 时用帧内块或默认值，不用帧间块生成参考点。降低参考错误传播距离，降低压缩率和速度，增加数据损坏的恢复概率。</p>
             <code><b>--fast-intra</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt;夹角模式优化。先查夹角模式 2,10,18,26,34，再加精度到 5，15，21，31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt;夹角模式优化。先查夹角模式 2,10,18,26,34，再提高精度到 5，15，21，31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
             <code><b>--b-intra</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt;B 条带同样进行帧内预测。关闭可以提速，但相对浪费压缩率。</p>
             <code><b>--no-strong-intra-smoothing</b></code>
@@ -969,7 +969,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             <!-- } -->
             <h3>下层 - VBR，CBR 模式</h3>
-            <p>带宽是有限资源。一旦网络、硬盘、内存、PCIE 通道等等带宽无论原因慢于当前视频码率，视频就一定会卡顿。因此，在播放各种流媒体前，播放器会根据用户指定的大小设置一段内存缓冲区，利用了传输速度有时会快于当前视频码率的随机条件，预加载一些数据以求播放不卡顿。此时问题变成了“缸里一端加水、另一端放水，注水量变化，缸里一直有水，求缸的大小”的问题。这样一来，只要平均传输带宽大于视频的平均码率，就可以保证播放流畅。有的大型 3D 游戏中没有加载缓冲区，导致无论电脑内存多大，只要玩家移动到触发地图加载的区域后，游戏才会开始读盘，导致游戏突然卡顿。</p>
+            <p>带宽是有限资源。一旦网络、硬盘、内存、PCIE 通道等等带宽无论原因慢于当前视频码率，视频就一定会卡顿。因此，在播放各种流媒体前，播放器会根据用户指定的大小设置一段内存缓冲区，利用了传输速度有时会快于当前视频码率的随机条件，预加载一些数据以求播放不卡顿。此时问题变成了“缸里一端加水、另一端放水，注水量变化，缸里一直有水，求缸的大小”。如此，只要平均传输带宽大于 GOP 平均码率则播放流畅。有的大型 3D 游戏中没有加载缓冲区，导致无论电脑内存多大，只要玩家移动到触发地图加载的区域后，游戏才会开始读盘而突然卡顿。</p>
             <p>基于缓冲区的量化控制 VBV 全称 Video Buffer Verifier：</p>
             <ol>
                 <li>保证 <code>rc-lookahead</code> 范围内，用户通过 <code>vbv-bufsize vbv-maxrate</code> 指定网络/设备元器件带宽所能及的缓冲速度是否大于等于码率流量</li>

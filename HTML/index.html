@@ -4046,13 +4046,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~99，默认 70&gt;相似度判定值，默认达 70% 重复就判为相似。</p>
 
             <h2 id="h2-18">线程与节点控制</h2>
-            <h3>设置创建比电脑处理器更多的线程会不会更快</h3>
-            <p>每个 CPU 线程能占用的算力最高只有 100%，因此会导致处理器随机并发的特性，从任务数量上冲淡如参考帧建立等需要之前步骤算完才能开始运行的时间窗口，造成编码器跳过一部分参考压缩，码率增加，画质降低。</p>
-
             <h3>买淘汰线程撕裂者跑压制的可行性</h3>
             <p>由于线程撕裂者 1000~2000 系处理器是用多个节点拼出来的（可能部分 EPYC 处理器也是这样？），所以单处理器内部就是多个 CPU 节点。此外要避开 2990WX 与 2970WX（核心组 1，3 没有内存控制器用，所以只能用 0，2）。当然前提是买来以后不做主力电脑使用的。</p>
 
-            <h3>X3D 处理器在压制上有没有优势</h3>
+            <h3>X3D 处理器有没有优势</h3>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>见 <a href="https://www.pugetsystems.com/labs/articles/amd-ryzen-5800x3d-vs-5800x-for-content-creation-2331/">PugetSystems 跑分</a>：</p>

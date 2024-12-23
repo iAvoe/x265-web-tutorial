@@ -233,7 +233,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2 id="h2-3">分块</h2>
             <p>将帧内的像素组合成大的整体，以更多地冗余单个像素的帧间/帧内信息；同时要根据动静态以及图像边缘的变化，将图像细分为足够小的区域，以精确分配量化的强度。可以说既要大，又要小。</p>
-            <p>在 High Efficiency Video Coding HEVC 中，帧的下级结构按照分辨率大小分为帧 → 瓦 tile → 条带 slice → 条带分段 slice segment（ss）→ CTU 树单元 Coding Tree Unit → 编码单元 Coding Unit CU</p>
+            <p>在 High Efficiency Video Coding HEVC 中，帧的下级结构按照分辨率大小分为帧 → 瓦 tile / 条带 slice → 条带分段 slice segment（ss）→ CTU 树单元 Coding Tree Unit → 编码单元 Coding Unit CU。多个 CTU 可以通过瓦 tile 和条带 slice 两种形式构成一帧，后者继承自 x264，代表按左右顺序划分的一排 CTU；前者较新，代表一定宽高范围的一系列 CTU，更适用于根据画面的分布而分配每个分区的码率。</p>
             <div class="align-items-center">
                 <img src="files/block-splitting/Coding-Tree-Unit.png" alt="image1" class="img-medium">
                 <p class="text-gray-side mt-0">图：Coding Tree Unit 以及其下 Coding Unit 的划分</p>
@@ -1132,7 +1132,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--aq-strength</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点&gt;自适应量化强度。搭配 aq-mode，如动漫 1:0.8，2:0.9，3:0.7 用。录像上可加 0.1~0.2，画面混乱/观众难以注意平面时可再增加。注意低成本动漫的平面居多，因此码率不足时反而要妥协纹理。</p>
             <code><b>--hevc-aq</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;以¼tile 而非 aq 的边缘高频信息实现自适应。据 doom9 论坛讨论：<a href="https://forum.doom9.org/showthread.php?p=1925373#post1925373">1</a>，<a href="https://forum.doom9.org/showthread.php?p=1925464">2</a>: hevc-aq 比 aq 4 快且适合动漫，而 aq 4 更适合录播。目前学术方 - 官方 - 第三方间信息较割裂，暂无适解。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;以 ¼ tile 而非 aq 的边缘高频信息实现自适应。据 doom9 论坛讨论：<a href="https://forum.doom9.org/showthread.php?p=1925373#post1925373">1</a>，<a href="https://forum.doom9.org/showthread.php?p=1925464">2</a>: hevc-aq 比 aq 4 快且适合动漫，而 aq 4 更适合录播。目前学术方 - 官方 - 第三方间信息较割裂，暂无适解。</p>
             <code><b>--aq-motion</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">实验性</span>&gt;据动态信息微调自适应量化的效果 mode 和强度 strength。</p>
             <code><b>---qg-size</b></code>

@@ -277,7 +277,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <p>波形有正弦波 sinusoidal / sine，余弦波 co-sinusoidal / cosine，直流波 direct current / DC，三角波，方形波，以及各种各样的噪声波等等。两波形相加能够得到中间态，而调节相加波形还可以调节振幅强度，得到更偏向其中一个波形的中间态。因此理论上“周期性函数可以被更简单的周期性函数逐级逼近”。其中“周期性”代表按固定时间空间范围循环的函数，最简单的是 <span class="text-blue-math">\(\sin(x)\)</span> 和 <span class="text-blue-math">\(\cos(x)\)</span>。通过单纯累计 <span class="text-blue-math">\(\cos(x)\)</span> 可以得到 cosine 的级数：</p>
                 <div class="align-items-center">
-                    <img src="files/transforming/cosine-series.png" alt="image4" class="">
+                    <img src="files/transforming/cosine-series.png" alt="image4" class="img-medium">
                     <p class="text-gray-side">图：此处使用 cos(πx) 以缩放到 0~2，2~4 为一周期，频率 n 限制范围 1-9 以保证可视化</p>
                 </div>
                 <p>虽然上式说明了“逐级累计以逼近源波形”，但上式只能一次调节全部级数波形的振幅（如 <span class="text-blue-math">\(0.1 \cos(nπx)\)</span>），而不能调节单独一条线（如 <span class="text-blue-math">n=5</span>）的振幅——也就是说无法逼近所有周期波形。因此要设定一个随频率 <span class="text-blue-math">n</span> 控制振幅的变量 <span class="text-blue-math">\(a_n\)</span>：<span class="text-blue-math">\(a_n cos(nπx)\)</span>，实现上式中给每个频率 <span class="text-blue-math">n</span> 的波形调节振幅的功能。如果将 <span class="text-blue-math">\(a_n\)</span> 随频率 <span class="text-blue-math">\(n\)</span>变化的状态用坐标系表示，就得到了“频域坐标系”：</p>

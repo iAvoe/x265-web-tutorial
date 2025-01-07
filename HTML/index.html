@@ -27,7 +27,7 @@
                     <a href="../../x264-web-tutorial/HTML/index.html">x264 教程网页版</a>
                     <ul class="text-xs">
                         <li>基础：
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-1">封装/解封装</a>，
+                            <a href="../../x264-web-tutorial/HTML/index.html#h2-1">必备常识</a>，
                             <a href="../../x264-web-tutorial/HTML/index.html#h2-2">编解码过程</a>，
                             <a href="../../x264-web-tutorial/HTML/index.html#h2-3">视频结构</a>
                         </li>
@@ -274,9 +274,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </ul>
             
             <h2 id="h2-4">变换</h2>
-            <h3>傅里叶级数 Fourier Series</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：傅里叶级数</button>
             <div class="coll-content">
+                <h3>傅里叶级数 Fourier Series</h3>
                 <p>波形有正弦波 sinusoidal / sine，余弦波 co-sinusoidal / cosine，直流波 direct current / DC，三角波，方形波，以及各种各样的噪声波等等。两波形相加能够得到中间态，通过修改其中波形的振幅强度还可以微调合成的中间态。因此，理论上只要有足够多的可调节波形，就可以让合成的中间态逼近原始波形，甚至做到完全一样。</p>
                 <p>除了一条横线以外，波形一般取自余弦 <span class="text-blue-math">\(\cos(x)\)</span> 或正弦 <span class="text-blue-math">\(\sin(x)\)</span>。这两者自带周期循环，通过单纯累计 <span class="text-blue-math">\(\cos(x)\)</span> 可以得到 cosine 的级数：</p>
                 <div class="align-items-center">
@@ -311,24 +311,32 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </ul>
                 <p>当然，理解这个式子背后的理论就足够了，说不定式子非得这样写，原因到底不过是为了好看...</p>
             </div>
+
+            <h3>均方根 Root Mean Square（RMS）</h3>
+            <p>统计中常用的一种数据量化，用于表示一组数据平均值的平方根。对于一个包含 N 个值的数据集<span class="text-blue-math">\( \{ x_1, x_2, \ldots, x_N \} \)</span> </p>
+            <span class="text-blue-math overflow-auto">\[ \text{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}{N} x_i^2} \]</span>
+            <p>具体到 DCT 变换，对于 N×N 块 <span class="text-blue-math">\( f(x,y) \)</span> 的均方根以表示为：</p>
+            <span class="text-blue-math overflow-auto">\[ \text{RMS}_{f(x,y)} = \sqrt{\frac{1}{N^2}\sum_{x=0}^{N-1} \sum_{y=0}^{N-1} f(x, y)^2} \]</span>
+            <p>DCT 变换后，DCT 系子 <span class="text-blue-math">\( T(u,v) \)</span>的均方根为：</p>
+            <span class="text-blue-math overflow-auto">\[ \text{RMS}_{\text{DCT}} = \sqrt{\sum_{u=0}{N-1} \sum_{v=0}^{N-1} C(u, v)^2} \]</span>
+
+            <h3>归一化 Normalize</h3>
+            <p>将数据缩放到基本单位大小，以便计算和对比的处理。<span class="text-blue-math">\( \alpha(u) \)</span>和 <span class="text-blue-math">\( \alpha(v) \)</span> 两个缩放值来对齐，使得 <spanclass="text-blue-math">\( \text{RMS}_{\text{DCT}} = \text{RMS}_{f(x,y)} \)</span>：</p>
+            <span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{N}} & \text{if } u,v = 0 \text{ (DC)} \\ \frac{1}{\sqrt{2N}} & \text{if } u,v \neq 0\text{ (AC)} \end{cases} \]</span>
+            <p>而在 JPEG 中：</p>
+            <div class="overflow-auto"><span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{2}} \approx 0.7071 & \text{if } u,v = 0 \text{ (DC)} \\ 1 & \text{if } u,v \neq 0 \text{ (AC)} \end{cases} \]</span></div>
+
             <div class="row">
                 <div id="LR-UD-001" class="col-8">
                     <h3>一维傅里叶变换 1D Fourier Transform</h3>
                     <p>一种理解方法为：将信号分段或整体视为一个周期，再设定一条从最长周期（起伏很慢的周期线，如 <span class="text-blue-math">\(\cos(0.001x)\)</span>）开始的函数，穷举所有的相位，再穷举所有的振幅，而后记录匹配程度；再缩短一点周期，再穷举所有的相位，...，如此往复直到所有频率、相位、振幅的匹配程度被记录下来。</p>
                     <p>逆变换时，根据每个周期频率所记录的的相位和振幅生成这些波形，再加到一起即可转换回原始信号。计算过程中可能存在信号反相情况，因此还会绝对值的操作。</p>
-                    <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：二维傅里叶变换</button>
-                    <div class="coll-content">
-                        <h3>二维傅里叶变换 2D-FT</h3>
-                        <p>宽高上单拆出线来分别进行 1DFT。在频域中相当于每个像素的变换结果相加或干涉。亮则振幅大，距中心远则频率高。强在可编辑性，可以消除打印喷头，抖动等均匀噪声。</p>
-                    </div>
                 </div>
                 <img src="files/transforming/Fourier-Transform-Phenomenons.png" alt="image7" id="LR-UD-002" class="img-medium img-right col-4 mb-auto">
-                <div id="LR-UD-003" class="col-8">
-                    <h3>二维离散余弦变换 2D Descrete Cosine Transform</h3>
-                    <p>用预制的二维波形模具，穷举加减列出各波形格子的使用次数得到频域分布，比 2DFT 更快。</p>
-                    <p class="text-gray-side mt-0">图：二维傅里叶变换的特性，背景特性以及可编辑性</p>
-                </div>
-                <img src="files/transforming/Fourier-Transform-Editing.png" alt="image8" id="LR-UD-004" class="img-medium img-right col-4 mb-auto">
+            </div>
+            <div class="align-items-center">
+                <img src="files/transforming/Fourier-Transform-Editing.png" alt="image8" class="img-medium">
+                <p class="text-gray-side mt-0">图：二维傅里叶变换的特性，背景特性以及可编辑性</p>
             </div>
 
             <code><b>--limit-tu</b></code>
@@ -1119,7 +1127,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>其它率控制</h3>
             <p>可以搭配除 CQP 以外的上下层模式使用，决定了视频各处的最终量化值</p>
             <code><b>--tskip</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;启用 4x4 tu 的跳过变换模式（直接量化），可提高纹理密集处（如大量文本）的放大细节；也可算作一种近无损模式</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;启用 4x4 tu 的跳过变换模式（直接量化），可提高纹理密集处（如大量文本）的放大细节。对高细节视频的编码速度有明显影响，也可算作一种近无损模式</p>
             <code><b>--qpmin</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14</p>
             <code><b>--qpmax</b></code>

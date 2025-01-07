@@ -88,14 +88,16 @@
                         </li>
                     </ul>
                 </li>
-                <li>附录 α：
-                    <a href="https://www.nazorip.site/archives/44/">QAAC 音频压缩教程</a> 或 <a href="https://github.com/iAvoe/QAAC-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a>
-                    <ul class="text-xs">
-                        <li>下载安装，用例，Pipe 导入，流格式，封装格式，多声道编辑，压缩强度与占用，章节处理，缓入缓出，音频标识，音频编辑，滤镜，已知报错，多参数储存和调用，采样率的选择，采样率的验证</li>
-                    </ul>
+                <li>
+                    附录 α：
+                    <a href="https://www.nazorip.site/archives/44/">QAAC 音频压缩教程</a> 或
+                    <a href="https://github.com/iAvoe/QAAC-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a>
                 </li>
-                <li>附录 β：<a href="https://nazorip.site/archives/334/">x264，libx264，x265，libx265 压制教程急用版</a> 或 <a href=""> Github 副本</a></li>
-                <li>附录 γ：<a href="https://nazorip.site/archives/169/">ffprobe 教程</a> 或 <a href="https://github.com/iAvoe/FFprobe-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a></li>
+                <li>附录 β：<a href="https://nazorip.site/archives/334/">x264，libx264，x265，libx265 压制教程急用版</a></li>
+                <li>
+                    附录 γ：<a href="https://nazorip.site/archives/169/">ffprobe 教程</a> 或
+                    <a href="https://github.com/iAvoe/FFprobe-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a>
+                </li>
                 <li>附录 δ：<a href="https://nazorip.site/archives/1068/">ffprobe + Excel 绘制码率曲线，帧类型饼图</a></li>
                 <li>
                     附录 ε：<a href="../../deint-ivtc-web-tutorial/HTML/index.html">交错转逐行与 IVTC 处理</a>
@@ -399,7 +401,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>动态预测的精度比起原画还差一点（最高 1px）导致了预测帧相比原画会欠缺大量的纹理细节；在此之上还常遭到动态噪点的干扰劫持。动态补偿 Motion Compensation MC 通过对比原画与预测块得到残差，并根据残差的分布动态向量的精度到¼子像素，使“精加工预测块”的画面残差尽可能地缩小，得到足够准确的预测帧。</p>
             <p>至于对抗动态噪点，大体上是允许真正移动的物件（所涵盖的分块）有运动向量，拦截噪点在静止画面上的孤立运动向量，即「允动之移，防静所变」解决。</p>
             <ol class="overflow-auto">
-                <li>此处省略<span class="text-blue-math">上帧画面 + 帧间向量表中的动态向量 = 一系列粗加工预测块</span>的步骤</li>
+                <li>此处省略以上帧画面与帧间向量表中的动态向量的和，得到一系列粗加工预测块的步骤</li>
                 <li>使用有限冲激响应插值滤镜 FIR filter 放大画面以便后面对齐</li>
                 <li>将“粗加工预测块”与源视频所对应的画面使用 SATD 做差，得到当前的误差程度</li>
                 <li>当前向量的 x，y 分量分别加减 ½，¼ 像素（插值放大的画面中是整数像素），即分别让这些块对比原画跑一遍 SATD：
@@ -1117,7 +1119,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>其它率控制</h3>
             <p>可以搭配除 CQP 以外的上下层模式使用，决定了视频各处的最终量化值</p>
             <code><b>--tskip</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;4x4 tu 上跳过 DCT 变换，可保留深度分块/纹理密集处的放大细节；也可算作一种近无损模式</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;启用 4x4 tu 的跳过变换模式（直接量化），可提高纹理密集处（如大量文本）的放大细节；也可算作一种近无损模式</p>
             <code><b>--qpmin</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14</p>
             <code><b>--qpmax</b></code>
@@ -1259,7 +1261,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">2</span>直接对比 cu 纹理密度 Edge Density，快且不比前者差，但存在对源的画质要求及客观判断“画质”的能力</li>
             </ul>
             <code><b>--tskip-fast</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;跳过 4x4 tu 的变换，忽略部分 DCT 系子 coefficients 来加速，CbCr-tu 也取决于 Y 块是否被跳过。在全屏小细节的视频中有显著加速效果。建议除高压以外的情况使用。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，需<code>--tskip</code> &gt;只在亮度 4x4 块中使用。色度块的检查取决于同位亮度块是否跳过。在全屏小细节的视频中有显著加速效果</p>
             <code><b>--rskip-edge-threshold</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~100，默认 5: 趋向于分块，<span class="text-red-emph">需 rskip 大于 1</span>&gt;用 Sobel 算法获取 cu 纹理密度，再将纹理密度除以块所占面积，得到密度占据面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8 或 16×16 块下默认 5%（即含 3 或 12 个系子）就分。类似 x264 的 deadzone 参数。</p>
             <ul class="font-monospace pl-5 text-smaller">

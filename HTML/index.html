@@ -752,12 +752,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h5>RASL 任访略前导，RADL 任仿解前导 random access skipping/decoding lead</h5>
             <ul class="text-gray-side text-smaller">
                 <li>打开直播或用户拖动进度条落在 CRA 附近，找不到 I 帧时指定应该解码 decode 还是略过 skip 的标签 P 帧</li>
+                <li>启用后，部分引用这些标签 P 帧的 IDR 帧会改变帧类型，以提示这些标签帧位于其之前，而这种 GOP 的解码会与传统 GOP 有一些区别，导致后续剪辑工具链中的兼容性问题</li>
             </ul>
 
             <code><b>--ref</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~16，推荐<span class="text-blue-math">fps÷100+3.4</span>&gt;向量溯块前后帧数半径，一图流设<span class="text-blue-emph">1</span>。要在能溯全所有块的情况下降低参考面积，所以一般设<span class="text-blue-emph">3</span>就不管了。</p>
             <code><b>--radl</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数默认 0，小于连续 B 帧，推荐 2~3&gt;原理见上。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数默认 0，小于连续 B 帧，推荐 2~3&gt;原理以及兼容性问题见上。</p>
             <code><b>--ipratio --pbratio</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点，默认 1.4 1.3&gt;P 帧比 IDR/I，及 B/b 帧相比 P 帧的量化值递增。B 帧双向参考能从更多帧中找到参考源，因此量化强度理应最高：</p>
             <ul class="font-monospace pl-5 text-smaller">
@@ -4046,11 +4047,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--hrd</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt;将假设对照解码参数 Hypothetical Reference Decoder Parameter 估计不丢包无延迟的瞬间码率，写在每段 SPS 及 SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
             <code><b>--hash</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0/关&gt;SEI 里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0/关，推荐关&gt;SEI 里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力（但是，一般来说校验可以通过直接对输出的视频文件添加，而且解码器一般为了性能等原因会忽略掉“多余”的 SEI）：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span>：checksum 校验，性能占用最小</li>
-                <li><span class="text-blue-emph">2</span>：CRC 校验，性能占用略高，准确率较高，一般情况推荐</li>
-                <li><span class="text-blue-emph">3</span>：CRC 校验，性能占用略高，准确率高；性能占用高</li>
+                <li><span class="text-blue-emph">2</span>：CRC 校验，性能占用略高，准确率较高</li>
+                <li><span class="text-blue-emph">3</span>：CRC 校验，性能占用略高，准确率高</li>
             </ul>
             <code><b>--single-sei</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;只写一个装全部 SEI 信息的大 NALU 而非每 GOP 都写，提高很小一点压缩率，但可能会降低兼容性。</p>

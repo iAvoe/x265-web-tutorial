@@ -1127,7 +1127,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>其它率控制</h3>
             <p>可以搭配除 CQP 以外的上下层模式使用，决定了视频各处的最终量化值</p>
             <code><b>--tskip</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;启用 4x4 tu 的跳过变换模式（直接量化），可提高纹理密集处（如大量文本）的放大细节。对高细节视频的编码速度有明显影响，也可算作一种近无损模式</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;在 4x4 变换块上尝试 DCT，DST 等变换模式的基础上增加一个不变换直接量化（SKIP 模式），然后由模式决策权衡出率失真最佳的方案。视频内容越复杂，对编码速度的影响就越大。与无损模式无关，但也可算作一种近无损模式。如果嫌慢还可以考虑 <code>--tskip-fast</code></p>
             <code><b>--qpmin</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14</p>
             <code><b>--qpmax</b></code>
@@ -1269,7 +1269,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">2</span>直接对比 cu 纹理密度 Edge Density，快且不比前者差，但存在对源的画质要求及客观判断“画质”的能力</li>
             </ul>
             <code><b>--tskip-fast</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，需<code>--tskip</code> &gt;只在亮度 4x4 块中使用。色度块的检查取决于同位亮度块是否跳过。在全屏小细节的视频中有显著加速效果</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，需<code>--tskip</code> &gt;只在帧内编码的亮度 NxN 细分块中，在 4x4 变换块上不但尝试 DCT，DST 等变换模式，还增加不变换直接量化（SKIP 模式），然后由模式决策选出更好的方案。色度块的检查也取决于同位亮度块是否最终采用了 SKIP 变换模式。在使用与不使用 <code>--tskip</code> 之间提供了编码压力偏向中间的选项</p>
             <code><b>--rskip-edge-threshold</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~100，默认 5: 趋向于分块，<span class="text-red-emph">需 rskip 大于 1</span>&gt;用 Sobel 算法获取 cu 纹理密度，再将纹理密度除以块所占面积，得到密度占据面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8 或 16×16 块下默认 5%（即含 3 或 12 个系子）就分。类似 x264 的 deadzone 参数。</p>
             <ul class="font-monospace pl-5 text-smaller">

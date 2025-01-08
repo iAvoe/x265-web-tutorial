@@ -137,7 +137,7 @@
 ffmpeg -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265 --y4m --input - --output
 ffmpeg -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; --input - --output</code></pre>
 <p><span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span>关格式限制，<span class="text-blue-emph">--y4m</span>对应"YUV for MPEG"，两个"-"是 pipe 串流</p>
-<pre><code>avs2yuv &lt;源.avs&gt; -csp &lt;色&gt; -dept h&lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; --input - --output
+<pre><code>avs2yuv &lt;源.avs&gt; -csp &lt;色&gt; -depth &lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; --input - --output
 avs2pipemod &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output</code></pre>
 
             <h3>VapourSynth 传递参数</h3>
@@ -1269,7 +1269,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">2</span>直接对比 cu 纹理密度 Edge Density，快且不比前者差，但存在对源的画质要求及客观判断“画质”的能力</li>
             </ul>
             <code><b>--tskip-fast</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，需<code>--tskip</code> &gt;只在帧内编码的亮度 NxN 细分块中，在 4x4 变换块上不但尝试 DCT，DST 等变换模式，还增加不变换直接量化（SKIP 模式），然后由模式决策选出更好的方案。色度块的检查也取决于同位亮度块是否最终采用了 SKIP 变换模式。在使用与不使用 <code>--tskip</code> 之间提供了编码压力偏向中间的选项</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 <code>tskip</code></span>&gt;只在帧内编码的亮度 NxN 细分块中的 4x4 变换块上不但尝试 DCT，DST 等变换模式，还增加不变换直接量化（SKIP）模式，然后由模式决策选出更好的方案。色度块的检查也取决于同位亮度块是否最终采用了 SKIP 变换模式。在使用与不使用 <code>--tskip</code> 之间提供了编码压力偏向中间的选项</p>
             <code><b>--rskip-edge-threshold</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~100，默认 5: 趋向于分块，<span class="text-red-emph">需 rskip 大于 1</span>&gt;用 Sobel 算法获取 cu 纹理密度，再将纹理密度除以块所占面积，得到密度占据面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8 或 16×16 块下默认 5%（即含 3 或 12 个系子）就分。类似 x264 的 deadzone 参数。</p>
             <ul class="font-monospace pl-5 text-smaller">

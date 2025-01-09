@@ -4640,110 +4640,112 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </table>
                 <p>RPU 是含有动态元数据的特殊 NALU，类似（到现在还没几个播放器能正常解码的）<code>opt-qp-pps</code>，<code>opt-ref-list-length-pps</code>的功能。</p>
                 <p>像素流量每秒 Pixel per second PPS：像素宽，像素高，帧数每秒的商。</p>
-                <table class="table-fit-container align-items-center text-xs">
-                    <thead>
-                        <tr class="t-invert-dark">
-                            <th class="px-1">级别 Level</th>
-                            <th class="px-1">PPS</th>
-                            <th class="px-1">pps 相符的格式</th>
-                            <th class="px-1">Main tier 码率</th>
-                            <th class="px-1">High tier 码率</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">01</td>
-                            <td class="px-1">22118400</td>
-                            <td class="px-1">1280x720 24fps</td>
-                            <td class="px-1">20Mbps</td>
-                            <td class="px-1">50Mbps</td>
-                        </tr>
-                        <tr class="border-lr">
-                            <td class="px-1">02</td>
-                            <td class="px-1">27648000</td>
-                            <td class="px-1">1280x720 30fps</td>
-                            <td class="px-1">20Mbps</td>
-                            <td class="px-1">50Mbps</td>
-                        </tr>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">03</td>
-                            <td class="px-1">49766400</td>
-                            <td class="px-1">1920x1080 24fps</td>
-                            <td class="px-1">20Mbps</td>
-                            <td class="px-1">70Mbps</td>
-                        </tr>
-                        <tr class="border-lr">
-                            <td class="px-1">04</td>
-                            <td class="px-1">62208000</td>
-                            <td class="px-1">1920x1080 30fps</td>
-                            <td class="px-1">20Mbps</td>
-                            <td class="px-1">70Mbps</td>
-                        </tr>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">05</td>
-                            <td class="px-1">12441600</td>
-                            <td class="px-1">1920x1080 60fps</td>
-                            <td class="px-1">20Mbps</td>
-                            <td class="px-1">70Mbps</td>
-                        </tr>
-                        <tr class="border-lr">
-                            <td class="px-1">06</td>
-                            <td class="px-1">199065000</td>
-                            <td class="px-1">3840x2160 24fps</td>
-                            <td class="px-1">25Mbps</td>
-                            <td class="px-1">130Mbps</td>
-                        </tr>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">07</td>
-                            <td class="px-1">248832000</td>
-                            <td class="px-1">3840x2160 30fps</td>
-                            <td class="px-1">25Mbps</td>
-                            <td class="px-1">130Mbps</td>
-                        </tr>
-                        <tr class="border-lr">
-                            <td class="px-1">08</td>
-                            <td class="px-1">398131200</td>
-                            <td class="px-1">3840x2160 48fps</td>
-                            <td class="px-1">40Mbps</td>
-                            <td class="px-1">130Mbps</td>
-                        </tr>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">09</td>
-                            <td class="px-1">497664000</td>
-                            <td class="px-1">3840x2160 60fps</td>
-                            <td class="px-1">40Mbps</td>
-                            <td class="px-1">130Mbps</td>
-                        </tr>
-                        <tr class="border-lr">
-                            <td class="px-1">10</td>
-                            <td class="px-1">995328000</td>
-                            <td class="px-1">3840x2160 120fps</td>
-                            <td class="px-1">60Mbps</td>
-                            <td class="px-1">240Mbps</td>
-                        </tr>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">11</td>
-                            <td class="px-1">995328000</td>
-                            <td class="px-1">7680x4320 30fps</td>
-                            <td class="px-1">60Mbps</td>
-                            <td class="px-1">240Mbps</td>
-                        </tr>
-                        <tr class="border-lr">
-                            <td class="px-1">12</td>
-                            <td class="px-1">1990656000</td>
-                            <td class="px-1">7680x4320 60fps</td>
-                            <td class="px-1">120Mbps</td>
-                            <td class="px-1">480Mbps</td>
-                        </tr>
-                        <tr class="t-light-gray border-lr">
-                            <td class="px-1">13</td>
-                            <td class="px-1">3981312000</td>
-                            <td class="px-1">7680x4320 120fps</td>
-                            <td class="px-1">240Mbps</td>
-                            <td class="px-1">800Mbps</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class=" overflow-auto">
+                    <table class="table-fit-container align-items-center text-xs">
+                        <thead>
+                            <tr class="t-invert-dark">
+                                <th class="px-1">级别 Level</th>
+                                <th class="px-1">PPS</th>
+                                <th class="px-1">pps 相符的格式</th>
+                                <th class="px-1">Main tier 码率</th>
+                                <th class="px-1">High tier 码率</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">01</td>
+                                <td class="px-1">22118400</td>
+                                <td class="px-1">1280x720 24fps</td>
+                                <td class="px-1">20Mbps</td>
+                                <td class="px-1">50Mbps</td>
+                            </tr>
+                            <tr class="border-lr">
+                                <td class="px-1">02</td>
+                                <td class="px-1">27648000</td>
+                                <td class="px-1">1280x720 30fps</td>
+                                <td class="px-1">20Mbps</td>
+                                <td class="px-1">50Mbps</td>
+                            </tr>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">03</td>
+                                <td class="px-1">49766400</td>
+                                <td class="px-1">1920x1080 24fps</td>
+                                <td class="px-1">20Mbps</td>
+                                <td class="px-1">70Mbps</td>
+                            </tr>
+                            <tr class="border-lr">
+                                <td class="px-1">04</td>
+                                <td class="px-1">62208000</td>
+                                <td class="px-1">1920x1080 30fps</td>
+                                <td class="px-1">20Mbps</td>
+                                <td class="px-1">70Mbps</td>
+                            </tr>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">05</td>
+                                <td class="px-1">12441600</td>
+                                <td class="px-1">1920x1080 60fps</td>
+                                <td class="px-1">20Mbps</td>
+                                <td class="px-1">70Mbps</td>
+                            </tr>
+                            <tr class="border-lr">
+                                <td class="px-1">06</td>
+                                <td class="px-1">199065000</td>
+                                <td class="px-1">3840x2160 24fps</td>
+                                <td class="px-1">25Mbps</td>
+                                <td class="px-1">130Mbps</td>
+                            </tr>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">07</td>
+                                <td class="px-1">248832000</td>
+                                <td class="px-1">3840x2160 30fps</td>
+                                <td class="px-1">25Mbps</td>
+                                <td class="px-1">130Mbps</td>
+                            </tr>
+                            <tr class="border-lr">
+                                <td class="px-1">08</td>
+                                <td class="px-1">398131200</td>
+                                <td class="px-1">3840x2160 48fps</td>
+                                <td class="px-1">40Mbps</td>
+                                <td class="px-1">130Mbps</td>
+                            </tr>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">09</td>
+                                <td class="px-1">497664000</td>
+                                <td class="px-1">3840x2160 60fps</td>
+                                <td class="px-1">40Mbps</td>
+                                <td class="px-1">130Mbps</td>
+                            </tr>
+                            <tr class="border-lr">
+                                <td class="px-1">10</td>
+                                <td class="px-1">995328000</td>
+                                <td class="px-1">3840x2160 120fps</td>
+                                <td class="px-1">60Mbps</td>
+                                <td class="px-1">240Mbps</td>
+                            </tr>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">11</td>
+                                <td class="px-1">995328000</td>
+                                <td class="px-1">7680x4320 30fps</td>
+                                <td class="px-1">60Mbps</td>
+                                <td class="px-1">240Mbps</td>
+                            </tr>
+                            <tr class="border-lr">
+                                <td class="px-1">12</td>
+                                <td class="px-1">1990656000</td>
+                                <td class="px-1">7680x4320 60fps</td>
+                                <td class="px-1">120Mbps</td>
+                                <td class="px-1">480Mbps</td>
+                            </tr>
+                            <tr class="t-light-gray border-lr">
+                                <td class="px-1">13</td>
+                                <td class="px-1">3981312000</td>
+                                <td class="px-1">7680x4320 120fps</td>
+                                <td class="px-1">240Mbps</td>
+                                <td class="px-1">800Mbps</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
                 <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
 
@@ -4799,10 +4801,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <th class="px-1">级别 Level</th>
                         <th class="px-1">最大亮度像素流量 (Luma Samples)</th>
                         <th class="px-1">最大亮度平面面积 (Luma Size)</th>
-                        <th class="px-1">最大 8~10bit 码率</th>
-                        <th class="px-1">最大 12bit 码率 (Kbps)</th>
-                        <th class="px-1">最大 4:4:4 12bit 码率 (Kbps)</th>
-                        <th class="px-1">最高分辨率@帧率举例 (Resolution@FPS)</th>
+                        <th class="px-1">8~10bit 最大码率</th>
+                        <th class="px-1">12bit 最大码率 (Kbps)</th>
+                        <th class="px-1">4:4:4 12bit 最大码率 (Kbps)</th>
+                        <th class="px-1">最高分辨率@帧率举例 (W×H@FPS)</th>
                     </tr>
                 </thead>
                 <tbody>

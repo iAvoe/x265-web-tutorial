@@ -180,17 +180,18 @@ for (let i=0; i<imgs.length; i++) {
 
 /**
  * Change all anchor behavior to open external page
+ * Modified to used class name detection, so it is more html compliant
  */
 anchors = document.querySelectorAll('a');
-for (let i=0; i<anchors.length; i++) {
-    if (anchors[i].hasAttribute('toSelf')) {
+for (let i = 0; i < anchors.length; i++) {
+    if (anchors[i].classList.contains('toSelf')) {
         anchors[i].setAttribute("target", "_self");
-        anchors[i].removeAttribute('toSelf');
+        anchors[i].classList.remove('toSelf');
     }
     else {
         anchors[i].setAttribute("target", "_blank");
     }
-}
+} 
 
 /* Accordion collapse support */
 var collapseBtns = document.getElementsByClassName('collapsible');

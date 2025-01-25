@@ -59,32 +59,32 @@
                     <a href="../../x265-web-tutorial/HTML/index.html" class="disabled">x265 教程网页版（你在这里）</a>
                     <ul class="text-xs">
                         <li>基础：
-                            <a toSelf href="#h2-1">命令参考</a>，
-                            <a toSelf href="#h2-2">视频的压制</a>
+                            <a class="toSelf" href="#h2-1">命令参考</a>，
+                            <a class="toSelf" href="#h2-2">视频的压制</a>
                         </li>
                         <li>编码：
-                            <a toSelf href="#h2-3">分块</a>，
-                            <a toSelf href="#h2-4">变换</a>，
-                            <a toSelf href="#h2-5">动搜</a>，
-                            <a toSelf href="#h2-6">补偿</a>，
-                            <a toSelf href="#h2-7">时域架网搜索</a>，
-                            <a toSelf href="#h2-8">溯块向量搜索</a>，
-                            <a toSelf href="#h2-9">前瞻</a>，
-                            <a toSelf href="#h2-10">帧内预测</a>，
-                            <a toSelf href="#h2-11">率控制</a>，
-                            <a toSelf href="#h2-12">自适应量化</a>，
-                            <a toSelf href="#h2-13">率失真优化</a>，
-                            <a toSelf href="#h2-14">环路滤波</a>，
-                            <a toSelf href="#h2-15">熵编码</a>，
-                            <a toSelf href="#h2-16">优化熵编码</a>，
-                            <a toSelf href="#h2-17">SEI</a>，
-                            <a toSelf href="#h2-18">线程与节点控制</a>，
-                            <a toSelf href="#h2-19">色彩，VUI，HDR</a>，
-                            <a toSelf href="#h2-20">输入输出</a>
+                            <a class="toSelf" href="#h2-3">分块</a>，
+                            <a class="toSelf" href="#h2-4">变换</a>，
+                            <a class="toSelf" href="#h2-5">动搜</a>，
+                            <a class="toSelf" href="#h2-6">补偿</a>，
+                            <a class="toSelf" href="#h2-7">时域架网搜索</a>，
+                            <a class="toSelf" href="#h2-8">溯块向量搜索</a>，
+                            <a class="toSelf" href="#h2-9">前瞻</a>，
+                            <a class="toSelf" href="#h2-10">帧内预测</a>，
+                            <a class="toSelf" href="#h2-11">率控制</a>，
+                            <a class="toSelf" href="#h2-12">自适应量化</a>，
+                            <a class="toSelf" href="#h2-13">率失真优化</a>，
+                            <a class="toSelf" href="#h2-14">环路滤波</a>，
+                            <a class="toSelf" href="#h2-15">熵编码</a>，
+                            <a class="toSelf" href="#h2-16">优化熵编码</a>，
+                            <a class="toSelf" href="#h2-17">SEI</a>，
+                            <a class="toSelf" href="#h2-18">线程与节点控制</a>，
+                            <a class="toSelf" href="#h2-19">色彩，VUI，HDR</a>，
+                            <a class="toSelf" href="#h2-20">输入输出</a>
                         </li>
                         <li>附录：
-                            <a toSelf href="#h2-21">预设参数</a>
-                            <a toSelf href="#h2-22">下载</a>
+                            <a class="toSelf" href="#h2-21">预设参数</a>
+                            <a class="toSelf" href="#h2-22">下载</a>
                         </li>
                     </ul>
                 </li>
@@ -862,9 +862,48 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--no-strong-intra-smoothing</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，不推荐&gt;强力平滑滤镜平滑的是参考点而非 pu，还能去色带，所以不推荐关。触发条件与原理见上说明。</p>
 
-            <h3 class="same-line">量化</h3><p class="same-line">：见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
-
             <h2 id="h2-11">率控制</h2>
+            
+            <h3>量化</h3>
+            <p>由 QP 值，分块大小，位深等条件所指定的矩阵除法表。通过点除实现的频域强度分解。</p>
+            
+            <h4>矩阵 Matrix</h4>
+            <p>一串于特定位置换行的数字，用括号括起来得到。矩阵和矩阵之间可以根据情况选一种算法实现加减乘，和一种除法</p>
+
+            <h4>点乘/内积 Dot Product</h4>
+            <p>两个矩阵之间，位置相对应的数相乘，得到新的矩阵。如果两个矩阵大小不一，则需要设定其它规则才能计算。</p>
+            <div class="overflow-auto"><span class="text-blue-math">\[ A = \begin{bmatrix} a_{1} & a_{2} \\ a_{3} & a_{4} \end{bmatrix}, \quad B = \begin{bmatrix} b_{1} & b_{2} \\ b_{3} & b_{4} \end{bmatrix}, \quad A \cdot B = \begin{bmatrix} a_{1} \cdot b_{1} + a_{2} \cdot b_{3} & a_{1} \cdot b_{2} + a_{2} \cdot b_{4} \\a_{3} \cdot b_{1} + a_{4} \cdot b_{3} & a_{3} \cdot b_{2} + a_{4} \cdot b_{4} \end{bmatrix} \]</span></div>
+
+            <h4>矩阵除法</h4>
+
+            <p>没有乘法的各种花样，由两个大小一致的矩阵一对一地点除（和约分）实现。如 JPEG 8x8 亮度变换块的量化：</p>
+            <div class="overflow-auto"><span class="text-blue-math">\[ Q(u, v) = \text{round} \left( \frac{C(u, v)}{Q_m(u, v)} \right) \]</span></div>
+            <div class="overflow-auto"><span class="text-blue-math">\[ \text{round} \left( {\begin{bmatrix} 515&65&-12&4&1&2&-8&5 \\ -16&3&2&0&0&-11&-2&3 \\ -12&6&11&-1&3&0&1&-2 \\ -8&3&-4&2&-2&-3&-5&-2 \\ 0&-2&7&-5&4&0&-1&-4 \\ 0&-3&-1&0&4&1&-1&0 \\ 3&-2&-3&3&3&-1&-1&3 \\ -2&5&-2&4&-2&2&-3&0 \end{bmatrix}}\div{ \begin{bmatrix} 16&11&10&16&24&40&51&61 \\ 12&12&14&19&26&58&60&55 \\ 14&13&16&24&40&57&69&56 \\ 14&17&22&29&51&87&80&62 \\ 18&22&37&56&68&109&103&77 \\ 24&35&55&64&81&104&113&92 \\ 49&64&78&87&103&121&120&101 \\ 72&92&95&98&112&100&103&99\end{bmatrix} } \right) = \begin{bmatrix} 32&6&-1&0&0&0&0&0 \\ -1&0&0&0&0&0&0&0 \\ -1&0&0&0&0&0&0&0 \\ -1&0&0&0&0&0&0&0 \\ 0&0&0&0&0&0&0&0 \\ 0&0&0&0&0&0&0&0 \\ 0&0&0&0&0&0&0&0 \\ 0&0&0&0&0&0&0&0 \end{bmatrix} \]</span></div>
+
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：矩阵间的行列式叉乘与外积</button>
+            <div class="coll-content">
+                <h4>矩阵间的行列式叉乘 Determinant cross product</h4>
+                <p>通过一种算法（此处为行列式）将矩阵坍缩为一个数字（标量）得到。</p>
+                <div class="overflow-auto"><span class="text-blue-math">\[ A = \begin{bmatrix} a_{1} & a_{2} \\ a_{3} & a_{4} \end{bmatrix}, \quad B = \begin{bmatrix} b_{1} & b_{2} \\ b_{3} & b_{4} \end{bmatrix} \]</span></div>
+                <div class="overflow-auto"><span class="text-blue-math">\[ A \times B = (a_{1} \cdot a_{4} - a_{2} \cdot a_{3}) \cdot (b_{1} \cdot b_{4} - b_{2} \cdot b_{3}) \]</span></div>
+
+                <h4>矩阵间的外积 - 克罗内克积 Outer product</h4>
+                <p>将乘数矩阵本身乘进被乘数矩阵中的每一个值得到：</p>
+                <div class="overflow-auto"><span class="text-blue-math">\[ A \otimes B = \begin{bmatrix} a_{1}B & a_{2}B \\ a_{3}B & a_{4}B \end{bmatrix} = \begin{bmatrix} a_{1}b_{1} & a_{1}b_{2} & a_{2}b_{1} & a_{2}b_{2} \\ a_{1}b_{3} & a_{1}b_{4} & a_{2}b_{3} & a_{2}b_{4} \\ a_{3}b_{1} & a_{3}b_{2} & a_{4}b_{1} & a_{4}b_{2} \\ a_{3}b_{3} & a_{3}b_{4} & a_{4}b_{3} & a_{4}b_{4} \end{bmatrix} \]</span></div>
+            </div>
+
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：矩阵间的哈达玛积</button>
+            <div class="coll-content">
+                <h4>矩阵间的哈达玛积 Haramad product</h4>
+                <p>两个大小相同矩阵下的一种常用的自定义点乘/内积算法。</p>
+                <div class="overflow-auto"><span class="text-blue-math">\[ A = \begin{bmatrix} a_{1} & a_{2} \\ a_{3} & a_{4} \end{bmatrix}, \quad B = \begin{bmatrix} b_{1} & b_{2} \\ b_{3} & b_{4} \end{bmatrix}, \quad A \circ B = \begin{bmatrix} a_{1} \cdot b_{1} & a_{2} \cdot b_{2} \\ a_{3} \cdot b_{3} & a_{4} \cdot b_{4} \end{bmatrix} \]</span></div>
+
+                <p>x264 中，变换与量化会通过哈达玛积合并为一个矩阵表格，如 4x4 亮度块下为：</p>
+                <div class="overflow-auto"><span class="text-blue-math">\[ \text{round} \begin{bmatrix}1/4 & 1/2\sqrt{10} & 1/4 & 1/2\sqrt{10} \\1/2\sqrt{10} & 1/10 & 1/2\sqrt{10} & 1/10 \\1/4 & 1/2\sqrt{10} & 1/4 & 1/2\sqrt{10} \\1/2\sqrt{10} & 1/10 & 1/2\sqrt{10} & 1/10 \end{bmatrix} \times Q_{Step} \times 2^6 \]</span></div>
+                <p>得到 qp 为 0，1，2，4，5 下的 4x4 块变换量化合并矩阵分别为：</p>
+                <div class="overflow-auto"><span class="text-blue-math">\[ \text{QP}_0 \rightarrow \begin{bmatrix} 10&13&10&13 \\ 13&16&13&16 \\ 10&13&10&13 \\ 13&16&13&16 \end{bmatrix}, \text{QP}_1 \rightarrow \begin{bmatrix} 11&14&11&14 \\ 14&18&14&18 \\ 11&14&11&14 \\ 14&18&14&18 \end{bmatrix}, \text{QP}_2 \rightarrow \begin{bmatrix} 13&16&13&16 \\ 16&20&16&20 \\ 13&16&13&16 \\ 16&20&16&20 \end{bmatrix}, \text{QP}_4 \rightarrow \begin{bmatrix} 16&20&16&20 \\ 20&25&20&25 \\ 16&20&16&20 \\ 20&25&20&25 \end{bmatrix}, \text{QP}_5 \rightarrow \begin{bmatrix} 18&23&18&23 \\ 23&29&23&29 \\ 18&23&18&23 \\ 23&29&23&29 \end{bmatrix} \]</span></div>
+            </div>
+            
             <h3>算出量化值</h3>
             <p>人眼对明暗变化与画面细节程度的感知呈对数㏒状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
             <div class="align-items-center">
@@ -1139,7 +1178,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur，所以保留默认值或手动指定，如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
 
             <h2 id="h2-12">自适应量化</h2>
-            <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 qp 分配过程。讨论时注意 aq 与 vaq 的混淆。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a></p>
+            <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 QP 分配过程。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a></p>
             
             <code><b>--aq-mode</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3&gt;据原画和 crf/abr 设定，以及码率不足时（crf&lt;18/低码 abr）如何分配 qp。</p>

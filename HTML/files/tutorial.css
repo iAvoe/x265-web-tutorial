@@ -333,8 +333,10 @@ td.px-1.t-invert-light a {
 .img-small { max-width: 25%; }
 .img-right { float: right; }
 
-/* Image transitions */
+/* Image shadow and transitions */
 img {
+    box-shadow: 1px 1px 0.3em #3c4042c2;
+
     aspect-ratio: auto;
     max-width: 100%; height: auto;
     animation: imageTransition 550ms;

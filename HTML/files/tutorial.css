@@ -442,5 +442,12 @@ button.collapsible {
     float: right;
     margin-left: auto;
 }
+
 /* Correcting incompetent overflow control on mobile */
 code { word-break: break-word; }
+
+/* Text selection styling */
+::selection {
+    color: white;
+    background-color: var(--hex-dark-gold);
+}

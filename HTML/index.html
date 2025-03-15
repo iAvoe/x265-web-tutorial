@@ -1176,6 +1176,8 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<code>--tune grain</code> 时开启&gt;通过抑制 cplxBlur 的累积，从而保证一定场景下，GOP 分配量化值呈跌势以保证整个视频的码率受控。如果视频中的大多数高频信号都是细节而非噪点，且策略为画质编码则关</p>
             <code><b>--cplxblur</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur，所以保留默认值或手动指定，如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
+            <code><b>--qcomp</b></code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6&gt;模糊复杂度 cplxBlur 以及 mbtree 迭代每帧量化强度范围的曲线抑制参数。越小则复杂度迭代越符合实际状况，抑制 CRF，mb/cutree，bframes 影响的效果就越弱，搭配高 CRF 能使码率控制接近 VBV 的程度。越大则 CRF，mb-cutree，bframes 越没用，越接近 CQP</p>
 
             <h2 id="h2-12">自适应量化</h2>
             <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 QP 分配过程。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a></p>
@@ -1340,15 +1342,15 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             <!-- } -->
             <p>x265 的失真（块间差异）用均方差 Mean Squared Error（MSE）判断：</p>
-            <span class="text-blue-math">$$\frac{1}{n^2}\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ |f(x,y) - f\prime(x,y)|^2}}$$</span>
+            <span class="text-blue-math">\[ \text{MSE} = \frac{1}{n^2}\sum_{x=0}^{n-1}\sum_{y=0}^{n-1} \left| f(x,y) - f'(x,y) \right|^2 \]</span>
             <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：
                 <span class="text-red-emph">补充跳过的 x264 教程率失真优化部分，以及 <code>--psy-rd，--fgo</code> 等参数的科普，可略。</span>
             </button>
             <div class="coll-content">
-                <p>x264 中默认用更快的平方差 Sum of Squared Error（SSE），或 Sum of Squared Difference（SSD）:</p>
-                <span class="text-blue-math">$$\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ |f(x,y) - f\prime(x,y)|^2}}$$</span>
-                <p>x264 中还可选用画质优先的高频加权平方差 Noise SSE（见 <a href="https://web.archive.org/web/20090916181521/http://x264dev.blogspot.com/2008/05/film-grain-optimization.html">Dark Shikari 的帖子</a>和<a href="https://forum.doom9.org/showthread.php?p=1127999">doom9 论坛</a>）：</p>
-                <span class="text-blue-math text-smaller">$$\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ \left| \left\lbrack N(x,y) - \ N\prime(x,y) \right\rbrack \cdot fgo \right| + |f(x,y) - f\prime(x,y)|^2}}$$</span>
+                <p>x264 中默认用更快的平方差 Sum of Squared Error（SSE）/ Sum of Squared Difference（SSD）:</p>
+                <span class="text-blue-math">$$\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ |f(x,y) - f^\prime(x,y)|^2}}$$</span>
+                <p>x264 中还可选用画质优先的高频加权平方差 Noise SSE（见 <a href="https://web.archive.org/web/20090916181521/http://x264dev.blogspot.com/2008/05/film-grain-optimization.html">Dark Shikari 帖子</a>和<a href="https://forum.doom9.org/showthread.php?p=1127999">doom9 论坛</a>）：</p>
+                <span class="text-blue-math text-smaller">$$\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ \left| \left\lbrack N(x,y) - \ N\prime(x,y) \right\rbrack \cdot fgo \right| + |f(x,y) - f^\prime(x,y)|^2}}$$</span>
                 <p>其中 N/Noise 代表块的噪点强度，在一个 2x2 的区间下为四个像素两两加减得到，因为噪点和其它高频信号一样都是突兀的像素值（所以速度很慢）：</p>
                 <span class="text-blue-math">$$N(0,0)=|f(0,0)-f(0,1)+f(1,1)-f(0,1)|$$</span>
                 <ul class="text-gray-side">
@@ -5232,7 +5234,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                         <td class="px-1">GCC 9.3，附 x86 32bit 版</td>
                     </tr>
                     <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="http://www.mediafire.com/folder/arv5xmdqyiczc">Patman</a></th>
+                        <th class="px-3 t-light-gray"><a href="https://github.com/Patman86/x265-Mod-by-Patman/releases">Patman</a></th>
                         <td class="px-1">.hevc [8-10-12bit]</td>
                         <td class="px-1">GCC 11 + MSVC 1925</td>
                     </tr>

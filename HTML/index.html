@@ -134,18 +134,24 @@
 
             <h3 class="mb-0">ffmpeg，avs2yuv 传递参数</h3>
             <pre><code>
-ffmpeg -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265 --y4m --input - --output
-ffmpeg -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; --input - --output</code></pre>
-<p><span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span>关格式限制，<span class="text-blue-emph">--y4m</span>对应"YUV for MPEG"，两个"-"是 pipe 串流</p>
-<pre><code>avs2yuv &lt;源.avs&gt; -csp &lt;色&gt; -depth &lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; --input - --output
-avs2pipemod &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output</code></pre>
+ffmpeg -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265 --y4m --input - --output &lt;输出.hevc&gt;
+ffmpeg -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; -D &lt;位深&gt; --input - --output &lt;输出.hevc&gt;</code></pre>
+<p><span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span> 解除编码超过 8bit 位深的 y4m 格式，<span class="text-blue-emph">--y4m</span> 对应"YUV for MPEG"，代表一种自带分辨率、帧率、位深等参数的未压缩格式，两个“-”代表 pipe 串流的输出和输入。</p>
+<p>如果源视频的格式不支持元数据（如 .yuv），或者 ffmpeg 读取不到时，可以手动提供分辨率、帧率、色彩空间以及位深（当然此时直接用视频编码器导入，并手动指定这些信息可能更简单）：<code>-s &lt;宽x高&gt; -r &lt;帧率&gt; -pix_fmt &lt;色彩空间及位深，如 yuv420p10le&gt;</code></p>
+<!--<p>如果源视频使用 HDR 格式编码，而目标格式为 SDR，则可以使用 ffmpeg 的 <code>-vf</code> 滤镜进行调整。</p>-->
+<pre><code>avs2yuv &lt;源.avs&gt; -csp &lt;色&gt; -depth &lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;帧率&gt; --input - --output &lt;输出.hevc&gt;
+avs2pipemod &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output &lt;输出.hevc&gt;</code></pre>
 
             <h3>VapourSynth 传递参数</h3>
             <h4>R.54 - API 3.0:</h4>
-            <pre><code>VSpipe &lt;源.vpy&gt; --y4m - | x265.exe --y4m --input - --output</code></pre>
+            <code>VSpipe &lt;源.vpy&gt; --y4m - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;</code>
             <h4>R.55 - API 4.0:</h4>
-            <pre><code>VSpipe &lt;源.vpy&gt; -c y4m - | x265.exe --y4m --input - --output
-VSpipe &lt;源.vpy&gt; --container y4m - | x265.exe - --y4m --output</code></pre>
+            <pre><code>VSpipe &lt;源.vpy&gt; -c y4m - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
+VSpipe &lt;源.vpy&gt; --container y4m - | x265.exe - --y4m --output &lt;输出.hevc&gt;</code></pre>
+
+            <h3>ffmpeg 调用 libx265 参数</h3>
+            <p>相比直接使用 x265，ffmpeg 通过调用动态链接库的方法做到只用一条命令实现多个视频、音频、字幕和字体，的导入与分别编码，且最后能够封装到一起。同时，这么做可以在不使用 <span>-strict unofficial</span> 命令的情况下直接编码 10bit 或更高位深的视频流。</p>
+            <code>ffmpeg -y -i &lt;源&gt; -c:v libx265 -profile:v &lt;见：输入输出 Input-output IO&gt; -x265-params "high-tier=1:preset=slow:me=umh:subme=5:merange=48:weightb=1:bframes=5:ref=3" -fps_mode passthrough -c:a copy &lt;输出.mp4/mkv&gt;</code>
 
             <h3>搜索 ffmpeg 支持的色度采样：</h3>
             <pre><code>ffmpeg -pix_fmts | findstr &lt;字符串，源视频色度采样&gt;

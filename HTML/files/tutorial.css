@@ -32,21 +32,24 @@
 /* Fonts, including Windows font YouYuan for multi-OS compatibility */
 @font-face {
     font-family: 'SweiGothic';
-    src: url('SweiGothicCJKsc-Regular.ttf') format('truetype');
+    src: url('fonts/SweiGothicCJKsc-Regular.woff2') format('woff2');
 }
 @font-face {
     font-family: 'Zhudou Sans';
-    src: url('ZhudouSans-Regular.otf') format('opentype');
+    src: url('fonts/ZhudouSans-Regular.woff2') format('woff2');
 }
-@font-face {
+/*@font-face {
     font-family: 'YouYuan';
     src: url('SIMYOU.TTF') format('truetype');
+}*/
+@font-face {
+    font-family: 'YouYuan';
+    src: url('fonts/YouYuan.woff2') format('woff2');
 }
 @font-face {
     font-family: 'KaTeX Math';
-    src: url('KaTeX_Main-Regular.ttf') format('truetype');
+    src: url('fonts/KaTeX_Main-Regular.woff2') format('woff2');
 }
-
 /* Color Palette and bootstrap font settings */
 :root {
     --no-opacity: 1; /* default opacity */

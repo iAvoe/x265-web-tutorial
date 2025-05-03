@@ -280,7 +280,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </ul>
             
             <h2 id="h2-4">变换</h2>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：傅里叶级数</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：傅里叶级数</button>
             <div class="coll-content">
                 <h3>傅里叶级数 Fourier Series</h3>
                 <p>波形有正弦波 sinusoidal / sine，余弦波 co-sinusoidal / cosine，直流波 direct current / DC，三角波，方形波，以及各种各样的噪声波等等。两波形相加能够得到中间态，通过修改其中波形的振幅强度还可以微调合成的中间态。因此，理论上只要有足够多的可调节波形，就可以让合成的中间态逼近原始波形，甚至做到完全一样。</p>
@@ -318,31 +318,40 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p>当然，理解这个式子背后的理论就足够了，说不定式子非得这样写，原因到底不过是为了好看...</p>
             </div>
 
-            <h3>均方根 Root Mean Square（RMS）</h3>
-            <p>统计中常用的一种数据量化，用于表示一组数据平均值的平方根。对于一个包含 N 个值的数据集<span class="text-blue-math">\( \{ x_1, x_2, \ldots, x_N \} \)</span> </p>
-            <span class="text-blue-math overflow-auto">\[ \text{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}{N} x_i^2} \]</span>
-            <p>具体到 DCT 变换，对于 N×N 块 <span class="text-blue-math">\( f(x,y) \)</span> 的均方根以表示为：</p>
-            <span class="text-blue-math overflow-auto">\[ \text{RMS}_{f(x,y)} = \sqrt{\frac{1}{N^2}\sum_{x=0}^{N-1} \sum_{y=0}^{N-1} f(x, y)^2} \]</span>
-            <p>DCT 变换后，DCT 系子 <span class="text-blue-math">\( T(u,v) \)</span>的均方根为：</p>
-            <span class="text-blue-math overflow-auto">\[ \text{RMS}_{\text{DCT}} = \sqrt{\sum_{u=0}{N-1} \sum_{v=0}^{N-1} C(u, v)^2} \]</span>
-
-            <h3>归一化 Normalize</h3>
-            <p>将数据缩放到基本单位大小，以便计算和对比的处理。<span class="text-blue-math">\( \alpha(u) \)</span>和 <span class="text-blue-math">\( \alpha(v) \)</span> 两个缩放值来对齐，使得 <spanclass="text-blue-math">\( \text{RMS}_{\text{DCT}} = \text{RMS}_{f(x,y)} \)</span>：</p>
-            <span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{N}} & \text{if } u,v = 0 \text{ (DC)} \\ \frac{1}{\sqrt{2N}} & \text{if } u,v \neq 0\text{ (AC)} \end{cases} \]</span>
-            <p>而在 JPEG 中：</p>
-            <div class="overflow-auto"><span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{2}} \approx 0.7071 & \text{if } u,v = 0 \text{ (DC)} \\ 1 & \text{if } u,v \neq 0 \text{ (AC)} \end{cases} \]</span></div>
-
-            <div class="row">
-                <div id="LR-UD-001" class="col-8">
-                    <h3>一维傅里叶变换 1D Fourier Transform</h3>
-                    <p>一种理解方法为：将信号分段或整体视为一个周期，再设定一条从最长周期（起伏很慢的周期线，如 <span class="text-blue-math">\(\cos(0.001x)\)</span>）开始的函数，穷举所有的相位，再穷举所有的振幅，而后记录匹配程度；再缩短一点周期，再穷举所有的相位，...，如此往复直到所有频率、相位、振幅的匹配程度被记录下来。</p>
-                    <p>逆变换时，根据每个周期频率所记录的的相位和振幅生成这些波形，再加到一起即可转换回原始信号。计算过程中可能存在信号反相情况，因此还会绝对值的操作。</p>
-                </div>
-                <img src="files/transforming/Fourier-Transform-Phenomenons.png" alt="image7" id="LR-UD-002" class="img-medium img-right col-4 mb-auto">
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：均方根 RMS</button>
+            <div class="coll-content">
+                <h3>均方根 Root Mean Square（RMS）</h3>
+                <p>统计中常用的一种数据量化，用于表示一组数据平均值的平方根。对于一个包含 N 个值的数据集<span class="text-blue-math">\( \{ x_1, x_2, \ldots, x_N \} \)</span> </p>
+                <span class="text-blue-math overflow-auto">\[ \text{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}{N} x_i^2} \]</span>
+                <p>具体到 DCT 变换，对于 N×N 块 <span class="text-blue-math">\( f(x,y) \)</span> 的均方根以表示为：</p>
+                <span class="text-blue-math overflow-auto">\[ \text{RMS}_{f(x,y)} = \sqrt{\frac{1}{N^2}\sum_{x=0}^{N-1} \sum_{y=0}^{N-1} f(x, y)^2} \]</span>
+                <p>DCT 变换后，DCT 系子 <span class="text-blue-math">\( T(u,v) \)</span>的均方根为：</p>
+                <span class="text-blue-math overflow-auto">\[ \text{RMS}_{\text{DCT}} = \sqrt{\sum_{u=0}{N-1} \sum_{v=0}^{N-1} C(u, v)^2} \]</span>
             </div>
-            <div class="align-items-center">
-                <img src="files/transforming/Fourier-Transform-Editing.png" alt="image8" class="img-medium">
-                <p class="text-gray-side mt-0">图：二维傅里叶变换的特性，背景特性以及可编辑性</p>
+
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：归一化/基本单位化 Normalize</button>
+            <div class="coll-content">
+                <h3>归一化/基本单位化 Normalize</h3>
+                <p>将数据缩放到基本单位大小，以便计算和对比的处理。<span class="text-blue-math">\( \alpha(u) \)</span>和 <span class="text-blue-math">\( \alpha(v) \)</span> 两个缩放值来对齐，使得 <spanclass="text-blue-math">\( \text{RMS}_{\text{DCT}} = \text{RMS}_{f(x,y)} \)</span>：</p>
+                <span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{N}} & \text{if } u,v = 0 \text{ (DC)} \\ \frac{1}{\sqrt{2N}} & \text{if } u,v \neq 0\text{ (AC)} \end{cases} \]</span>
+                <p>而在 JPEG 中：</p>
+                <div class="overflow-auto"><span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{2}} \approx 0.7071 & \text{if } u,v = 0 \text{ (DC)} \\ 1 & \text{if } u,v \neq 0 \text{ (AC)} \end{cases} \]</span></div>
+            </div>
+
+            <button type="button" class="collapsible border-main rounded-3 my-3">点击展开/折叠内容：一维傅里叶变换 1DFT</button>
+            <div class="coll-content">
+                <div class="row">
+                    <div id="LR-UD-001" class="col-8">
+                        <h3>一维傅里叶变换 1D Fourier Transform</h3>
+                        <p>一种理解方法为：将信号分段或整体视为一个周期，再设定一条从最长周期（起伏很慢的周期线，如 <span class="text-blue-math">\(\cos(0.001x)\)</span>）开始的函数，穷举所有的相位，再穷举所有的振幅，而后记录匹配程度；再缩短一点周期，再穷举所有的相位，...，如此往复直到所有频率、相位、振幅的匹配程度被记录下来。</p>
+                        <p>逆变换时，根据每个周期频率所记录的的相位和振幅生成这些波形，再加到一起即可转换回原始信号。计算过程中可能存在信号反相情况，因此还会绝对值的操作。</p>
+                    </div>
+                    <img src="files/transforming/Fourier-Transform-Phenomenons.png" alt="image7" id="LR-UD-002" class="img-medium img-right col-4 mb-auto">
+                </div>
+                <div class="align-items-center">
+                    <img src="files/transforming/Fourier-Transform-Editing.png" alt="image8" class="img-small">
+                    <p class="text-gray-side mt-0">图：二维傅里叶变换的特性，背景特性以及可编辑性</p>
+                </div>
             </div>
 
             <code><b>--limit-tu</b></code>
@@ -371,7 +380,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>用于在连续帧间进行运动估计。这个过程涉及逐个像素块在相邻帧之间寻找最小失真朝向/最小失真方向 Direction of minimal distortion DMD，从而在每帧之间都生成一张向量表。如果这个过程缺失或不够理想，参考帧与分块的建立就可能会出现问题，从而导致潜在的压缩率损失或画质下降。</p>
             <p>简化模型下，动态搜索得到帧间向量表，帧间向量表加上上帧的画面得到预测帧，原始帧减去预测帧得到残差帧，残差帧储存为参考帧，得到帧间结构。</p>
             <!-- } -->
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
             <div class="coll-content">
                 <div class="align-items-center">
                     <img src="files/motion-estimation/Jain&Jain-Search.png" alt="image9" class="" >
@@ -426,7 +435,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>选出 SATD 误差值最小的块——中的 x,y 分量，纠正帧间向量表的动态矢量，完成补偿</li>
             </ol>
             <p class="text-gray-side">注：在参数值强度给高后，上述的对比步骤改成用 me hex 之类的动态搜索算法来找对齐</p>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
             <div class="coll-content">
                 <div class="row">
                     <div id="LR-UD-005" class="col-10 align-items-center">
@@ -575,7 +584,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;启用 B 条带的隐加权预测。注意光线变化和淡入淡出在公开课，电脑录屏，低成本/旧动漫等片源中几乎不存在，这种情况下打开只会浪费性能。</p>
 
             <h2 id="h2-7">帧间 - 时域架网搜索</h2>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：一维小波变换 1D Wavelet Transform</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：一维小波变换 1D Wavelet Transform</button>
             <div class="coll-content">
                 <p>让短波像拉链一样划过一维信号，短波所到的时间域与源信号匹配（波形重合）的程度会变化，而变化本身记为时间频域信息。支持更换波形以提取特征（如特征采样式音频降噪滤镜）。解决了傅里叶变换只有空间频域，无法描述信号随时间变化过程的原生缺陷，缺点是分辨率低。详见<a href="https://www.youtube.com/watch?v=jnxqHcObNK4">科普视频</a>。一般用于检测特征片段，如将小波本身塑性为需要的特征，然后划过源波形，得到这些特征的时间域分布和强度变化。</p>
                 <div class="align-items-center">
@@ -626,7 +635,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2 id="h2-8">帧间动态向量先预测/溯块向量预搜索</h2>
             <p>“动态搜索”与“动态预测”的全称分别是 Motion Estimation 和 Motion Prediction，两者不同但都可译作“预测”，“估计”（<a href="https://stats.stackexchange.com/questions/17773/what-is-the-difference-between-estimation-and-prediction">其实很容易混淆，不能怪翻译</a>）。因此为了简化，此处将 Prediction 译作预搜索/先预测/预估计（代表 Estimation 之前的 Estimation），Estimation 译作搜索/预测/估计。</p>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：Estimate 与 Predict 的定义</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Estimate 与 Predict 的定义</button>
             <div class="coll-content">
                 <ul>
                     <li>Estimator 用现有数据推导参悟出最可能的值（Parameter）。例如在有限数据下对人口平均年龄、身高的预测</li>
@@ -705,7 +714,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="text-gray-side pl-5 m-0">注：封装文件的科普<a href="https://www.nazorip.site/archives/63">见 x264 教程</a>。</p>
 
             <h3>HLS 与 Chunked Encoding 串流</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <h4>HTTP 数据块编码协议 Chunked Encoding（1997 年）</h4>
                 <p>HTTP/1.1 的一部分。数据块编码允许服务器分段传输视频流的数据块，实现视频的直播、实时聊天等场合。理论上所有平台都支持该协议。</p>
@@ -917,7 +926,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             <p>由于当前帧此时还未编码（码率未知），故寻已编码前帧的量化失真程度（越高则后帧理应越复杂），做推演复杂度/模糊复杂度。CRF 越高则除进推演复杂度的分母越大/ABR 越低则分子越小，得到的推演复杂度越低，推演出的量化值就越高。</p>
 
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容 CRF/ABR 模式推演量化值 qp 的简略方法</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容 CRF/ABR 模式推演量化值 qp 的简略方法</button>
             <div class="coll-content">
                 <div class="mt-3 align-items-center">
                     <table class="table-center text-smaller">
@@ -1008,7 +1017,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <!-- x264 教程副本，更改需手动同步 { -->
             <h3>下层 - FTQP 半自动模式</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>手动通过文件制定一部分帧的帧类型和量化值，实现全部手动或半手动指定。</p>
                 <code><b>--qpfile</b></code>
@@ -1058,7 +1067,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
 
             <h3>下层 - SBRC 分段控制模式</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>Segment based rate control，实现 DASH，M3U8 串流（视频平台）用。可搭配 CRF/ABR/CRF-VBR/ABR-VBR。</p>
                 <code><b>--sbrc</b></code>
@@ -1349,7 +1358,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <!-- } -->
             <p>x265 的失真（块间差异）用均方差 Mean Squared Error（MSE）判断：</p>
             <span class="text-blue-math">\[ \text{MSE} = \frac{1}{n^2}\sum_{x=0}^{n-1}\sum_{y=0}^{n-1} \left| f(x,y) - f'(x,y) \right|^2 \]</span>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：
                 <span class="text-red-emph">补充跳过的 x264 教程率失真优化部分，以及 <code>--psy-rd，--fgo</code> 等参数的科普，可略。</span>
             </button>
             <div class="coll-content">
@@ -1409,7 +1418,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--nr-intra --nr-inter</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0 关~2000，默认 0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080 不建议超 250</a>&gt;基于 MC 结果给量化前变换完的 i 帧降噪。nr-intra 不如第三方降噪滤镜。但帧间/时域上降噪的 nr-inter 可以拉近参考源和参考帧的差距/残差，实现在 rc-grain 上进一步稳定 qp 值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点，结果类似低配双阈滤镜。</p>
 
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：补充信噪比 SNR 和峰值信噪比 PSNR 的内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充信噪比 SNR 和峰值信噪比 PSNR 的内容</button>
             <div class="coll-content">
                 <h3>峰值信噪比 Peak signal-noise ratio PSNR</h3>
                 <p>根据信号与噪声之间的比例关系衡量图像或视频的质量。PSNR 不仅仅适用于视频、音频和图像，还可以是温度、气压等强度的差异。由于人对光线变化的感知强度呈对数状，因此对数被用于统计信号的强度，通常用分贝 dB 表示。信噪比 SNR 是指信号与噪声的比值，用于衡量在处理、传输或变换信号过程中有效信息的保留程度。使用对数统计的 PSNR 也能更好地突出关键范围内的变化，并在坐标系中平衡过高或过低的信噪比数据，使得变化更易于理解。</p>
@@ -1421,7 +1430,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>优化策略 - 随量化强度增加而增加</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <div class="align-items-center">
                     <img src="files/rate-distorsion-optimization/RDO-Settings-Reference.jpg" alt="image37" class="img-medium">
@@ -1609,7 +1618,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>算数编码</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
                 <div class="align-items-center">
@@ -2072,7 +2081,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>上下文自适应 - 类 LZ 的 PPM 推演法简化版</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>拓展上例思路作上下文长 0——CTX0 时的推演，添加 CTX1 或更高的范围。每进一位字就「先查长，后查短，生字用对等；匹长概大，配短概小」的上下文自适应出字概率推演。其中部分匹配预测法 Prediction by Partial Matching 设最长 3 字编码 DNA 链单侧的 CTAGGCAATCTAGGTA 时，推演过程如下：</p>
                 <ul class="text-gray-side text-smaller">
@@ -3805,7 +3814,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>有限状态机 Finite-State Machine</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <div class="row">
                     <p id="LR-UD-029" class="col-10">以状态描述程序/机器。如 1~2 间可过渡出无限个数字，代表机械运动到位的中间过程；去掉过程后（如取整后）剩下圆圈数字表示的①↔②两种状态，就足以抽象地表示按动式圆珠笔；将两态联系起来的操作表示为箭头，即按下笔的按钮，而输出就是下一状态。若需要将笔伸出（需②）而笔已收拢则写作 ①→⓶；若需收拢而笔已伸出则 ②→⓵</p>
@@ -3817,7 +3826,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             
             <h3>上下文自适应 - 有限状态机推演法</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>二进制算数编码 BAC 下只有大于 50% 出字概率，以及小于 50% 出字概率的两种值，因此设立最大概符 Most-probable symbol MPS 和最小概符 Least-probable symbol LPS
                     两个变量。如果 MPS 变量标记为 1，则同概率区间下的 LPS 变量的值只能为 0。同时，已知出 0 概率为 <span class="text-blue-math">\(p0\)</span>，则出 1 的概率就是
@@ -3834,7 +3843,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>在（有限状态机推演法）上述的 MPS，LPS 变量简化概率统计的基础上降低精度到 ½ 的幂（如 8 则在 0~1 区间精确到 1/256 个过渡）以在允许的概率统计偏差（可接受 5% 左右）进一步优化性能，再加一步将像素值转二进制的编码，设以便统计过程中交换值，而算数编码的部分不变，就实现了二进制的算数编码。</p>
 
             <h3>几何分布/等差等比分布类 Geometric distribution</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>条件过程不变，各个尝试独立，只有阴阳两结果的<a href="https://zh.wikipedia.org/zh-hans/%E4%BC%AF%E5%8A%AA%E5%88%A9%E8%A9%A6%E9%A9%97">伯努利试验</a>中统计 n 遍成功的概率分布所形成的概率变化曲线，为：<span class="text-blue-math">\[ P(X=x) = (1-p)^{x-1} p \]</span>其中概率 <span class="text-blue-math">\(1-p\)</span> 盖失败，<span class="text-blue-math">\(p\)</span> 盖成功。如：</p>
                 <ol>
@@ -3851,7 +3860,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>小数取整法，进位法以及取模</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <table class="align-items-center table-center">
                     <thead>
@@ -3887,19 +3896,19 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>转二进制 - 伪哥伦布编码（原理解析）</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>十进制的 3 会转为浪费码率的二进制 8bit 00000011 而非 11，因为前后都挨着其它的数而不能删。解决方法是清点有效的位数，11 共有两位数，因此设置两位数的标记 00 作为 11 的前缀，就得到了相对可靠的 <span class="text-blue-math">\( (a=00,b=11) \)</span>。解码器检测到变量 a 和 b，算出无效位有<span class="text-blue-math">\( 8-2 \)</span>个，于是输出 000000，在输出 11，完成还原。</p>
             </div>
 
             <h3>转二进制 - 一元码 Unary，截短二进制码 Truncated Binary</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>一元码如 2，3 即<span class="text-blue-math">110</span>，<span class="text-blue-math">1110</span>或<span class="text-blue-math">001</span>，<span class="text-blue-math">0001</span>，末尾分隔后续数，差在吃带宽。截短二进制如 8bit 的十进制 5 是二进制<span class="text-blue-math">00000101</span>。所以能截短到<span class="text-blue-math">101</span>，但问题是多个数字放一起就难以解码。</p>
             </div>
 
             <h3>转二进制 - 哥伦布 (-莱斯) 编码 Golomb(-Rice) Coding</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>将正整数转二进制并压缩。以输入 N，十进制缩放值 M 与刻度 Κ，一元码，截短二进制实现。（-莱斯）码在此基础上限制 M 仅为 2 的幂，对计算机更友好。此处例 M=4，输入 N=9：</p>
                 <ol>
@@ -3929,7 +3938,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>转二进制 - 零阶指数哥伦布编码 Exponential Golomb k0</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>十进制数添一位则量增十倍，如 1，10，100 按×10 倍增；二进制数添一位则量增二倍，如 001，010，100 照×2 倍增。可见「刻度本是指数」，二进制刻度 K 的间距设为指数增加的<span class="text-blue-math">0,1,3,7,15…</span>或<span class="text-blue-math">0,1,11,111,1111…</span>，每度从底<span class="text-blue-math">\(2^{(M-1)}\)</span>延伸至顶<span class="text-blue-math">\(2^{(M+1)}-1\)</span>。刻度 Kλίμακα 设为对齐小的边界：</p>
                 <ol>
@@ -4030,7 +4039,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2 id="h2-16">优化熵编码</h2>
             <h3>汉明距离与欧几里得距离</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>前者在不考虑大小的情况下测量数字信号的差距，如<span class="text-blue-math">100</span>与<span class="text-blue-math">010</span>的汉明距离为 2，数值误差为 90，很明显信号偏差的程度并不如数值误差所说的那么离谱。汉明距离以累计各位数的异或门 ⊻ 得到，“累计”代表误差和 SAD。</p>
                 <p>欧几里得距离测量更高维度下，至少两点分别取值的平方差 SSE，如 GPS 的定位误差</p>
@@ -4056,7 +4065,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>Trellis</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：
                 <span class="text-red-emph">补充因难度过高而跳过的 x264 教程 <code>--trellis</code> 参数相关科普，可略。</span>
             </button>
             <div class="coll-content">
@@ -4070,7 +4079,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>软判决率失真游程走线优化 - SDQ trellis</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：
                 <span class="text-red-emph">补充因难度过高而跳过的 x264 教程 <code>--trellis</code> 参数相关科普，可略。</span>
             </button>
             <div class="coll-content">
@@ -4113,7 +4122,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p>由于线程撕裂者 1000~2000 系处理器是用多个节点拼出来的（可能部分 EPYC 处理器也是这样？），所以单处理器内部就是多个 CPU 节点。此外要避开 2990WX 与 2970WX（核心组 1，3 没有内存控制器用，所以只能用 0，2）。当然前提是买来以后不做主力电脑使用的。</p>
 
             <h3>X3D 处理器有没有优势</h3>
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>见 <a href="https://www.pugetsystems.com/labs/articles/amd-ryzen-5800x3d-vs-5800x-for-content-creation-2331/">PugetSystems 跑分</a>：</p>
                 <ul>
@@ -4201,7 +4210,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h2 id="h2-19">色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
             <p>Video usability information 是有工具就可以随时改的元数据。HDR 电视只读取 maxcll 和 maxfall，所以实际情况是 master-display 可略。光强/光压 Candela 等于尼特，即<span class="text-blue-math">\(1 \text{cd} = 1 \text{nit}\)</span>。因 bt601，709，HDR-PQ，HLG 标准重视的亮度范围，曲线所异（偏亮或偏暗），故需要量化曲线，心理学优化，模式决策的重适配。</p>
             
-            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：色彩格式的具体转换变量与算法标准</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：色彩格式的具体转换变量与算法标准</button>
             <p>详见国际电信联盟（ITU-T）<a href="https://www.itu.int/rec/dologin.asp?lang=s&id=T-REC-H.265-201504-S!!MSW-E">H.265 Table E.3</a>。</p>
             <div class="coll-content">
                 <table class="table-center text-smaller">
@@ -5268,12 +5277,12 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <table class="table-center">
                 <tbody>
                     <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffmpeg</a></th>
-                        <td class="px-1">强大的 CLI 开源视音频处理工具</td>
+                        <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffmpeg~ffprobe</a></th>
+                        <td class="px-1">顶级开源多系统多媒体 CLI 处理~检测工具</td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://mpv.io/installation/">mpv</a></th>
-                        <td class="px-1">开源，支持便携的现代视频播放器。见<a href="https://nazorip.site/archives/1052/">安装与配置</a>教程</td>
+                        <td class="px-1">支持便携的开源多系统现代视频播放器。见<a href="https://nazorip.site/archives/1052/">安装与配置</a>教程</td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://www.voukoder.org/">Voukoder</a></th>
@@ -5281,16 +5290,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://obsproject.com/zh-cn/download">OBS</a></th>
-                        <td class="px-1">强大的开源直播框架和软件，设置略比传统录屏软件复杂，但效果也更好</td>
+                        <td class="px-1">开源直播框架和录制软件，设置略比传统录屏软件复杂，但效果也更好</td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://mediaarea.net/zh-CN/MediaInfo">MediaInfo</a></th>
-                        <td class="px-1">开源的 GUI 媒体元数据/视音频格式读取器，用于配置正确的压制参数</td>
-                    </tr>
-                    <tr>
-                        <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffprobe</a></th>
-                        <td class="px-1">CLI 视音频格式读取器，若检测所得信息与 MediaInfo 所异，则优先参考 ffprobe<br>见<a href="https://nazorip.site/archives/169/">基本使用</a>，以及<a href="https://nazorip.site/archives/1068/">搭配 Excel 的视频数据可视化</a>教程
-                        </td>
+                        <td class="px-1">开源 GUI 媒体元数据/视音频格式读取器，用于配置正确的压制参数</td>
                     </tr>
                 </tbody>
             </table>

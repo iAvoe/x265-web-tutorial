@@ -23,38 +23,7 @@
             <!-- x264 教程副本，更改需手动同步 { -->
             <h2>地图</h2>
             <ol class="font-monospace">
-                <li>
-                    <a href="../../x264-web-tutorial/HTML/index.html">x264 教程网页版</a>
-                    <ul class="text-xs">
-                        <li>基础：
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-1">必备常识</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-2">编解码过程</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-3">视频结构</a>
-                        </li>
-                    </ul>
-                    <ul class="text-xs">
-                        <li>编码：<a href="../../x264-web-tutorial/HTML/index.html#h2-4">前瞻</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-5">动搜</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-6">动补</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-7">变换量化</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-8">率控制模式</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-9">自适应量化</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-10">去块滤波</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-11">模式决策</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-12">优化策略</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-13">熵编码</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-14">优化熵编码</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-15">色彩信息</a>
-                        </li>
-                    </ul>
-                    <ul class="text-xs">
-                        <li>附录：
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-16">预设参数</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-17">线程控制</a>，
-                            <a href="../../x264-web-tutorial/HTML/index.html#h2-18">工具下载</a>
-                        </li>
-                    </ul>
-                </li>
+                <li><a href="../../x264-web-tutorial/HTML/index.html">x264 教程网页版</a></li>
                 <li>
                     <a href="../../x265-web-tutorial/HTML/index.html" class="disabled">x265 教程网页版（你在这里）</a>
                     <ul class="text-xs">
@@ -920,7 +889,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             
             <h3>算出量化值</h3>
-            <p>人眼对明暗变化与画面细节程度的感知呈对数㏒状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
+            <p>人眼对明暗变化与画面细节程度的感知呈对数 ㏒ 状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
             <div class="align-items-center">
                 <img src="files/rate-control/Logrithm-QP-to-qScale.png" alt="image30" class="img-medium">
             </div>
@@ -1054,7 +1023,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <code><b>--vbv-bufsize</b></code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt;编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>
             <code><b>--vbv-maxrate</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关 0&gt;峰值红线。用「出缓帧码率 - 入缓帧码率必≤maxrate"」限制编码器在 GOP 码率超 bufsize，即缓存跑满时压缩超载帧（提高 qp 值 + 强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超 maxrate 也会因缓存有空而不被压缩。所以有四种状态，需经验判断：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关 0&gt;峰值红线。用「出缓帧码率 - 入缓帧码率必须小于等于 maxrate"」限制编码器在 GOP 码率超 bufsize，即缓存跑满时压缩超载帧（提高 qp 值 + 强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超 maxrate 也会因缓存有空而不被压缩。所以有四种状态，需经验判断：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>大：GOP 大小=bufsize=2×maxrate，视频码率超出 maxrate 后等缓存满再压缩，避开多数涨落，适合限平均率的串流</li>
                 <li>小：GOP 大小=bufsize=1×maxrate，视频码率超出 maxrate 后直接压缩，避开部分涨落，适合限峰值的串流</li>

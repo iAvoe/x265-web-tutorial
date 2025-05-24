@@ -977,7 +977,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>上层 - 平均码率 ABR 模式</h3>
             <p>全称 Average Bitrate。编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
             <code><b>--bitrate</b></code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt;平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。如果给太低则会得到码率不达标，同时画质差的片子。平均码率模式，除 2pass 分隔，一般推流用的"码率选项"就是这个参数，速度快但同时妥协了压缩</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt;平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。一般推流用的“码率选项”就是设置了这个参数</p>
 
             <h3>双层 - 恒定量化值 CQP 模式</h3>
             <p>全称 Constant Quantizer Parameter</p>

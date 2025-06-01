@@ -448,6 +448,7 @@ button.collapsible {
 
 /* Correcting incompetent overflow control on mobile */
 code { word-break: break-word; }
+code.code-bold { font-weight: 600; }
 
 /* Text selection styling */
 ::selection {

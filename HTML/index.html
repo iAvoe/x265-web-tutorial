@@ -93,7 +93,7 @@
             <h2 id="h2-1">命令行调用参考</h2>
 
             <h3>命令行参数的说明格式</h3>
-            <code><b>--参数</b></code>
+            <code class="code-bold">--参数</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关 | 整数 A~B | 浮点 A~B | 其它格式，默认值，<span class="text-red-emph">限制</span>&gt;说明信息，特点注解，推荐<span class="text-blue-emph">这个值</span>，其它情况可设<span class="text-blue-emph">这个值</span>。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>情况 1：特点如此，推荐<span class="text-blue-emph">这个值</span></li>
@@ -231,9 +231,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <p class="same-line">存取单元 Access unit AU 代表解码端用于启动解码的块，通常由 IDR 帧开始，所以一般叫做 IDR-AU</p>
             <br>
 
-            <code><b>--ctu</b></code>
+            <code class="code-bold">--ctu</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;64/32/16，默认 64&gt;编码树单元最大大小。大则有损压缩效率高，速度慢。一般建议保持默认，除非片有类似 jpeg 边缘损失的老片设<span class="text-blue-emph">32</span>，分辨率特别小的老片设<span class="text-blue-emph">16</span>。</p>
-            <code><b>--min-cu-size</b></code>
+            <code class="code-bold">--min-cu-size</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16，默认 8&gt;通过限制最小 CU 大小以简化计算。其副作用是导致后续步骤中 PU，TU 的划分更大。按照画面细节程度和编码策略设置。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>4x4 细分块能够有效地隔离动静态画面——默认</li>
@@ -241,7 +241,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>16x16 细分块能够有效地隔离动静态画面——<span class="text-blue-emph">32</span></li>
                 <li>快速编码——<span class="text-blue-emph">16</span> 或 <span class="text-blue-emph">32</span></li>
             </ul>
-            <code><b>--rect --amp</b></code>
+            <code class="code-bold">--rect --amp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，受 limit-modes 限制，<span class="text-red-emph">amp 需 rect</span>&gt;PU 的对称与不对称细分块，用较大到大量的时间换取画质和压缩率。使用前考虑：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>画面中有大量面积小于 4x4 细分块的细节——<code><span class="text-blue-emph">--rect</span></code></li>
@@ -323,7 +323,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
             </div>
 
-            <code><b>--limit-tu</b></code>
+            <code class="code-bold">--limit-tu</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~4 默认关，<span class="text-red-emph">需 tu-intra/inter-depth 大于 1</span>&gt;提前退出 tu 分块，以量化/残差编码质量为代价提速。<a href="https://forum.doom9.org/showthread.php?p=1963250#post1963250">tu 大则易出现量化涂抹涂抹</a>，不利于暂停画质。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span> 一般，画质编码，取分裂/跳过中花费最小的</li>
@@ -331,7 +331,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">3</span> 快速编码取帧内帧间附近 tu 分裂平均次数为上限</li>
                 <li><span class="text-blue-emph">4</span> 不推荐，将 3 作为未来 tu 的分裂上限，相比 0+20% 速度</li>
             </ul>
-            <code><b>--rdpenalty</b></code>
+            <code class="code-bold">--rdpenalty</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2，默认关，<span class="text-red-emph">需 tu-intra-depth 大于 1</span>&gt;与 limit-tu 相反，强制 tu 分块细化以增加算力损耗并降低量化涂抹。可理解为 tu 分块的下限，例如高 limit-tu，高 crf 时设 2，避免 32x32tu 量化效果太强画面糊掉。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span> 提高率失真代价而减少 32x32tu 出现概率</li>
@@ -339,9 +339,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-red-emph">32x32 的帧内 cu 需 tu-intra-depth 2</span></li>
                 <li><span class="text-red-emph">64x64 帧内 cu 需 tu-intra-depth 3</span></li>
             </ul>
-            <code><b>--tu-intra-depth --tu-inter-depth</b></code>
+            <code class="code-bold">--tu-intra-depth --tu-inter-depth</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~4，默认 1，<span class="text-blue-emph">配合 limit-tu</span>&gt;空间域 tu 分裂次数上限，默认只在 cu 基础上分裂一次。决定量化质量所以建议开高，建议一般情况设 2，保画质设 3~4。</p>
-            <code><b>--max-tu-size</b></code>
+            <code class="code-bold">--max-tu-size</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16/8/4，默认 32&gt;大 tu 使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></p>
 
             <h2 id="h2-5">动态搜索</h2>
@@ -361,11 +361,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
             </div>
 
-            <code><b>--analyze-src-pics</b></code>
+            <code class="code-bold">--analyze-src-pics</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;允许动态搜索查找片源帧，耗时增加压缩。</p>
-            <code><b>--me</b></code>
+            <code class="code-bold">--me</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，推荐 umh&gt;搜索算法，umh 平衡，star 四角星搜索之后收益递减，sea 是优化过的 x264 esa 穷举，但收益递减仍大。umh 和 star 通过多种分辨率大小的查找范围，减轻了动态噪点对传统搜索算法的干扰</p>
-            <code><b>--merange</b></code>
+            <code class="code-bold">--merange</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，推荐 4 的倍数，<span class="text-red-emph">需 me</span>&gt;<span class="text-blue-emph">完全取决于 ME 算法和分辨率</span>，过大会因「找不到更好，找到也是错」而损失画质和压缩。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>1920x1080 下推荐<span class="text-blue-emph">48</span>左右</li>
@@ -373,11 +373,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>me hex 下设<span class="text-blue-emph">16</span></li>
                 <li>me umh-star 设<span class="text-blue-emph">≥32</span></li>
             </ul>
-            <code><b>--no-temporal-mvp</b></code>
+            <code class="code-bold">--no-temporal-mvp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关 P-B 条带的动态搜索，除直播外不推荐。</p>
-            <code><b>--hme-search</b></code>
+            <code class="code-bold">--hme-search</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，<span class="text-red-emph">关 me</span>&gt;原画做三种分辨率，分别查找搜索动态信息，能够更好地消除动态噪点所导致的假动态向量。</p>
-            <code><b>--hme-range</b></code>
+            <code class="code-bold">--hme-range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;三整数，<span class="text-red-emph">需 hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt;对应 1/16，¼和全分辨率三画面。</p>
             
             <h3>绝对变换差和 SATD</h3>
@@ -475,7 +475,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </ul>
             </div>
 
-            <code><b>--subme</b></code>
+            <code class="code-bold">--subme</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数范围 1~7，默认 2&gt;根据源帧率借下表判断。注：x264 的 rdo 选项和 subme 并用，所以与 x265 不通用；SATD 算法见 x264 教程。</p>
 
             <table class="align-items-center table-center text-smaller mt-3">
@@ -549,7 +549,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/weighted-prediction/Implicit-Weighted-Prediction.png" alt="image15" id="LR-UD-008" class="img-small img-right col-2 mt-3 mb-auto" >
             </div>
 
-            <code><b>--weightb</b></code>
+            <code class="code-bold">--weightb</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;启用 B 条带的隐加权预测。注意光线变化和淡入淡出在公开课，电脑录屏，低成本/旧动漫等片源中几乎不存在，这种情况下打开只会浪费性能。</p>
 
             <h2 id="h2-7">帧间 - 时域架网搜索</h2>
@@ -598,7 +598,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <div class="align-items-center">
                     <img src="files/bilateral-filter/Bilateral-Filter.png" alt="image20" class="img-medium">
                 </div>
-                <code><b>--mcstf</b></code>
+                <code class="code-bold">--mcstf</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">会关多线程</span>&gt;时域动态补偿滤镜 mctf 搭配双阈滤镜的自动降噪，理论上提高细节保真。关多线程会大幅削弱性能。</p>
             </div>
 
@@ -637,33 +637,33 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/amvp-merge/Merge-Mode.png" alt="image22" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
             </div>
 
-            <code><b>--max-merge</b></code>
+            <code class="code-bold">--max-merge</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~5，默认 2&gt;重设 merge mode 被选参考块的数量，时间换质量。建议高压编码设<span class="text-blue-emph">4</span>，其它可设<span class="text-blue-emph">2，3</span>。</p>
-            <code><b>--early-skip</b></code>
+            <code class="code-bold">--early-skip</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;先查 2nx2n merge 被选块，找不到就跳过 AMVP 以提速。</p>
 
             <h2 id="h2-9">前瞻进程 Lookahead</h2>
             <p>最先启动，设立关键帧和参考帧，决定了 GOP 划分的初始编码步骤。决定了后续所有步骤的大纲。过程见<a href="../../x264-web-tutorial/HTML/index.html#h2-4">x264 教程网页版</a></p>
 
-            <code><b>--scenecut</b></code>
+            <code class="code-bold">--scenecut</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，不推荐用&gt;Lookahead 中两帧差距达到该参数值则触发转场。</p>
-            <code><b>--hist-scenecut</b></code>
+            <code class="code-bold">--hist-scenecut</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，会关 scenecut，<span class="text-blue-emph">10 与 12bit 源可能会导致崩溃</span>，推荐 8bit 下用&gt;亮度平面边缘 + 颜色直方图 SAD 阈值触发转场。x265 v3.5+69 后编码彩色视频，尤其<a href="https://forum.doom9.org/showthread.php?p=1978502">HDR 源中超越 scenecut 精度~20%</a>，降低了正误判（设 I 帧，closed-gop 下帧间冗余效益降低）和负误判（不设 I 帧，分为多个带 I 块的 P 帧预测效益降低），因此除黑白视频外推荐。缺点是超过 8bit 后不稳定，且理论上不应对画质/压缩率有太大影响</p>
             <p class="text-gray-side pl-5 m-0">注：hist-threshold 参数于 x265 v3.5+69 被删。</p>
             <!-- x264 教程副本，需要手动同步更改 { -->
-            <code><b>--rc-lookahead</b></code>
+            <code class="code-bold">--rc-lookahead</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;帧数量，范围 1~250，推荐 keyint÷2&gt;指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
             <p class="text-gray-side pl-5 m-0 overflow-auto">注：mbtree/cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
             <!-- } -->
-            <code><b>--no-cutree</b></code>
+            <code class="code-bold">--no-cutree</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关闭少见 CTU 量化增强偏移。可能只有近无损，<code>--crf</code> 小于 16 才用的到。</p>
 
             <h3 class="mb-0">P/B 帧推演 - Viterbi 最短路径算法</h3>
             <p class="mt-0">见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
-            <code><b>--b-adapt</b></code>
+            <code class="code-bold">--b-adapt</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2，推荐<span class="text-blue-emph">2</span>&gt;<span class="text-blue-emph">0</span>停用，<span class="text-blue-emph">1</span>快速算法，因当今设备算力够高所以一律<span class="text-blue-emph">2</span>。</p>
-            <code><b>--bframe-bias</b></code>
+            <code class="code-bold">--bframe-bias</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 -90~100，推荐默认&gt;设立 B 帧判定偏移，增大的同时搭配低 pbratio 可增加 B 帧数量，用负值搭配高 pbratio 可以减少 B 帧数量。</p>
 
             <h3>网络抽象层单元 - 参数集</h3>
@@ -675,10 +675,10 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>条带段 Slice segment—————————分枝 - 负责防止 ctu 中的错误传播到整个条带，ctu 以上最小的单位</li>
             </ul>
 
-            <code><b>--opt-qp-pps --opt-ref-list-length-pps</b></code>
+            <code class="code-bold">--opt-qp-pps --opt-ref-list-length-pps</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，已知兼容性问题&gt;据上个 GOP 改动当前 PPS 中默认的 qp/ref 参数值，从而整体上优化视频数据结构。尽管符合 HEVC 标准，但部分解码端，包括视频网站都不这么想</p>
             <p class="text-gray-side pl-5 m-0">注：兼容性问题为<a href="https://forum.doom9.org/showthread.php?p=1978837">应该用 hev1 而非 hvc1 封装进 ISO-BMFF</a>。</p>
-            <code><b>--repeat-headers</b></code>
+            <code class="code-bold">--repeat-headers</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;在流未封装的情况下提供 SPS，PPS 等信息，正常播放 HEVC 源码</p>
             <p class="text-gray-side pl-5 m-0">注：封装文件的科普<a href="https://www.nazorip.site/archives/63">见 x264 教程</a>。</p>
 
@@ -693,7 +693,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             
                 <p>总的来说，HTTP Live Streaming（HLS）和 Chunked Encoding 都是 HTTP 协议的一部分。Chunked Encoding 优点在于容易实现以及冷门设备更可能支持，但是在专门的流媒体应用中不如 HTTP Live Streaming（HLS）的功能强大。</p>
 
-                <code><b>--chunk-start --chunk-end</b></code>
+                <code class="code-bold">--chunk-start --chunk-end</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需 no-open-gop</span>&gt;start 跨 GOP 打包网络数据包，end 将数据包结尾标注分割。</p>
                 <p class="text-gray-side pl-5 m-0">注：由于数据包接收顺序随机，所以只可参考 chunk 数据包之前，而不可参考 chunk 数据包之后的内容，跟 http 串流的数据包编码协议有关</p>
             </div>
@@ -720,15 +720,15 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li class="mt-0">open-gop 间划界，访问不相关/不相连 GOP 的特殊 CRA 帧。用于不暂停播放的分辨率切换</li>
             </ul>
 
-            <code><b>--no-open-gop</b></code>
+            <code class="code-bold">--no-open-gop</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，建议开&gt;不用 cra/bla，增加码率增加兼容性，适合长 GOP 策略。</p>
-            <code><b>--keyint</b></code>
+            <code class="code-bold">--keyint</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 25&gt;判断新发现的转场距上个 IDR 帧的距离是否短于此值。有两种设定逻辑，而它们给出的画质都一样：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>设 5 或更高，省了设立一些 IDR 帧拖慢速度。快速编码/直播环境直接设=keyint</li>
                 <li>设 1 来增加 IDR 帧的数量，一帧被判转场本来就意味着前后溯块价值不高。而单/双向参考（P/B）帧内可以放置 I 宏块，x264/5 倾向插 P/B 帧。好处是进度条落点在激烈的动作场面更密集</li>
             </ul>
-            <code><b>--fades</b></code>
+            <code class="code-bold">--fades</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;找流中的虚实渐变 fade-in，给小到帧间条带，大到整个帧间范围改用 I 条带，并根据渐变后最亮的帧重设码率控制历史记录，解决转场致模糊的问题</p>
             <p class="text-gray-side pl-5 m-0">注：与 weightb 殊路同归但效果更强，增加码率更多。</p>
 
@@ -739,18 +739,18 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>启用后，部分引用这些标签 P 帧的 IDR 帧会改变帧类型，以提示这些标签帧位于其之前，而这种 GOP 的解码会与传统 GOP 有一些区别，导致后续剪辑工具链中的兼容性问题</li>
             </ul>
 
-            <code><b>--ref</b></code>
+            <code class="code-bold">--ref</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~16&gt;多参考帧前后帧数半径，一图流设<span class="text-blue-emph">1</span>。要在能溯全所有块的情况下降低参考面积，所以一般设<span class="text-blue-emph">3</span>就不管了。</p>
-            <code><b>--radl</b></code>
+            <code class="code-bold">--radl</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数默认 0，小于连续 B 帧，推荐 2~3&gt;原理以及兼容性问题见上。</p>
-            <code><b>--ipratio --pbratio</b></code>
+            <code class="code-bold">--ipratio --pbratio</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点，默认 1.4 1.3&gt;P 帧比 IDR/I，及 B/b 帧相比 P 帧的量化值递增。B 帧双向参考能从更多帧中找到参考源，因此量化强度理应最高：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>真人录像片源中保持默认</li>
                 <li>动漫片源中连续长 B 帧出现几率增多，有时会找不到合适的参考源导致画质损失，用<span class="text-blue-emph">1.2</span>或更小分配一定码率</li>
                 <li>可据比例换算帧类型的 qp，如<span class="text-blue-emph">I-qp17</span>，<span class="text-blue-emph">P-qp20</span>，<span class="text-blue-emph">B-qp22</span>即<span class="text-blue-emph">--qp/crf 17 --ipratio 1.1765 --pbratio 1.1</span></li>
             </ul>
-            <code><b>--bframes</b></code>
+            <code class="code-bold">--bframes</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~16&gt;最多可连续插入的 B 帧数量：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>一般录像/录屏快速，以及视频剪辑素材设<span class="text-blue-emph">3~6</span>以防止录制和剪辑的解码算力要求过高</li>
@@ -837,13 +837,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </div>
             </div>
 
-            <code><b>--constrained-intra</b></code>
+            <code class="code-bold">--constrained-intra</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;缺少生成参考点的 CB 时用帧内块或默认值，不用帧间块生成参考点。降低参考错误传播距离，降低压缩率和速度，增加数据损坏的恢复概率。</p>
-            <code><b>--fast-intra</b></code>
+            <code class="code-bold">--fast-intra</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt;夹角模式优化。先查夹角模式 2,10,18,26,34，再提高精度到 5，15，21，31，再用最高精度。提高速度且略微增加参考错误，关闭相对更加浪费算力。</p>
-            <code><b>--b-intra</b></code>
+            <code class="code-bold">--b-intra</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，rd 大于 4 时关，推荐开&gt;B 条带同样进行帧内预测。关闭可以提速，但相对浪费压缩率。</p>
-            <code><b>--no-strong-intra-smoothing</b></code>
+            <code class="code-bold">--no-strong-intra-smoothing</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，不推荐&gt;强力平滑滤镜平滑的是参考点而非 pu，还能去色带，所以不推荐关。触发条件与原理见上说明。</p>
 
             <h2 id="h2-11">率控制</h2>
@@ -971,17 +971,17 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <!-- x264 教程副本，更改需手动同步 { -->
             <h3>上层 - 质量呼应码率 CRF 模式</h3>
             <p>全称 Constant Rate Factor。压制三角形下，距离妥协中心点最近的模式。因此也是压制最常用的模式。</p>
-            <code><b>--crf</b></code>
+            <code class="code-bold">--crf</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0~51，默认 23&gt;据 cplxBlur，cutree，B 帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称 crf。素材级画质设在 16~18，收藏~高压画质设在 19~20.5，YouTube 是 23。由于动画和录像的内容差距，动画比录像要给低点</p>
 
             <h3>上层 - 平均码率 ABR 模式</h3>
             <p>全称 Average Bitrate。编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
-            <code><b>--bitrate</b></code>
+            <code class="code-bold">--bitrate</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt;平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。一般推流用的“码率选项”就是设置了这个参数</p>
 
             <h3>双层 - 恒定量化值 CQP 模式</h3>
             <p>全称 Constant Quantizer Parameter</p>
-            <code><b>--qp</b></code>
+            <code class="code-bold">--qp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~69，<span class="text-red-emph">禁用 CRF/ABR/模式决策/率失真优化</span>&gt;设定全局量化强度。除非有既定目的，否则不建议使用。如果要手动指定特定范围的帧类型和量化值，则应使用 SBRC 下层模式</p>
 
             <!-- x264 教程副本，更改需手动同步 { -->
@@ -989,7 +989,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>手动通过文件制定一部分帧的帧类型和量化值，实现全部手动或半手动指定。</p>
-                <code><b>--qpfile</b></code>
+                <code class="code-bold">--qpfile</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径到文件&gt;手动指定帧类型和 qp 值 closed-gop 下 K 帧的 frame type qp 下层模式。qpfile 文件内的格式为"帧号 帧类型 QP"</p>
                 <ul class="font-monospace pl-5 text-smaller">
                     <li>帧类型可以选 [I,i,K,P,B,b]</li>
@@ -1020,9 +1020,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>与 ABR 上层模式一并使用时叫固定码率 Constant BitRate（CBR），或 Capped-ABR 模式</li>
             </ol>
             <!-- x264 教程副本，更改需手动同步 { -->
-            <code><b>--vbv-bufsize</b></code>
+            <code class="code-bold">--vbv-bufsize</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt;编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>
-            <code><b>--vbv-maxrate</b></code>
+            <code class="code-bold">--vbv-maxrate</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关 0&gt;峰值红线。用「出缓帧码率 - 入缓帧码率必须小于等于 maxrate"」限制编码器在 GOP 码率超 bufsize，即缓存跑满时压缩超载帧（提高 qp 值 + 强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超 maxrate 也会因缓存有空而不被压缩。所以有四种状态，需经验判断：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>大：GOP 大小=bufsize=2×maxrate，视频码率超出 maxrate 后等缓存满再压缩，避开多数涨落，适合限平均率的串流</li>
@@ -1032,36 +1032,36 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </ul>
             <p class="font-monospace pl-5 m-0 overflow-auto">由于 gop 多样，4 种状态可以出现在同一视频中。buf/max 实际控制了这些状态的出现概率</p>
             <!-- } -->
-            <code><b>--crf-max</b></code>
+            <code class="code-bold">--crf-max</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
 
             <h3>下层 - SBRC 分段控制模式</h3>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>Segment based rate control，实现 DASH，M3U8 串流（视频平台）用。可搭配 CRF/ABR/CRF-VBR/ABR-VBR。</p>
-                <code><b>--sbrc</b></code>
+                <code class="code-bold">--sbrc</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需 min-keyint=keyint</span>，<span class="text-red-emph">no-open-gop</span>&gt;由于提高了初始 CRF 值的利用率，所以建议搭配--cplxblur=crf 使用。</p>
             </div>
 
             <h3>双层 - 2pass-ABR 模式</h3>
             <p>先用 CRF 模式分析整个视频总结可压缩信息，后根据 ABR 模式的码率限制统一分配量化值。有 pass 2 给特别高的平均码率，输出最小损失的最小体积近无损模式，以及 pass2 给码率硬限的全局整体压缩模式。</p>
-            <code><b>--pass 1</b></code>
+            <code class="code-bold">--pass 1</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;挡位，导出 stats 数据文件&gt;</p>
-            <code><b>--pass 2</b></code>
+            <code class="code-bold">--pass 2</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;挡位，导入 stats 数据文件&gt;</p>
-            <code><b>--stats</b></code>
+            <code class="code-bold">--stats</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径，默认在 x264/5 所在目录下&gt;设定导出和导入 stats 数据文件的路径和文件名</p>
             <!-- } 额外参数（与 x264 教程不同）：-->
-            <code><b>--slow-firstpass</b></code>
+            <code class="code-bold">--slow-firstpass</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;pass1 里自动关闭以下提速，或自动提高以下参数的强度，以保证 pass1 模式中 CRF 模式计算量化值的准确度：<code>fast-intra，no-rect，no-amp，early-skip，ref 1，max-merge 1，me dia，subme 2 rd 2</code>，可手动覆盖为强度更高的参数</p>
 
             <h3>双层 - Analysis-2pass-ABR 模式</h3>
             <p>于普通 2pass 基础上，将 pass1 的帧内和帧间的分析结果传给 pass2。</p>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-2pass</button>
             <div class="coll-content">
-                <code><b>--analysis-save --analysis-load</b></code>
+                <code class="code-bold">--analysis-save --analysis-load</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;指定导入/出 analysis 信息文件的路径，文件名。</p>
-                <code><b>--analysis-save-reuse-level --analysis-load-reuse-level</b></code>
+                <code class="code-bold">--analysis-save-reuse-level --analysis-load-reuse-level</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~10，默认 5&gt;指定 analysis-save 和 load 的信息量，配合 pass1 的动态搜索，帧内搜索，参考帧等参数。推荐 8</p>
                 <ul class="font-monospace pl-5 text-smaller">
                     <li><span class="text-blue-emph">1</span>储存 lookahead 信息</li>
@@ -1071,9 +1071,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <li><span class="text-blue-emph">8==9</span>加完整 8x8cu 分块信息</li>
                     <li><span class="text-blue-emph">10</span>加所有 cu 分析信息</li>
                 </ul>
-                <code><b>--dynamic-refine</b></code>
+                <code class="code-bold">--dynamic-refine</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径，默认在 x264/5 所在目录下&gt;设定导出和导入 stats 数据文件的路径和文件名</p>
-                <code><b>--refine-inter</b></code>
+                <code class="code-bold">--refine-inter</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0&gt;限制帧间块的向量格式，<span class="text-blue-emph">取决于 pass1 分析结果是否可信，如 pass 1 只跑了快速搜索的情况</span>。</p>
                 <ul class="font-monospace pl-5 text-smaller">
                     <li><span class="text-blue-emph">0</span>完全遵从 pass1 的分块深度和向量格式</li>
@@ -1081,35 +1081,35 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     <li><span class="text-blue-emph">2</span>一旦找出最佳的动态向量格式就应用于全部的块，2Nx2N 块的 rect/amp 分块全部遵从 pass1，仅对 merge 和 2Nx2N 划分的块的动态向量信息进行分析</li>
                     <li><span class="text-blue-emph">3</span>保持使用 pass1 的分块程度，仍然搜索向量格式</li>
                 </ul>
-                <code><b>--refine-intra</b></code>
+                <code class="code-bold">--refine-intra</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0&gt;限制帧间块的向量格式，<span class="text-blue-emph">取决于 pass1 分析结果是否可信，如 pass 1 只跑了快速搜索的情况</span>。</p>
                 <ul class="font-monospace pl-5 text-smaller">
                     <li><span class="text-blue-emph">0~2</span>同上</li>
                     <li><span class="text-blue-emph">3</span>保持使用 pass1 的分块程度，但优化动态向量</li>
                     <li><span class="text-blue-emph">4</span>pass1 丢弃不用</li>
                 </ul>
-                <code><b>--refine-mv</b></code>
+                <code class="code-bold">--refine-mv</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~3&gt;优化分辨率变化情况下 pass2 的最优动态向量，<span class="text-blue-emph">1</span>仅搜索动态向量周围的动态，<span class="text-blue-emph">2</span>增加搜索 AMVP 的顶级候选块，<span class="text-blue-emph">3</span>再搜索更多 AMVP 候选。</p>
-                <code><b>--scale-factor</b></code>
+                <code class="code-bold">--scale-factor</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-blue-emph">需 analysis-reuse-level 10</span>&gt;若 1pass 和 2pass 视频的分辨率不一致，就使用这个参数。</p>
-                <code><b>--refine-mv-type avc</b></code>
+                <code class="code-bold">--refine-mv-type avc</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto"> 读取 API 调用的动态信息，目前支持 avc 大小，使用 analyse-reuse 模块就用这个参数+avc。</p>
-                <code><b>--refine-ctu-distortion</b></code>
+                <code class="code-bold">--refine-ctu-distortion</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~1&gt;pass 1 下用 0 写，pass 2 下用 1 读取 ctu 失真信息。</p>
             </div>
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-2pass 转场优化</button>
             <div class="coll-content">
-                <code><b>--scenecut-aware-qp</b></code>
+                <code class="code-bold">--scenecut-aware-qp</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认关，<span class="text-red-emph">仅 pass2</span>&gt;降低转场前/后 qp 以增加转场画质，类似 fades 和 weightb。</p>
                 <ul class="font-monospace pl-5 text-smaller">
                     <li><span class="text-blue-emph">1</span>仅转前</li>
                     <li><span class="text-blue-emph">2</span>仅转后</li>
                     <li><span class="text-blue-emph">3</span>前加后</li>
                 </ul>
-                <code><b>--analysis-reuse-file</b></code>
+                <code class="code-bold">--analysis-reuse-file</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径，默认 x265 目录下 x265_analysis.dat&gt;若使用了 2pass-ABR 调优，则导入 multi-pass-opt-analysis/distortion 信息的路径，文件名。</p>
-                <code><b>--masking-strength</b></code>
+                <code class="code-bold">--masking-strength</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;逗号分隔整数&gt;于 sct-awr-qp 基础上定制 qp 偏移量。建议根据低~高成本动漫，真人录像三种情况定制参数值。scenecut-aware-qp 的三种方向决定了 masking-strength 的三种方向。所谓的非参考帧就是参考参考帧的帧，包括 B，b，P 三种帧。</p>
                 <ul class="font-monospace pl-5 text-smaller">
                     <li>sct-awr-qp=1 时写作<span class="text-blue-emph">&lt;转前毫秒（推 500）&gt;,&lt;参考±qp&gt;,&lt;非参±qp&gt;</span></li>
@@ -1123,17 +1123,17 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <div class="coll-content">
                 <p>在 Analysis-pass 1 和 Analysis-pass 2 之间引入一步优化计算，实现比普通的 2pass 编码更精细的码率控制。“优化”代表更详细的分析和统计视频内容，以便在第二次编码时更准确地分配码率。</p>
 
-                <code><b>--multi-pass-opt-analysis</b></code>
+                <code class="code-bold">--multi-pass-opt-analysis</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认生成 x265_analysis.dat，<span class="text-red-emph">需关闭 pme/pmode/analysis-save|load</span>&gt;储存/导入每个 CTU 的参考帧/分块/向量等信息。将信息优化，细化并省去多余计算。</p>
-                <code><b>--multi-pass-opt-distortion</b></code>
+                <code class="code-bold">--multi-pass-opt-distortion</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需关闭 pme/pmode/analysis-save|load</span>&gt;根据失真（编码前后画面差）进一步分析 qp</p>
-                <code><b>--multi-pass-opt-rps</b></code>
+                <code class="code-bold">--multi-pass-opt-rps</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;将 pass1 常用的率参数集保存在序列参数集 SPS 里以加速。</p>
             </div>
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：Analysis-2pass pass2 梯级多视频流导出</button>
             <div class="coll-content">
-                <code><b>--abr-ladder</b></code>
+                <code class="code-bold">--abr-ladder</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名.txt，<a href="https://streaminglearningcenter.com/blogs/the-evolving-encoding-ladder-what-you-need-to-know.html">苹果 TN2224</a>，<span class="text-red-emph">实验性</span>&gt;编码器内部实现 Analysis-2pass 中，pass2-ABR 阶段的多规格输出。方便平台布置多分辨率视频版本用。可以把不变的参数写进 pass1+2，变化的写进 txt。</p>
                 <p class="font-monospace pl-5 m-0 overflow-auto">格式为："[压制名:analysis-load-reuse-level:analysis-load] &lt;参数 1+ 输出文件名 1&gt;" 例：</p>
                 <pre class="mt-3"><code>x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-dep例th 8 --input-csp i420 --min-keyint 60 --keyint 60 --no-open-gop --cutree
@@ -1143,30 +1143,30 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 [2160p2:10:Anld存档3] --input视频.yuv --input-res 3840x2160 --bitrate 16000 --ssim --psnr --csv 11.csv --csv-log-level 2 --output 3.hevc --scale-factor 0 }</code></pre>
             </div>
             <h3>双层 - 近无损，真无损模式</h3>
-            <code><b>--lossless</b></code>
+            <code class="code-bold">--lossless</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;过分块，动/帧/参搜索，量/自适量化等影响画质的步骤，保留率失真优化以增强参考性能。输出体积特大的原画。相比锁定量化方法，这样更能满足影业与科研用，但不适合个人和一般媒体。真无损导出有很小几率因为参考质量提升而会比近无损小</p>
-            <code><b>--cu-lossless</b></code>
+            <code class="code-bold">--cu-lossless</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;将无损量化 cu（qp 4）作为率失真优化的结果选项之一，只要码率管够（符合<span class="text-blue-math">\(λ=R/D\)</span>）就不量化。用更多码率换取原画相似度，无损源能提高参考冗余</p>
 
             <h3>其它率控制</h3>
             <p>可以搭配除 CQP 以外的上下层模式使用，决定了视频各处的最终量化值</p>
-            <code><b>--tskip</b></code>
+            <code class="code-bold">--tskip</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 rd 大于 2</span>&gt;在 4x4 变换块上尝试 DCT，DST 等变换模式的基础上增加一个不变换直接量化（SKIP 模式），然后由模式决策权衡出率失真最佳的方案。视频内容越复杂，对编码速度的影响就越大。与无损模式无关，但也可算作一种近无损模式。如果嫌慢还可以考虑 <code>--tskip-fast</code></p>
-            <code><b>--qpmin</b></code>
+            <code class="code-bold">--qpmin</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;由于画质和优质参考帧呈正比，所以仅高压环境建议设最高 14</p>
-            <code><b>--qpmax</b></code>
+            <code class="code-bold">--qpmax</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;在要用到颜色键，颜色替换等需要清晰物件边缘的滤镜时，可以设<span class="text-blue-emph">26</span>防止录屏时物件的边缘被压缩的太厉害，其他情况永远不如关 <code>--cutree/--mbtree</code></p>
-            <code><b>--rc-grain</b></code>
+            <code class="code-bold">--rc-grain</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<code>--tune grain</code> 时开启&gt;通过抑制 cplxBlur 的累积，从而保证一定场景下，GOP 分配量化值呈跌势以保证整个视频的码率受控。如果视频中的大多数高频信号都是细节而非噪点，且策略为画质编码则关</p>
-            <code><b>--cplxblur</b></code>
+            <code class="code-bold">--cplxblur</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur，所以保留默认值或手动指定，如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
-            <code><b>--qcomp</b></code>
+            <code class="code-bold">--qcomp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6&gt;模糊复杂度 cplxBlur 以及 mbtree 迭代每帧量化强度范围的曲线抑制参数。越小则复杂度迭代越符合实际状况，抑制 CRF，mb/cutree，bframes 影响的效果就越弱，搭配高 CRF 能使码率控制接近 VBV 的程度。越大则 CRF，mb-cutree，bframes 越没用，越接近 CQP</p>
 
             <h2 id="h2-12">自适应量化</h2>
             <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 QP 分配过程。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a></p>
             
-            <code><b>--aq-mode</b></code>
+            <code class="code-bold">--aq-mode</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3&gt;据原画和 crf/abr 设定，以及码率不足时（crf&lt;18/低码 abr）如何分配 qp。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span>标准自适应量化（急用，简单平面）</li>
@@ -1174,20 +1174,20 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">3</span>加码率不够用时倾向保暗场（接受更明显的涂抹失真）</li>
                 <li><span class="text-blue-emph">4</span>加码率不够用时更加倾向保纹理（接受平面上的涂抹失真，<span class="text-red-emph">实验性</span>，很慢）</li>
             </ul>
-            <code><b>--aq-strength</b></code>
+            <code class="code-bold">--aq-strength</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点&gt;自适应量化强度。搭配 aq-mode，如动漫 1:0.8，2:0.9，3:0.7 用。录像上可加 0.1~0.2，画面混乱/观众难以注意平面时可再增加。注意低成本动漫的平面居多，因此码率不足时反而要妥协纹理。</p>
-            <code><b>--hevc-aq</b></code>
+            <code class="code-bold">--hevc-aq</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;以 ¼ 瓦（tile）而非 aq 的边缘高频信息实现自适应（虽然瓦分区还没有被实现）。据 doom9 论坛讨论：<a href="https://forum.doom9.org/showthread.php?p=1925373#post1925373">1</a>，<a href="https://forum.doom9.org/showthread.php?p=1925464">2</a>: hevc-aq 比 aq 4 快且适合动漫，而 aq 4 更适合录播。目前学术方 - 官方 - 第三方间信息较割裂，暂无适解。</p>
-            <code><b>--aq-motion</b></code>
+            <code class="code-bold">--aq-motion</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">实验性</span>&gt;据动态信息微调自适应量化的效果 mode 和强度 strength。</p>
-            <code><b>---qg-size</b></code>
+            <code class="code-bold">---qg-size</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点&gt;&lt;64/32/16/8，默认 64，<span class="text-red-emph">≥min-cu-size</span>&gt;偏移蓝，红色色度面相比亮度平面的 qp 值差异，负值降低量化。如当色度平面的量化太高则可以用这两个参数补偿回来，但 x264-5 会根据色度平面采样格式（4:2:2，4:4:4）自动设定这些参数。由于编码器一直不擅长深红色，而人眼又对红光敏感，所以可以给红色面设<span class="text-blue-emph">-3</span>左右。</p>
-            <code><b>--cbqpoffs --crqpoffs</b></code>
+            <code class="code-bold">--cbqpoffs --crqpoffs</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数偏移值&gt;据动态信息微调自适应量化的效果 mode 和强度 strength。</p>
 
             <h3>x265 jpsdr-mod 参数</h3>
 
-            <code><b>--aq-auto</b></code>
+            <code class="code-bold">--aq-auto</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;8bit 四开关十进制，默认 0 关&gt;对应下表：</p>
             <table class="align-items-center table-center">
                 <thead>
@@ -1259,13 +1259,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </tbody>
             </table>
 
-            <code><b>--aq-fast-edge</b></code>
+            <code class="code-bold">--aq-fast-edge</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需 aq-mode 4,5</span>&gt;边缘检测跳过高斯模糊过滤，不适合脏片源。</p>
-            <code><b>--aq-bias-strength</b></code>
+            <code class="code-bold">--aq-bias-strength</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点，默认 1，<span class="text-red-emph">需 aq-mode 3,5</span>&gt;aq-strength 偏给暗场的程度。</p>
-            <code><b>--aq-strength-edge</b></code>
+            <code class="code-bold">--aq-strength-edge</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~3，默认等于 aq-strength，<span class="text-red-emph">需 aq-mode 4,5</span>&gt;偏给纹理的 aq-strength。</p>
-            <code><b>--aq-bias-strength-edge</b></code>
+            <code class="code-bold">--aq-bias-strength-edge</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点，默认等于 aq-bias-str，<span class="text-red-emph">需 aq-mode 5</span>&gt;aq-strength-edge 偏给暗场的程度。</p>
 
             <h3>模式决策 Mode Decision</h3>
@@ -1275,7 +1275,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/rate-control/Mode-Decision.png" alt="image31" class="img-medium">
             </div>
 
-            <code><b>--rd</b></code>
+            <code class="code-bold">--rd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;1/2/3/5，默认 3，大则慢&gt;据优化模式决策的程度。建议快速用用<span class="text-blue-emph">1</span>，<span class="text-blue-emph">2</span>；高压用<span class="text-blue-emph">3</span>；片源数据无损 (非视觉无损) 时用<span class="text-blue-emph">5</span>。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span>优化帧内参考，并块/跳过决策，含明显边缘失真时用</li>
@@ -1283,20 +1283,20 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">3</span>加帧间决策，高压高量化时可平衡</li>
                 <li><span class="text-blue-emph">5==6</span>加向量/帧间方向预测决策，比 3 慢一倍，片源含边缘失真时会强化失真</li>
             </ul>
-            <code><b>--limit-modes</b></code>
+            <code class="code-bold">--limit-modes</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;用附近的 4 个子 CU 以判断用 merge 还是 AMVP，会大幅减少 rect/amp 的效果，提速明显。会增大或减少体积，微降画质但难以察觉。</p>
-            <code><b>--limit-refs</b></code>
+            <code class="code-bold">--limit-refs</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 3&gt;限制分块用信息可参考性。<span class="text-blue-emph">0 不限</span>压缩高且慢；<span class="text-blue-emph">1</span>用 cu 分裂后的信息 + 差异信息描述自身 (推荐)；<span class="text-blue-emph">2</span>据单个 cb 的差异信息建立 pu；<span class="text-blue-emph">3=1+2</span>。</p>
-            <code><b>--rskip</b></code>
+            <code class="code-bold">--rskip</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2&gt;前 cu 分块被跳过时，判断后 cu 接着搜索分块还是提前退出的参数。画面越接近录屏/低成本动漫就用得越多。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">0</span>继续分析。适合信噪比差/高噪源。原画很干净则不如<span class="text-blue-emph">1</span></li>
                 <li><span class="text-blue-emph">1</span>rd 0~4 下据临 cu 是否细分而定；rd5~6 下看附近 2Nx2N cu 分块难度而定，高压和一般情况推荐</li>
                 <li><span class="text-blue-emph">2</span>直接对比 cu 纹理密度 Edge Density，快且不比前者差，但存在对源的画质要求及客观判断“画质”的能力</li>
             </ul>
-            <code><b>--tskip-fast</b></code>
+            <code class="code-bold">--tskip-fast</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 <code>tskip</code></span>&gt;只在帧内编码的亮度 NxN 细分块中的 4x4 变换块上不但尝试 DCT，DST 等变换模式，还增加不变换直接量化（SKIP）模式，然后由模式决策选出更好的方案。色度块的检查也取决于同位亮度块是否最终采用了 SKIP 变换模式。在使用与不使用 <code>--tskip</code> 之间提供了编码压力偏向中间的选项</p>
-            <code><b>--rskip-edge-threshold</b></code>
+            <code class="code-bold">--rskip-edge-threshold</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~100，默认 5: 趋向于分块，<span class="text-red-emph">需 rskip 大于 1</span>&gt;用 Sobel 算法获取 cu 纹理密度，再将纹理密度除以块所占面积，得到密度占据面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8 或 16×16 块下默认 5%（即含 3 或 12 个系子）就分。类似 x264 的 deadzone 参数。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>像素风：<span class="text-blue-emph">据像素变大的程度决定</span>。如分辨率宽÷2，分辨率高÷2 会回到 1x1 像素大小，则使默认值乘以 2 以提速</li>
@@ -1352,13 +1352,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>优化模式决策</h3>
-            <code><b>--dynamic-rd</b></code>
+            <code class="code-bold">--dynamic-rd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~4，<span class="text-red-emph">需 rd 小于 5</span>&gt;给 VBR 限码画面调高 rd 止损。1~4 为 rd 搜索面积倍数，大则慢。</p>
-            <code><b>--splitrd-skip</b></code>
+            <code class="code-bold">--splitrd-skip</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;在“所有当前 CU 分割致失真程度之总和”大于“同帧 CU 分割致失真程度之和”时，不独立计算 rd 值以加速。</p>
-            <code><b>--qp-adaptation-range</b></code>
+            <code class="code-bold">--qp-adaptation-range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 1~6，默认 1&gt;psy 参数改动 qp 的最大范围，宏观影响大，片源含明显边缘失真时会不应使用，以防止进一步的失真。</p>
-            <code><b>--psy-rd</b></code>
+            <code class="code-bold">--psy-rd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点偏移值 0~50，默认 2.0，<span class="text-red-emph">需 rd 3</span>，加 <code>--psy-rdoq</code> 后构成 x264 psy-rd 参数&gt;心理视觉优化往高影响量化块的能量 J，使 md 偏好保留细节的程度，值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
@@ -1366,17 +1366,17 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">0.5~2</span>根据要保留的边缘峭度以及文件大小，VBR 模式的峰值码率决定</li>
                 <li><span class="text-blue-emph">1.5~2.5</span>至少 2k 的录像片源，根据分辨率和边缘失真程度决定</li>
             </ul>
-            <code><b>--rd-refine</b></code>
+            <code class="code-bold">--rd-refine</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<span class="text-red-emph">需 rd 5</span>&gt;率失真优化分析帧内预测 CU 的最佳量化和分块结果，耗时换压缩率和画质。但有概率会出现随机块失真（猜测是因为率失真算法发现特定块失真后反而对整体编码收益更大而导致）。</p>
 
             <h3>优化量化</h3>
-            <code><b>--rdoq-level</b></code>
+            <code class="code-bold">--rdoq-level</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，0~2&gt;ABR/CRF 分配量化值的宏观调控强度，大则慢，0 则关。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span>逐分块进行率失真优化量化，psy-rdoq 开启则倾向低量化</li>
                 <li><span class="text-blue-emph">2</span>对比 4x4 块高频信息/残差是否有利于整个编码组 (CTU 内分块) 画质，同时对所有系子进行同类分析，大量减少 4×4 块，降低 psy-rdoq 效果，适合一般及高压缩用途</li>
             </ul>
-            <code><b>--psy-rdoq</b></code>
+            <code class="code-bold">--psy-rdoq</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~50，默认 0 关&gt;心理视觉往高影响量化块的能量 J，改量化偏好为保留细节。值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
@@ -1384,7 +1384,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li><span class="text-blue-emph">3~4.8</span>分辨率从 1280x720 到 3840x2160 的高成本电影动漫，要求片源无明显边缘失真</li>
                 <li><span class="text-blue-emph">7~12 搭配 psy-rd 3，tskip，tskip-fast，ipratio 1.2，no-sao</span>留噪。保的细节面积越小越高</li>
             </ul>
-            <code><b>--nr-intra --nr-inter</b></code>
+            <code class="code-bold">--nr-intra --nr-inter</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0 关~2000，默认 0，<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080 不建议超 250</a>&gt;基于 MC 结果给量化前变换完的 i 帧降噪。nr-intra 不如第三方降噪滤镜。但帧间/时域上降噪的 nr-inter 可以拉近参考源和参考帧的差距/残差，实现在 rc-grain 上进一步稳定 qp 值波动，且在噪点源中相比模糊掉纹理更容易破坏噪点，结果类似低配双阈滤镜。</p>
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充信噪比 SNR 和峰值信噪比 PSNR 的内容</button>
@@ -1515,7 +1515,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <li>平滑 0：a 与 1 皆非帧内块，皆无参考源/已编码系子，溯同帧或动态向量相同，滤镜关</li>
             </ul>
 
-            <code><b>--deblock</b></code>
+            <code class="code-bold">--deblock</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点偏移值，默认 1:0。推荐 0:0，-1:-1，-2:-1&gt;平滑强度：搜索精度。两值于原有强度上增减。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>平滑<span class="text-blue-emph">≥1</span>时用以压缩</li>
@@ -1567,15 +1567,15 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </li>
             </ol>
             
-            <code><b>---no-sao</b></code>
+            <code class="code-bold">---no-sao</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;关闭 sao，默认开--sao&gt;由于针对的是强量化环境，所以高画质源+crf 小于 17 的情况下可以关。</p>
-            <code><b>--sao-non-deblock</b></code>
+            <code class="code-bold">--sao-non-deblock</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;启用后，未经由 deblock 分析的内容会被 sao 分析。</p>
-            <code><b>--no-sao-non-deblock</b></code>
+            <code class="code-bold">--no-sao-non-deblock</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;默认&gt;sao 分析跳过视频右边和下边边界。</p>
-            <code><b>--limit-sao</b></code>
+            <code class="code-bold">--limit-sao</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;对一些计算采用提前退出策略，不是改善画质的，但 crf≈18，cutree 和 bframes 16 下可以开，以保留一定影响。</p>
-            <code><b>--selective-sao</b></code>
+            <code class="code-bold">--selective-sao</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~4，默认 0&gt;从条带（横向的一组 CTU）角度调整 sao 参数，1 启用 I 条带 sao，2 增加 P 条带，3 增加 B 条带，4 所有条带。可直接控制 sao，或搭配 limit-sao 的新方法。</p>
 
             <h2 id="h2-15">熵编码/文本压缩</h2>
@@ -4066,24 +4066,24 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h2 id="h2-17">SEI 补充与优化消息</h2>
             <p>Supplemental enhance info 记录每帧的补充信息。主要有正确解码新 GOP 用的缓冲 SEI，解码校正时间戳的 pic timing SEI，让显示主控切边的 SEI，cc 字幕 SEI，HDR-SEI 等等。缓冲 SEI 记录对应 SPS 的号；待解码图像缓冲 Coded picture buffer CPB 的延迟安全区等信息；时戳 SEI 记录哪些帧上/下场优先的变化；连帧/三连帧的位置等信息。</p>
 
-            <code><b>--hrd</b></code>
+            <code class="code-bold">--hrd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt;将假设对照解码参数 Hypothetical Reference Decoder Parameter 估计不丢包无延迟的瞬间码率，写在每段 SPS 及 SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
-            <code><b>--hash</b></code>
+            <code class="code-bold">--hash</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0/关，推荐关&gt;SEI 里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力（但是，一般来说校验可以通过直接对输出的视频文件添加，而且解码器一般为了性能等原因会忽略掉“多余”的 SEI）：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">1</span>：checksum 校验，性能占用最小</li>
                 <li><span class="text-blue-emph">2</span>：CRC 校验，性能占用略高，准确率较高</li>
                 <li><span class="text-blue-emph">3</span>：CRC 校验，性能占用略高，准确率高</li>
             </ul>
-            <code><b>--single-sei</b></code>
+            <code class="code-bold">--single-sei</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;只写一个装全部 SEI 信息的大 NALU 而非每 GOP 都写，提高很小一点压缩率，但可能会降低兼容性。</p>
-            <code><b>--film-grain</b></code>
+            <code class="code-bold">--film-grain</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名&gt;将如<a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a>提取的纹理细节模型 Film grain model 写进 SEI，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能。</p>
-            <code><b>--idr-recovery-sei</b></code>
+            <code class="code-bold">--idr-recovery-sei</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;SEI 写进 idr 帧，串流时防止整个 GOP 都找不到参考帧的机制。</p>
-            <code><b>--frame-dup</b></code>
+            <code class="code-bold">--frame-dup</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，需<span class="text-red-emph">开 vbv 和 hrd，有 bug</span>&gt;直接将 2~3 面极近似的连续帧换成同一帧并用 SEI 告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性。</p>
-            <code><b>--dup-threshold</b></code>
+            <code class="code-bold">--dup-threshold</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~99，默认 70&gt;相似度判定值，默认达 70% 重复就判为相似。</p>
 
             <h2 id="h2-18">线程与节点控制</h2>
@@ -4106,7 +4106,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>多节点/多路主机</h3>
             <p>如电脑连接超过一台打印机，超过一个网卡（如有线 + 无线）就称为多节点部署。此处特指 CPU 节点——同主板上超过一颗处理器以及其对应内存的系统环境。这种环境的缺点是节点 0 的处理器访问节点 1 的内存的延迟很大，所以一般通过虚拟机，或专门优化的程序来限制软件只占用一个节点的 CPU 核心。</p>
 
-            <code><b>--pools</b></code>
+            <code class="code-bold">--pools</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/加减符“,,,”，默认*（占用任意节点电脑的全部线程）&gt;x264 中--threads 的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有 4 个 CPU 节点，使用首个节点</li>
@@ -4122,13 +4122,13 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             <h3>工作者线程/分工线程-Worker thread</h3>
             <p>一种多线程优化，能部分解决跨节点运行性能问题——主程序分出一个活跃的分工线程持续重复执行任务，如监听端口 8080，监听信息的后台进程；或者是 x265 外包任务给其它核心或节点上的 pme/pmode Worker thread，使 x265 可以略好的跨节点运行。</p>
 
-            <code><b>--pmode</b></code>
+            <code class="code-bold">--pmode</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 pools</span>&gt;创建平行模式决策 Parallel Mode Decision 的 Worker thread 以更改 pools 参数功能。推荐先于 pme 打开，推荐搭配 rd 3 + rect，而 rd 5 时可以先确认占用率未跑满再打开。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>如<span class="text-blue-emph">--pme --pmode</span>表明使用整个线程池，分配平行动态搜索，平行模式决策以更好地增加多线程节点占用。</li>
                 <li>模式决策独立线程化会使本可提前退出的策略因信息孤立而不可跳过，使理论率失真最优推理更准（无损压缩略微提升）</li>
             </ul>
-            <code><b>--pme</b></code>
+            <code class="code-bold">--pme</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 pools</span>&gt;创建平行动态搜索 Parallel Motion Estimation 的 Worker thread 以更改 pools 参数功能（不影响输出文件）。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>如<span class="text-blue-emph">--pme</span>表明使用整个线程池，并分配平行动态搜索的分工线程</li>
@@ -4169,7 +4169,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </tbody>
             </table>
 
-            <code><b>--frame-threads</b></code>
+            <code class="code-bold">--frame-threads</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~16~线程数÷2，默认 0 自动&gt;同时压制多少帧：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>如<span class="text-blue-emph">1</span>能让编码器做到前后整帧可完全分析参考，设 1 的代价是 cpu 占用显著降低，压制显著减速，建议搭配 mcstf 使用</li>
@@ -4506,11 +4506,11 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
 
             <h3>VUI 元数据</h3>
-            <code><b>--input-csp</b></code>
+            <code class="code-bold">--input-csp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;i400/i422/i444/nv12/nv16，默认 i420，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 时应设置</span>&gt;rgb，yuvj 等不支持需要滤镜转换。</p>
-            <code><b>--range</b></code>
+            <code class="code-bold">--range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;full/limited，默认留空&gt;指定视频源的色深范围，full：完整，limited：有限。剪辑时应额外检查剪辑软件的输出设定一致性。</p>
-            <code><b>--chromaloc</b></code>
+            <code class="code-bold">--chromaloc</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~5，默认留空&gt;指定色度采样缩减分辨率时所用的像素，相对于缩小前像素的位置（chroma location），涉及到解码端的色度像素对齐。如果源视频标注，则建议标注。</p>
             <ul class="list-dotless font-monospace pl-5 text-smaller">
                 <li><b>0：</b>左</li>
@@ -4525,15 +4525,15 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <p class="text-gray-side">图：色度采样位置</p>
             </div>
 
-            <code><b>--colorprim</b></code>
+            <code class="code-bold">--colorprim</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;播放用三原色 (以及白点) 指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图 1 为 bt.2020。</p>
-            <code><b>--colormatrix</b></code>
+            <code class="code-bold">--colormatrix</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;播放用矩阵格式/系数指标：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020c，smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp。</p>
             <p class="text-gray-side pl-5 m-0">注：不支持 bt2020nc</p>
-            <code><b>--transfer</b></code>
+            <code class="code-bold">--transfer</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;传输特质：bt470m，bt470bg，smpte170m，smpte240m，linear，log100，log316，iec61966-2-4，bt1361e，iec61966-2-1，bt2020-10，bt2020-12，smpte2084，smpte428，arib-std-b67。</p>
             <p class="text-gray-side pl-5 m-0">上图图 2 的 PQ 即 st.2084 的标准，所以参数值为 smpte2084。</p>
-            <code><b>--display-window</b></code>
+            <code class="code-bold">--display-window</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;←,↑,→,↓&gt;指定黑边宽度，从而跳过加速编码，或者用<code>--overscan crop</code> 裁掉。</p>
 
             <!-- x264 教程副本，更改需手动同步 { -->
@@ -4546,7 +4546,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <img src="files/video-usability-information/Metadata-for-VUI-HDR-2.png" alt="image52" class="img-medium">
                 <p class="text-gray-side">图 2：cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
-            <code><b>--master-display</b></code>
+            <code class="code-bold">--master-display</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;G(x,y)B(,)R(,)WP(,)L(,)（绿，蓝，红，白点，光强）&gt;写进 SEI 信息里，告诉解码端色彩空间/色域信息用</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>HDR 标准设立时还没有 HDR 电视，所以就把 master-display 写成必须参数了，而最重要的信息反而是内容亮度 Content light level（CLL）。</li>
@@ -4567,7 +4567,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                     </ul>
                 </li>
             </ul>
-            <code><b>--max-cll</b></code>
+            <code class="code-bold">--max-cll</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串 MaxCLL,MaxFall&gt;根据源视频的元数据设置最大内容光强与最大平均光强。见上图例。</p>
             <!-- } -->
 
@@ -4786,9 +4786,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
             <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
-            <code><b>--dolby-vision-profile</b></code>
+            <code class="code-bold">--dolby-vision-profile</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;选择 5/8.1（HDR10）/8.2（SDR）&gt;<span class="text-red-emph">大于 8.1 需 master-display 和 HDR10-opt</span>。</p>
-            <code><b>--dolby-vision-rpu</b></code>
+            <code class="code-bold">--dolby-vision-rpu</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;导入 RPU 二进制文件（.bin）。</p>
             <p class="text-gray-side pl-5 m-0">注：杜比视界 8.1 需要 <code>--dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code>。</p>
 
@@ -4800,7 +4800,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h3>Profile，Level，Tier</h3>
             <p>用于进一步提高编码内容的兼容性。设定后，如果视频规格（像素流量，帧大小等）高于设定规格（Profile）或级别（Level），或其它无法满足规格、级别要求的情况下阻止编码。如果开启 <code>--high-tier</code>，则在压制过程中判断当前规格能否被编码为 Main 规格，否则编码为 High 规格。解码时，如果视频规格过高，则用户可能会收到如“设备条件不满足”的警告。</p>
-            <code><b>--profile</b></code>
+            <code class="code-bold">--profile</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串&gt;据下表最低支持（视频所有规格小于下表）选择：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><b>8 bit</b>：
@@ -4825,9 +4825,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </li>
             </ul>
             <p class="font-monospace pl-5 m-0 overflow-auto">“-intra”代表仅使用帧内编码，一般用不到。</p>
-            <code><b>--level-idc</b></code>
+            <code class="code-bold">--level-idc</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/浮点&gt;可选 1, 2, 2.1, 3, 3.1, 4, 4.1, 5, 5.1, 5.2, 6, 6.1, 6.2 据下表的最高分辨率@帧率选择</p>
-            <code><b>--high-tier</b></code>
+            <code class="code-bold">--high-tier</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;不使用 Main tier，main，main10，main12 换成 high，high10，high12</p>
 
             <p>查找方法：根据视频位深选择规格 Profile，分辨率和帧率选择级别 Level，最后细分到档次 Tier（Main/High，或者一直开着 <code>--high-tier</code>）</p>
@@ -4967,30 +4967,30 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
             </div>
             <p>以上表格见 <a href="https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding_tiers_and_levels">维基百科</a>。</p>
 
-            <code><b>--seek</b></code>
+            <code class="code-bold">--seek</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第 x 帧开始压缩。</p>
-            <code><b>--frames</b></code>
+            <code class="code-bold">--frames</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认全部&gt;一共压缩 x 帧。</p>
-            <code><b>--output</b></code>
+            <code class="code-bold">--output</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第 x 帧开始压缩。</p>
-            <code><b>--dither</b></code>
+            <code class="code-bold">--dither</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;使用抖动功能以高质量的降低色深 (比如 10bit 片源降 8bit)，避免出现斑点和方块。</p>
-            <code><b>--allow-non-conformance</b></code>
+            <code class="code-bold">--allow-non-conformance</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;不写入 profile 和 level，绕过 HEVC 标准规定，只要不是按照 h.265 规定写的命令行参数值就必须使用这个参数。</p>
-            <code><b>--force-flush</b></code>
+            <code class="code-bold">--force-flush</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2，默认 0&gt;低能耗设备用的编码调度控制：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">0</span>等全部帧输入再编码</li>
                 <li><span class="text-blue-emph">1</span>不等全部帧输入完就编码</li>
                 <li><span class="text-blue-emph">2</span>取决于条带种类，调整 slice type 才能用</li>
             </ul>
-            <code><b>--field</b></code>
+            <code class="code-bold">--field</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;输入分行扫描视频时用，自动获取分场视频的帧率 + 优先场，x264 中中为 <code>--interlaced</code> 参数</p>
-            <code><b>--input-res</b></code>
+            <code class="code-bold">--input-res</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;宽 x 高，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置</span>&gt;指定输入源的分辨率，如 1920x1080。</p>
-            <code><b>--fps</b></code>
+            <code class="code-bold">--fps</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/浮点/分数，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置</span>&gt;指定输入源的帧率，如 30，24000/1001 等。</p>
-            <code><b>--temporal-layers</b></code>
+            <code class="code-bold">--temporal-layers</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;使 x265 更兼容 svc 标准，将非参考 b 帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗。</p>
             <p class="text-gray-side pl-5 m-0">注：可能会造成一般编解码方案的兼容性问题</p>
 
@@ -4999,7 +4999,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h2 id="h2-21">预设参数</h2>
             
-            <code><b>--preset</b></code>
+            <code class="code-bold">--preset</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;superfast/veryfast/faster/fast/medium/slow/slower/veryslow/placebo&gt;见下：</p>
             <div class="overflow-auto">
                 <table class="table-fit-container text-xs">
@@ -5183,7 +5183,7 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 </table>
             </div>
 
-            <code><b>--tune</b></code>
+            <code class="code-bold">--tune</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;zerolatency/animation/grain/film/fastdecode/psnr&gt;更改 preset 的一些参数，见下：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和 B 帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</code></li>

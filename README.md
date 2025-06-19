@@ -32,6 +32,8 @@
 - 公式段的字体为 [KaTeX Math Regular](https://github.com/KaTeX/katex-fonts/blob/master)（英文）附件（适配安卓）  
   - 辅以 Cochin，Georgia，Times，Times New Roman，serif
 
+本教程的代码块引入了 [higlight.js](https://highlightjs.org/#usage)（仅保留 cpp，PowerShell，Bash）和微调过的 docco.min.js。
+
 ### 公式转换
 
 - 目前引入了 [MathJax JavaScript]("https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js") 附件做公式转换，同时因为 MathML Tag 占据 HTML 源码的面积太大而重写为 LaTex。工具为 [Text2Latex.com]("https://www.text2latex.com")

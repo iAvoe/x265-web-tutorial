@@ -13,13 +13,16 @@
         <script src="./files/mathJax3-tex-svg.js" defer></script>
         <!-- Custom CSS Codes <link rel="stylesheet" href="./files/desktopContainer.css"> -->
         <link rel="stylesheet" href="./files/tutorial.css">
-        
+        <!-- highlight JS & CSS (language-cpp, language-bash, language-powershell) -->
+        <link rel="stylesheet" href="./files/docco.min.css">
+        <script src="./files/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
         <title>x265 教程 HTML 完整版</title>
 	</head>
 	<body class="text-gray-main">
         <div class="container-title">
             <h1>x265 教程<span class="text-blue-emph"> HTML 完整版</span></h1>
-            <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程仅算盲人摸象的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。</p>
+            <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程是对 HEVC 编码的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。</p>
             <!-- x264 教程副本，更改需手动同步 { -->
             <h2>地图</h2>
             <ol class="font-monospace">
@@ -102,38 +105,77 @@
             </ul>
 
             <h3 class="mb-0">ffmpeg，avs2yuv 传递参数</h3>
-            <pre><code>
-ffmpeg -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265 --y4m --input - --output &lt;输出.hevc&gt;
-ffmpeg -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; -D &lt;位深&gt; --input - --output &lt;输出.hevc&gt;</code></pre>
-<p><span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span> 解除编码超过 8bit 位深的 y4m 格式，<span class="text-blue-emph">--y4m</span> 对应"YUV for MPEG"，代表一种自带分辨率、帧率、位深等参数的未压缩格式，两个“-”代表 pipe 串流的输出和输入。</p>
-<p>如果源视频的格式不支持元数据（如 .yuv），或者 ffmpeg 读取不到时，可以手动提供分辨率、帧率、色彩空间以及位深（当然此时直接用视频编码器导入，并手动指定这些信息可能更简单）：<code>-s &lt;宽x高&gt; -r &lt;帧率&gt; -pix_fmt &lt;色彩空间及位深，如 yuv420p10le&gt;</code></p>
-<!--<p>如果源视频使用 HDR 格式编码，而目标格式为 SDR，则可以使用 ffmpeg 的 <code>-vf</code> 滤镜进行调整。</p>-->
-<pre><code>avs2yuv &lt;源.avs&gt; -csp &lt;色&gt; -depth &lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;帧率&gt; --input - --output &lt;输出.hevc&gt;
-avs2pipemod &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output &lt;输出.hevc&gt;</code></pre>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
+
+ffmpeg.exe -i &lt;源&gt; -an -f rawvideo - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;整/小/分数&gt; -D &lt;位深&gt; --input - --output &lt;输出.hevc&gt;
+            </code></pre>
+
+            <p><span class="text-blue-emph">-f</span>格式，<span class="text-blue-emph">-an</span>关音频，<span class="text-blue-emph">-strict unofficial</span> 解除编码超过 8bit 位深的 y4m 格式，<span class="text-blue-emph">--y4m</span> 对应"YUV for MPEG"，代表一种自带分辨率、帧率、位深等参数的未压缩格式，两个“-”代表 pipe 串流的输出和输入。</p>
+
+            <pre><code class="text-smaller language-powershell">
+avs2yuv.exe &lt;源.avs&gt; -csp &lt;色&gt; -depth &lt;深&gt; - | x265.exe --input-res &lt;宽x高&gt; --fps &lt;帧率&gt; --input - --output &lt;输出.hevc&gt;
+
+avs2pipemod.exe &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
+            </code></pre>
+            <p>如果源视频的格式不支持元数据（如 .yuv），或者 ffmpeg 读取不到时，可以手动提供分辨率、帧率、色彩空间以及位深（当然此时直接用视频编码器导入，并手动指定这些信息可能更简单）：</p>
+            <pre><code class="text-smaller language-powershell">
+-s &lt;宽x高&gt; -r &lt;帧率&gt; -pix_fmt &lt;色彩空间及位深，如 yuv420p10le&gt;
+            </code></pre>
+            <p>如果源视频使用 HDR 格式编码，而目标格式为 SDR，则可以使用 ffmpeg 的 <code>-vf zscale</code> 滤镜进行缩放。如 ST.2084 PQ 到 Bt.709：</p>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -i .\SolLevante_HDR10_r2020_ST2084_UHD_24fps_1000nit.mov
+-vf "format=yuv444p12le,
+zscale=rin=tv:r=full:tin=smpte2084:min=bt2020nc:pin=bt2020,
+zscale=transfer=linear,tonemap=hable:desat=3:peak=1000,
+zscale=transfer=bt709:matrix=bt709:primaries=bt709,
+format=yuv420p10le"
+-color_primaries bt709 -color_trc bt709 -colorspace bt709 -c:v rawvideo -pix_fmt yuv420p10le -strict experimental
+.\SolLevante_yuv444p10le_bt709.yuv
+            </code></pre>
 
             <h3>VapourSynth 传递参数</h3>
             <h4>R.54 - API 3.0:</h4>
-            <code>VSpipe &lt;源.vpy&gt; --y4m - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;</code>
+            <pre><code class="text-smaller language-powershell">
+VSpipe.exe &lt;源.vpy&gt; --y4m - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
+            </code></pre>
             <h4>R.55 - API 4.0:</h4>
-            <pre><code>VSpipe &lt;源.vpy&gt; -c y4m - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
-VSpipe &lt;源.vpy&gt; --container y4m - | x265.exe - --y4m --output &lt;输出.hevc&gt;</code></pre>
+            <pre><code class="text-smaller language-powershell">
+VSpipe.exe &lt;源.vpy&gt; -c y4m - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
+
+VSpipe.exe &lt;源.vpy&gt; --container y4m - | x265.exe - --y4m --output &lt;输出.hevc&gt;
+            </code></pre>
 
             <h3>ffmpeg 调用 libx265 参数</h3>
             <p>相比直接使用 x265，ffmpeg 通过调用动态链接库的方法做到只用一条命令实现多个视频、音频、字幕和字体，的导入与分别编码，且最后能够封装到一起。同时，这么做可以在不使用 <span>-strict unofficial</span> 命令的情况下直接编码 10bit 或更高位深的视频流。</p>
-            <code>ffmpeg -y -i &lt;源&gt; -c:v libx265 -profile:v &lt;见：输入输出 Input-output IO&gt; -x265-params "high-tier=1:preset=slow:me=umh:subme=5:merange=48:weightb=1:bframes=5:ref=3" -fps_mode passthrough -c:a copy &lt;输出.mp4/mkv&gt;</code>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -y -i &lt;源&gt; -c:v libx265 -profile:v &lt;见：输入输出 Input-output IO&gt; -x265-params "high-tier=1:preset=slow:me=umh:subme=5:merange=48:weightb=1:bframes=5:ref=3" -fps_mode passthrough -c:a copy &lt;输出.mp4/mkv&gt;
+            </code></pre>
 
             <h3>搜索 ffmpeg 支持的色度采样：</h3>
-            <pre><code>ffmpeg -pix_fmts | findstr &lt;字符串，源视频色度采样&gt;
-ffmpeg -pix_fmts | grep &lt;字符串，源视频色度采样&gt;</code></pre>
-            <h3>检查/选择色深，版本，编译：</h3>
-            <code>x265.exe -V，-D &lt;8/10/12&gt;</code>
-            <h3>多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
-            <code>ffmpeg -filter_complex "ass='F\:/字幕.ass'"滤镜</code>
-            <h3>Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -pix_fmts | findstr &lt;字符串，源视频色度采样&gt;
 
-            <pre><code>x265.exe [命令行] 2>&1 | tee home\[用户名]\Desktop\报错.txt
-x265.exe [命令行] 2>&1 | tee User\[用户名]\Desktop\报错.txt
-x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
+ffmpeg.exe -pix_fmts | grep &lt;字符串，源视频色度采样&gt;
+            </code></pre>
+
+            <h3>检查/选择色深，版本，编译：</h3>
+            <pre><code class="text-smaller language-powershell">
+x265.exe -V，-D &lt;8/10/12&gt;
+            </code></pre>
+            <h3>多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -filter_complex "ass='F\:/字幕.ass'"滤镜
+            </code></pre>
+
+            <h3>Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
+            <pre><code class="text-smaller language-powershell">
+x265.exe [命令行] 2&gt;&1 | tee home\[用户名]\Desktop\报错.txt
+
+x265.exe [命令行] 2&gt;&1 | tee User\[用户名]\Desktop\报错.txt
+
+x265.exe [命令行] 2&gt; [桌面路径]\报错.txt
+            </code></pre>
 
             <h2 id="h2-2">视频的压制（节选自 x264 教程）</h2>
             <ol>
@@ -1136,11 +1178,17 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
                 <code class="code-bold">--abr-ladder</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名.txt，<a href="https://streaminglearningcenter.com/blogs/the-evolving-encoding-ladder-what-you-need-to-know.html">苹果 TN2224</a>，<span class="text-red-emph">实验性</span>&gt;编码器内部实现 Analysis-2pass 中，pass2-ABR 阶段的多规格输出。方便平台布置多分辨率视频版本用。可以把不变的参数写进 pass1+2，变化的写进 txt。</p>
                 <p class="font-monospace pl-5 m-0 overflow-auto">格式为："[压制名:analysis-load-reuse-level:analysis-load] &lt;参数 1+ 输出文件名 1&gt;" 例：</p>
-                <pre class="mt-3"><code>x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-dep例th 8 --input-csp i420 --min-keyint 60 --keyint 60 --no-open-gop --cutree
-1440p8kb_2160p11kb_2160p16kb.txt {
+                <pre class="mt-3"><code class="text-smaller language-powershell">
+x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-depth 8 --input-csp i420 --min-keyint 60 --keyint 60 --no-open-gop --cutree
+                </code></pre>
+                <p>1440p8kb_2160p11kb_2160p16kb.txt：</p>
+                <pre><code class="text-smaller language-powershell">
 [1440p:8:Anld存档1] --input 视频.yuv --input-res 2560x1440 --bitrate 8000 --ssim --psnr --csv 9.csv --csv-log-level 2 --output 1.hevc --scale-factor 2
+
 [2160p1:0:nil] --input 视频.yuv --input-res 3840x2160 --bitrate 11000 --ssim --psnr --csv 10.csv --csv-log-level 2 --output 2.hevc --scale-factor 2
-[2160p2:10:Anld存档3] --input视频.yuv --input-res 3840x2160 --bitrate 16000 --ssim --psnr --csv 11.csv --csv-log-level 2 --output 3.hevc --scale-factor 0 }</code></pre>
+
+[2160p2:10:Anld存档3] --input视频.yuv --input-res 3840x2160 --bitrate 16000 --ssim --psnr --csv 11.csv --csv-log-level 2 --output 3.hevc --scale-factor 0
+                </code></pre>
             </div>
             <h3>双层 - 近无损，真无损模式</h3>
             <code class="code-bold">--lossless</code>
@@ -4794,7 +4842,9 @@ x265.exe [命令行] 2> [桌面路径]\报错.txt</code></pre>
 
             <h3>RPU 元数据的获取</h3>
             <p>可以用<a href="https://github.com/quietvoid/dovi_tool">dovi_tool</a>提取 RPU，<a href="https://github.com/saindriches/dovi_meta">dovi_meta</a>创建 RPU。ffmpeg 提取源视频 RPU 用：</p>
-            <pre><code>ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool extract-rpu - -o  "RPU.bin"</code></pre>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe extract-rpu - -o  "RPU.bin"
+            </code></pre>
 
             <h2 id="h2-20">输入输出 Input-output IO</h2>
 

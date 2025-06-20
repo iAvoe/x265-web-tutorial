@@ -104,7 +104,12 @@
                 <li>情况 3：特点如此，推荐<span class="text-blue-emph">这个值</span></li>
             </ul>
 
-            <h3 class="mb-0">ffmpeg，avs2yuv 传递参数</h3>
+            <h3>ffmpeg 调用 libx265</h3>
+            <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -y -i &lt;源&gt; -c:v libx265 -x265-params "&lt;参数A&gt;=&lt;值A&gt;:&lt;参数B&gt;=&lt;值B&gt;" -fps_mode passthrough -c:a copy &lt;输出.mp4&gt;
+            </code></pre>
+
+            <h3>ffmpeg，avs2yuv 传递参数</h3>
             <pre><code class="text-smaller language-powershell">
 ffmpeg.exe -i &lt;源&gt; -an -f yuv4mpegpipe -strict unofficial - | x265.exe --y4m --input - --output &lt;输出.hevc&gt;
 
@@ -122,6 +127,8 @@ avs2pipemod.exe &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output &lt;�
             <pre><code class="text-smaller language-powershell">
 -s &lt;宽x高&gt; -r &lt;帧率&gt; -pix_fmt &lt;色彩空间及位深，如 yuv420p10le&gt;
             </code></pre>
+
+            <h3>HDR 转换 SDR</h3>
             <p>如果源视频使用 HDR 格式编码，而目标格式为 SDR，则可以使用 ffmpeg 的 <code>-vf zscale</code> 滤镜进行缩放。如 ST.2084 PQ 到 Bt.709：</p>
             <pre><code class="text-smaller language-powershell">
 ffmpeg.exe -i .\SolLevante_HDR10_r2020_ST2084_UHD_24fps_1000nit.mov

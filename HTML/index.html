@@ -106,7 +106,7 @@
 
             <h3>ffmpeg 调用 libx265</h3>
             <pre><code class="text-smaller language-powershell">
-ffmpeg.exe -y -i &lt;源&gt; -c:v libx265 -x265-params "&lt;参数A&gt;=&lt;值A&gt;:&lt;参数B&gt;=&lt;值B&gt;" -fps_mode passthrough -c:a copy &lt;输出.mp4&gt;
+ffmpeg.exe -i &lt;源&gt; -c:v libx265 -x265-params "&lt;参数A&gt;=&lt;值A&gt;:&lt;参数B&gt;=&lt;值B&gt;" -fps_mode passthrough -c:a copy &lt;输出.mp4&gt;
             </code></pre>
 
             <h3>ffmpeg，avs2yuv 传递参数</h3>
@@ -131,14 +131,14 @@ avs2pipemod.exe &lt;源.avs&gt; -y4mp | x265.exe --y4m --input - --output &lt;�
             <h3>HDR 转换 SDR</h3>
             <p>如果源视频使用 HDR 格式编码，而目标格式为 SDR，则可以使用 ffmpeg 的 <code>-vf zscale</code> 滤镜进行缩放。如 ST.2084 PQ 到 Bt.709：</p>
             <pre><code class="text-smaller language-powershell">
-ffmpeg.exe -i .\SolLevante_HDR10_r2020_ST2084_UHD_24fps_1000nit.mov
+ffmpeg.exe -i &lt;源_HDR10_r2020_ST2084_UHD_24fps_1000nit.mov&gt;
 -vf "format=yuv444p12le,
 zscale=rin=tv:r=full:tin=smpte2084:min=bt2020nc:pin=bt2020,
 zscale=transfer=linear,tonemap=hable:desat=3:peak=1000,
 zscale=transfer=bt709:matrix=bt709:primaries=bt709,
 format=yuv420p10le"
 -color_primaries bt709 -color_trc bt709 -colorspace bt709 -c:v rawvideo -pix_fmt yuv420p10le -strict experimental
-.\SolLevante_yuv444p10le_bt709.yuv
+&lt;导出无损_yuv444p10le_bt709.yuv&gt;
             </code></pre>
 
             <h3>VapourSynth 传递参数</h3>
@@ -159,30 +159,54 @@ VSpipe.exe &lt;源.vpy&gt; --container y4m - | x265.exe - --y4m --output &lt;输
 ffmpeg.exe -y -i &lt;源&gt; -c:v libx265 -profile:v &lt;见：输入输出 Input-output IO&gt; -x265-params "high-tier=1:preset=slow:me=umh:subme=5:merange=48:weightb=1:bframes=5:ref=3" -fps_mode passthrough -c:a copy &lt;输出.mp4/mkv&gt;
             </code></pre>
 
-            <h3>搜索 ffmpeg 支持的色度采样：</h3>
-            <pre><code class="text-smaller language-powershell">
-ffmpeg.exe -pix_fmts | findstr &lt;字符串，源视频色度采样&gt;
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：ffmpeg 常用操作</button>
+            <div class="coll-content">
+                <h4>ffmpeg 封装流文件</h4>
+                <p class="text-gray-side">封装字幕与字体时，需要格外注意检查封装文件与流的兼容性，以及目标播放设备与封装文件的兼容性：<a href="https://en.wikipedia.org/wiki/Comparison_of_video_container_formats">Comparison of video container formats</a></p>
+                <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -i &lt;视频轨1&gt; -an -c:v copy -i &lt;音轨1&gt; -c:a copy -i &lt;音轨2&gt; -c:a copy -i &lt;字幕轨1&gt; -c:s copy -i &lt;字幕轨2&gt; -c:s copy -i &lt;字体1&gt; -c:t copy &lt;输出.mkv&gt;
+                </code></pre>
 
-ffmpeg.exe -pix_fmts | grep &lt;字符串，源视频色度采样&gt;
-            </code></pre>
+                <h4>ffmpeg 替换音频流</h4>
+                <p class="text-gray-side">通过 itoffset 实现延迟对齐</p>
+                <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -i &lt;封装文件&gt; -i &lt;新音轨&gt; -c:v copy -map 0:v:0 -map 1:a:0 -c:a copy -itsoffset &lt;秒数&gt; &lt;输出封装文件&gt;
+                </code></pre>
 
-            <h3>检查/选择色深，版本，编译：</h3>
-            <pre><code class="text-smaller language-powershell">
-x265.exe -V，-D &lt;8/10/12&gt;
-            </code></pre>
-            <h3>多字体 + 艺术体 + 上下标 .ass 字幕渲染：</h3>
-            <pre><code class="text-smaller language-powershell">
-ffmpeg.exe -filter_complex "ass='F\:/字幕.ass'"滤镜
-            </code></pre>
+                <h4>ffmpeg .ass 字幕渲染</h4>
+                <pre><code class="text-smaller language-powershell">
+ffmpeg.exe -i &lt;源&gt; -filter_complex "ass='F\:/字幕.ass'" &lt;输出.mp4&gt;
+                </code></pre>
 
-            <h3>Linux Bash，Mac Terminal，Windows CMD 报错导出：</h3>
-            <pre><code class="text-smaller language-powershell">
-x265.exe [命令行] 2&gt;&1 | tee home\[用户名]\Desktop\报错.txt
+                <h4>ffmpeg 缩放滤镜</h4>
+                <pre><code class="text-smaller language-powershell">
+-sws_flags bicubic/bitexact/gauss/bicublin/lanczos/spline/+full_chroma_int/+full_chroma_inp/+accurate_rnd
 
-x265.exe [命令行] 2&gt;&1 | tee User\[用户名]\Desktop\报错.txt
+ffmpeg.exe -i &lt;源&gt; -s 1280x720 -sws_flags bitexact+full_chroma_int+full_chroma_inp+accurate_rnd &lt;输出.mp4&gt;
+                </code></pre>
 
-x265.exe [命令行] 2&gt; [桌面路径]\报错.txt
-            </code></pre>
+                <h4>ffmpeg thread_queue_size 过小警告</h4>
+                <p class="text-gray-side">在串流（如上游程序通过管道发给 ffmpeg）用途中，如果 ffmpeg 设置的“每线程使用内存”小于上游发送带宽的峰值，就会面临丢包情况，设置 <code>-thread_queue_size</code> 参数，使 ffmpeg 额外占用一个专门用于读取数据包的线程即可。</p>
+                <pre><code class="text-smaller language-powershell">
+ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码率 kbps ÷ CPU 占用核心数&gt;
+                </code></pre>
+            </div>
+
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：命令行工具技巧</button>
+            <div class="coll-content">
+                <h4>报错导出到文件</h4>
+                <p class="text-gray-side">指定 2&gt; 相关的 Bash、Terminal、CMD/PowerShell 内置命令即可实现</p>
+                <pre><code class="text-smaller language-powershell">
+*.exe &lt;命令&gt; 2&gt;&1 | tee &lt;桌面路径&gt;\报错.txt
+
+*.exe &lt;命令&gt; 2&gt;&1 | tee &lt;桌面路径&gt;\报错.txt
+
+*.exe &lt;命令&gt; 2&gt; &lt;桌面路径&gt;\报错.txt
+                </code></pre>
+
+                <h4>压制时退出并封装现有内容到文件</h4>
+                <p class="text-gray-side">Ctrl+C（编码器有一定概率不支持）</p>
+            </div>
 
             <h2 id="h2-2">视频的压制（节选自 x264 教程）</h2>
             <ol>

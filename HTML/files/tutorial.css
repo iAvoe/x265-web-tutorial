@@ -27,8 +27,7 @@
     "clear:both" is a trick to set the #container div height
     ":hover" pseudoclass
     look at the ul, li, and "li a" styles for the navigation links
- 
- */
+*/
 /* Fonts, including Windows font YouYuan for multi-OS compatibility */
 @font-face {
     font-family: 'SweiGothic';
@@ -38,10 +37,6 @@
     font-family: 'Zhudou Sans';
     src: url('fonts/ZhudouSans-Regular.woff2') format('woff2');
 }
-/*@font-face {
-    font-family: 'YouYuan';
-    src: url('SIMYOU.TTF') format('truetype');
-}*/
 @font-face {
     font-family: 'YouYuan';
     src: url('fonts/YouYuan.woff2') format('woff2');

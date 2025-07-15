@@ -2,7 +2,7 @@
 /* YouYuan（Round） */
 @font-face {
     font-family: 'YouYuan';
-    font-weight: 400;
+    font-weight: normal;
     font-style: normal;
     src: url('fonts/YouYuan.woff2') format('woff2');
     font-display: auto;
@@ -11,7 +11,7 @@
 /* Swei Gothic CJK SC */
 @font-face {
     font-family: 'SweiGothic';
-    font-weight: 400;
+    font-weight: normal;
     font-style: normal;
     src: url('fonts/SweiGothicCJKsc-Regular.woff2') format('woff2');
     font-display: swap;
@@ -19,7 +19,7 @@
 @font-face {
     font-family: 'SweiGothic Bold';
     src: url('fonts/SweiGothicCJKsc-Bold.woff2') format('woff2');
-    font-weight: 600;
+    font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
@@ -27,14 +27,14 @@
 /* Zhudou Sans */
 @font-face {
     font-family: 'Zhudou Sans';
-    font-weight: 400;
+    font-weight: normal;
     font-style: normal;
     src: url('fonts/ZhudouSans-Regular.woff2') format('woff2');
 }
 @font-face {
     font-family: 'Zhudou Sans Bold';
     src: url('fonts/ZhudouSans-Bold.woff2') format('woff2');
-    font-weight: 600;
+    font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
@@ -43,21 +43,21 @@
 @font-face {
     font-family: 'KaTeX Math';
     src: url('fonts/KaTeX_Main-Regular.woff2') format('woff2');
-    font-weight: 400;
+    font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'KaTeX Math Bold';
     src: url('fonts/KaTeX_Main-Bold.woff2') format('woff2');
-    font-weight: 600;
+    font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'KaTeX Math Italic';
     src: url('fonts/KaTeX_Main-Italic.woff2') format('woff2');
-    font-weight: 400;
+    font-weight: normal;
     font-style: italic;
     font-display: swap;
 }
@@ -460,7 +460,7 @@ button.collapsible {
 
 /* Correcting incompetent overflow control on mobile */
 code { word-break: break-word; }
-code.code-bold { font-weight: 600; }
+code.code-bold { font-weight: bold; }
 
 /* Text selection styling */
 ::selection {

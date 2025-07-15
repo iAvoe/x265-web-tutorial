@@ -17,7 +17,7 @@
     font-display: swap;
 }
 @font-face {
-    font-family: 'SweiGothic Bold';
+    font-family: 'SweiGothic';
     src: url('fonts/SweiGothicCJKsc-Bold.woff2') format('woff2');
     font-weight: bold;
     font-style: normal;
@@ -32,7 +32,7 @@
     src: url('fonts/ZhudouSans-Regular.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'Zhudou Sans Bold';
+    font-family: 'Zhudou Sans';
     src: url('fonts/ZhudouSans-Bold.woff2') format('woff2');
     font-weight: bold;
     font-style: normal;
@@ -48,14 +48,14 @@
     font-display: swap;
 }
 @font-face {
-    font-family: 'KaTeX Math Bold';
+    font-family: 'KaTeX Math';
     src: url('fonts/KaTeX_Main-Bold.woff2') format('woff2');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
-    font-family: 'KaTeX Math Italic';
+    font-family: 'KaTeX Math';
     src: url('fonts/KaTeX_Main-Italic.woff2') format('woff2');
     font-weight: normal;
     font-style: italic;
@@ -104,10 +104,10 @@
     --rgb-light-yellow: 253,253,205; /* reserved */
     --rgb-dark-purple: 95,73,122; /* reserved */
     --bs-font-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'SweiGothic', 'SweiGothic Bold', 'Liberation Mono', 'Courier New', monospace, 'YouYuan';
-    --font-style-main: 'Zhudou Sans', 'Zhudou Sans Bold', sans-serif;
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'SweiGothic', 'Liberation Mono', 'Courier New', monospace, 'YouYuan';
+    --font-style-main: 'Zhudou Sans', sans-serif;
     --font-style-side: 'YouYuan', 'Yuanti SC';
-    --font-style-math: 'KaTeX Math', 'KaTeX Math Bold', 'KaTeX Math Italic', Cochin, Georgia, Times, 'Times New Roman', serif;
+    --font-style-math: 'KaTeX Math', Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 /* High-level inherited formatting */

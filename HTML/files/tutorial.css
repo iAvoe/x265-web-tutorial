@@ -1,50 +1,67 @@
-/* 
-    These following attributes allows display size comprehension
-    @media only screen and (min-width: 701px) {}
-    @media only screen and (max-width: 700px) {}
-
-     _______________________
-    |  margin               |
-    |  ___________________  |
-    | |  border           | |
-    | |  _______________  | |
-    | | |  padding      | | |
-    | | |  ___________  | | |
-    | | | |  content  | | | |
-    | | | |___________| | | |
-    | | | |           | | | |
-    | | | |<- width ->| | | |
-    | | |_______________| | |
-    | |___________________| |
-    |_______________________|
-
-    background: -moz-linear-gradient( center bottom, #def291 9%, #f1a8a0 55%, #4671a0 78% );
-    background: -o-linear-gradient( center bottom, rgb(59,63,65) 9%, rgb(72,76,77) 55%, rgb(75,77,77) 78% );
- 
-    "max-width", plus "margin:auto" used for a centered, flexible container
-    "width" as a percentage and "float:left" so that tiles arrange themselves
-    "box-sizing:border-box" so that the width setting includes padding and border
-    "clear:both" is a trick to set the #container div height
-    ":hover" pseudoclass
-    look at the ul, li, and "li a" styles for the navigation links
-*/
 /* Fonts, including Windows font YouYuan for multi-OS compatibility */
+/* YouYuan（Round） */
+@font-face {
+    font-family: 'YouYuan';
+    font-weight: 400;
+    font-style: normal;
+    src: url('fonts/YouYuan.woff2') format('woff2');
+    font-display: auto;
+}
+
+/* Swei Gothic CJK SC */
 @font-face {
     font-family: 'SweiGothic';
+    font-weight: 400;
+    font-style: normal;
     src: url('fonts/SweiGothicCJKsc-Regular.woff2') format('woff2');
+    font-display: swap;
 }
 @font-face {
+    font-family: 'SweiGothic Bold';
+    src: url('fonts/SweiGothicCJKsc-Bold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Zhudou Sans */
+@font-face {
     font-family: 'Zhudou Sans';
+    font-weight: 400;
+    font-style: normal;
     src: url('fonts/ZhudouSans-Regular.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'YouYuan';
-    src: url('fonts/YouYuan.woff2') format('woff2');
+    font-family: 'Zhudou Sans Bold';
+    src: url('fonts/ZhudouSans-Bold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
 }
+
+/* KaTeX Main */
 @font-face {
     font-family: 'KaTeX Math';
     src: url('fonts/KaTeX_Main-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
+@font-face {
+    font-family: 'KaTeX Math Bold';
+    src: url('fonts/KaTeX_Main-Bold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'KaTeX Math Italic';
+    src: url('fonts/KaTeX_Main-Italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
 /* Color Palette and bootstrap font settings */
 :root {
     --no-opacity: 1; /* default opacity */
@@ -86,11 +103,11 @@
     --rgb-dark-gold: 148,138,84; /* reserved */
     --rgb-light-yellow: 253,253,205; /* reserved */
     --rgb-dark-purple: 95,73,122; /* reserved */
-    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "SweiGothic", "Liberation Mono", "Courier New", monospace, "YouYuan";
-    --font-style-main: "Zhudou Sans", sans-serif;
-    --font-style-side: "YouYuan", "Yuanti SC";
-    --font-style-math: 'KaTeX Math', Cochin, Georgia, Times, 'Times New Roman', serif;
+    --bs-font-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'SweiGothic', 'SweiGothic Bold', 'Liberation Mono', 'Courier New', monospace, 'YouYuan';
+    --font-style-main: 'Zhudou Sans', 'Zhudou Sans Bold', sans-serif;
+    --font-style-side: 'YouYuan', 'Yuanti SC';
+    --font-style-math: 'KaTeX Math', 'KaTeX Math Bold', 'KaTeX Math Italic', Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 /* High-level inherited formatting */

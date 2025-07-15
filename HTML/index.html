@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang='zh-hans'>
 	<head>
-        <meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="initial-scale=1">
-        <!-- Basic Bootstrap Javascript <script src="./files/bootstrap.min.js"></script> -->
-        <!-- Bootstrap CSS <link rel="stylesheet" href="./files/bootstrap.css"> -->
-        <!-- Bootstrap Icons CSS (remote)
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/span/bootstrap-icons.css" crossorigin="anonymous">
-        -->
+        <meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- JavaScript Codes -->
         <script src="./files/tutorial.js" defer></script>
         <!-- Basic MathJax Javascript -->
         <script src="./files/mathJax3-tex-svg.js" defer></script>
-        <!-- Custom CSS Codes <link rel="stylesheet" href="./files/desktopContainer.css"> -->
+        <!-- Custom CSS -->
+         <link rel="preload" href="./files/tutorial.css" as="style">
         <link rel="stylesheet" href="./files/tutorial.css">
         <!-- highlight JS & CSS (language-cpp, language-bash, language-powershell) -->
         <link rel="stylesheet" href="./files/docco.min.css">
@@ -4647,7 +4643,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 </li>
             </ul>
             <code class="code-bold">--max-cll</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串 MaxCLL,MaxFall&gt;根据源视频的元数据设置最大内容光强与最大平均光强。见上图例。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串 MaxCLL,MaxFall&gt;根据源视频的元数据设置最大内容光强（Max content light level）与最大平均光强（Max Frame-Avg Light level）。见上图例。</p>
             <!-- } -->
 
             <h3>杜比视界 Dolby vision / DV</h3>

@@ -1041,12 +1041,12 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <h3>上层 - 质量呼应码率 CRF 模式</h3>
             <p>全称 Constant Rate Factor。压制三角形下，距离妥协中心点最近的模式。因此也是压制最常用的模式。</p>
             <code class="code-bold">--crf</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0~51，默认 23&gt;据 cplxBlur，cutree，B 帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称 crf。素材级画质设在 16~18，收藏~高压画质设在 19~20.5，YouTube 是 23。由于动画和录像的内容差距，动画比录像要给低点</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0~51，默认 23&gt;据 cplxBlur，cutree，B 帧偏移给每帧分配各自 qp 的固定目标质量模式，或简称质量呼应码率模式，统称 crf。素材级画质设在 16~18，收藏~高压画质设在 19~20.5，YouTube 是 23。由于动画和录像的内容差距，动画比录像要给低一点</p>
 
             <h3>上层 - 平均码率 ABR 模式</h3>
             <p>全称 Average Bitrate。编码器自行判断量化程度，尝试压缩到用户定义的平均码率 average bitrate 上，速度最快</p>
             <code class="code-bold">--bitrate</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps&gt;平均码率。若视频易压缩且码率给高，就会得到码率比设定的片子；反过来低了会不照顾画质强行提高量化，使码率达标。一般推流用的“码率选项”就是设置了这个参数</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，<span class="text-red-emph">禁用 CRF</span>&gt;平均码率模式。保持一个较低的量化，超出平均码率后增强量化。直播推流用的“码率选项”就是在设置这个参数</p>
 
             <h3>双层 - 恒定量化值 CQP 模式</h3>
             <p>全称 Constant Quantizer Parameter</p>

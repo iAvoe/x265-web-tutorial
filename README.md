@@ -42,7 +42,14 @@
 
 ### 内容范围
 
-ffmpeg，Vapoursynth，avs2yuv 传递参数，ffmpeg 字幕渲染，IPCM-CU，U 和 B 的区别，分块，1D 傅里叶变换，2D 傅里叶变换，二维离散余弦变换，帧间 - 动态搜索，DMD，Jain & Jain/十字搜索（含计算过程），LDSP-SDSP搜索（含计算过程），六边形Hex搜索（含计算过程），UMH搜索（含计算过程），搜索迭代与merange的关系，帧间-运动补偿，FIR，hpel-8tap，qpel-7tapα，qpel-7tapβ，时域架网-mctf，mcstf，高斯模糊，正态分布，中值滤镜，双边滤镜，显加权预测，隐加权预测，AMVP，merge-mode，GOP结构建立，PPS，SPS，VPS，SS，IDR，CRA，DRA，BLA，RAP，RASL，RADL，3-tap滤镜（含计算过程），强力平滑滤镜（含计算过程），趋平插值/billinear模式（含计算过程），夹角插值模式（含计算过程），DC插值模式，对数log(x)，对数-指数交换率，指数增长，上层量化模式，CRF模式（含计算过程），cplxBlur与qcomp，cplxBase，下层量化模式，近无损压缩，真无损压缩，2pass-ABR，Analysis-2pass-ABR，Analysis-Npass调优模式，Analysis-pass2-ABR-Ladder模式，率失真优化量化，jpsdr-Mod-AQ，MSE，峰值信噪比PSNR，边界强度，平滑0，平滑1，平滑4，取样迁就偏移，锐-带偏移EO-BO，明暗色深带，中间色深带，振铃，CABAC，算数编码，自适应与对等概率（含计算过程），上下文自适应：Prediction by partial matching（含计算过程），上下文自适应：有限状态机，伯努利试验，几何分布，小数取整法与取模法，一元码与截短二进制码，哥伦布 - 莱斯编码，零阶指数哥伦布编码 EGk0，游程编码与游标编码，二进制算数编码，汉明距离与欧几里得距离，软判决与硬判决解码，Trellis 的歧义，软判决率失真优化 CABAC 的再量化：SDQ-Trellis，SEI，SEI 分类，线程节点控制，3D V-Cache CPU，多线程 vs 多参考，色彩空间转换，VUI-HDR 调试，软件下载，GCC，RC，for 循环批量压制，x265 设置参数，杜比视界配置，preset 表格，tune 表格
+相比 x264 教程，添加了更多、更深入的算法细节说明。忽略如对比度、色彩空间、等基础常识科普，补充 x264 教程中缺失的压缩理论。
+
+### 移动端支持
+
+本教程对移动端支持添加了以下功能：
+1. 根据当前页面的宽度、高度调整内容大小
+2. 点击图片轮训放大缩小
+3. 使用兼容 Webkit/Blink 的独立字形（加粗、倾斜）字体文件
 
 ### 繁体中文支持
 

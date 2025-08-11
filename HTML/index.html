@@ -421,17 +421,17 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
             <div class="coll-content">
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/motion-estimation/Jain&Jain-Search.png" alt="image9" class="" >
+                    <img loading="lazy" src="files/motion-estimation/Jain&Jain-Search.png" alt="image9" class="">
                     <p class="text-gray-side mt-0">图：传统的 Jain & Jain 十字搜索。</p>
-                    <img loading="lazy" src="files/motion-estimation/LDSP&SDSP-Search.png" alt="image10" class="" >
+                    <img loading="lazy" src="files/motion-estimation/LDSP&SDSP-Search.png" alt="image10" class="">
                     <p class="text-gray-side mt-0">图：大小菱搜索。x264/5 中，六边形搜索 me hex 将 LDSP 的上下左右斜 8 个外点减到 6 个，SDSP 的细化规则不变。</p>
-                    <img loading="lazy" src="files/motion-estimation/Uneven-multi-hexagon-Search.png" alt="image11" class="" >
+                    <img loading="lazy" src="files/motion-estimation/Uneven-multi-hexagon-Search.png" alt="image11" class="">
                     <p class="text-gray-side mt-0">图：umh 搜索。</p>
                 </div>
             </div>
 
             <code class="code-bold">--analyze-src-pics</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;允许动态搜索查找片源帧，耗时增加压缩。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;动态搜索不再等待前瞻进程、分帧/帧类型决策和粗分块后的结果，而是直接搜索源帧像素。这样可以将动态搜索在独立线程上运行，提高并行效率。这样还能消除（速度优先选项下）上述前置步骤小概率会导致的微量失真，但提升小到可忽略不计。 <span class="text-red-side">推测副作用：动态搜索失去避免搜索区域重叠的功能，反而在线程数量较少时浪费一点至一定算力（但可能会因为提前退出机制存在而看不出明显浪费）</span>。</p>
             <code class="code-bold">--me</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，推荐 umh&gt;搜索算法，umh 平衡，star 四角星搜索之后收益递减，sea 是优化过的 x264 esa 穷举，但收益递减仍大。umh 和 star 通过多种分辨率大小的查找范围，减轻了动态噪点对传统搜索算法的干扰</p>
             <code class="code-bold">--merange</code>
@@ -1657,7 +1657,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
 
             <div class="align-items-center">
-                <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="image42" class="" >
+                <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="image42" class="">
                 <p class="text-gray-side">图：简化的上下文自适应二进制算数编码<a href="https://iphome.hhi.de/marpe/cabac.html">CABAC 流程</a>，分转二进制，出字概率统计和算数编码三步</p>
             </div>
 
@@ -1666,7 +1666,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <div class="coll-content">
                 <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Arithmetic-Coding.png" alt="image43" class="" >
+                    <img loading="lazy" src="files/entropy-coding/Arithmetic-Coding.png" alt="image43" class="">
                     <p class="text-gray-side">图：编码即逐字按出字概率缩窄概率条到最后一个字的出字概率，取上/下区间为编码结果，解码照概率位置（蓝线）的落点反推实现。</p>
                 </div>
     

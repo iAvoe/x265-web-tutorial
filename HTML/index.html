@@ -4164,10 +4164,10 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~99，默认 70&gt;相似度判定值，默认达 70% 重复就判为相似。</p>
 
             <h2 id="h2-18">线程与节点控制</h2>
-            <h3>买淘汰线程撕裂者跑压制的可行性</h3>
-            <p>由于线程撕裂者 1000~2000 系处理器是用多个节点拼出来的（可能部分 EPYC 处理器也是这样？），所以单处理器内部就是多个 CPU 节点。此外要避开 2990WX 与 2970WX（核心组 1，3 没有内存控制器用，所以只能用 0，2）。当然前提是买来以后不做主力电脑使用的。</p>
+            <code class="code-bold">--asm</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串或整数，默认除 avx512 以外全开&gt;通过指定以下列表中特定位置的指令集名称或序号，从而禁用比它新的指令集，从而支持老旧处理器。此外，可以手动指定 <code>avx512</code>，但仅 ZEN4、Arrow Lake 及更新架构的处理器正常支持，其它处理器有的完全不支持，有的假装支持。</p>
 
-            <h3>X3D 处理器有没有优势</h3>
+            <h3>大缓存处理器是否有优势</h3>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>见 <a href="https://www.pugetsystems.com/labs/articles/amd-ryzen-5800x3d-vs-5800x-for-content-creation-2331/">PugetSystems 跑分</a>：</p>

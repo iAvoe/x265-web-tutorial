@@ -433,7 +433,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </div>
 
             <code class="code-bold">--analyze-src-pics</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;动态搜索不再等待前瞻进程、分帧/帧类型决策和粗分块后的结果，而是直接搜索源帧像素。这样可以将动态搜索在独立线程上运行，提高并行效率。这样还能消除（速度优先选项下）上述前置步骤小概率会导致的微量失真，但提升小到可忽略不计。 <span class="text-red-side">推测副作用：动态搜索失去避免搜索区域重叠的功能，反而在线程数量较少时浪费一点至一定算力（但可能会因为提前退出机制存在而看不出明显浪费）</span>。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，推荐关&gt;动态搜索不再等待前瞻进程、分帧/帧类型决策和粗分块（包括 WPP）后的结果，而是直接搜索源帧像素。这样可以将动态搜索在独立线程上运行，提高并行效率；由于编码器最终编码的就是处理后的帧，而不是原帧，因此使用该选项反而会导致动态搜索准确度下降，降低画质。见 <a href="https://forum.doom9.org/showthread.php?s=3034a4a73f990075a4cd088d9902e9f3&p=1797539#post1797539">doom9 说明帖</a>。</p>
             <code class="code-bold">--me</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，推荐 umh&gt;搜索算法，umh 平衡，star 四角星搜索之后收益递减，sea 是优化过的 x264 esa 穷举，但收益递减仍大。umh 和 star 通过多种分辨率大小的查找范围，减轻了动态噪点对传统搜索算法的干扰</p>
             <code class="code-bold">--merange</code>

@@ -1244,11 +1244,11 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             
             <code class="code-bold">--aq-mode</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3&gt;据原画和 crf/abr 设定，以及码率不足时（crf&lt;18/低码 abr）如何分配 qp。</p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">1</span>标准自适应量化（急用，简单平面）</li>
-                <li><span class="text-blue-emph">2</span>加启用 aq-variance，自动调整 aq-strength 强度（录像 - 电影以及 crf&lt;17 推荐）</li>
-                <li><span class="text-blue-emph">3</span>加码率不够用时倾向保暗场（接受更明显的涂抹失真）</li>
-                <li><span class="text-blue-emph">4</span>加码率不够用时更加倾向保纹理（接受平面上的涂抹失真，<span class="text-red-emph">实验性</span>，很慢）</li>
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
+                <li><span class="text-blue-emph">1</span>：标准自适应量化，适合画面内容单调时使用</li>
+                <li><span class="text-blue-emph">2</span>：并且启用 aq-variance，自动调整 aq-strength 强度（录像 - 电影以及 crf&lt;17 推荐）</li>
+                <li><span class="text-blue-emph">3</span>：并且在码率不够用时倾向保暗场（接受更明显的涂抹失真）</li>
+                <li><span class="text-blue-emph">4</span>：并且码率不够用时更加倾向保纹理（接受平面上的涂抹失真，<span class="text-red-emph">实验性</span>，很慢）</li>
             </ul>
             <code class="code-bold">--aq-strength</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点&gt;自适应量化强度。搭配 aq-mode，如动漫 1:0.8，2:0.9，3:0.7 用。录像上可加 0.1~0.2，画面混乱/观众难以注意平面时可再增加。注意低成本动漫的平面居多，因此码率不足时反而要妥协纹理。</p>
@@ -1353,7 +1353,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 
             <code class="code-bold">--rd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;1/2/3/5，默认 3，大则慢&gt;据优化模式决策的程度。建议快速用用<span class="text-blue-emph">1</span>，<span class="text-blue-emph">2</span>；高压用<span class="text-blue-emph">3</span>；片源数据无损 (非视觉无损) 时用<span class="text-blue-emph">5</span>。</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">1</span>优化帧内参考，并块/跳过决策，含明显边缘失真时用</li>
                 <li><span class="text-blue-emph">2</span>加分块决策，含明显边缘失真时用</li>
                 <li><span class="text-blue-emph">3</span>加帧间决策，高压高量化时可平衡</li>
@@ -1365,7 +1365,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 3&gt;限制分块用信息可参考性。<span class="text-blue-emph">0 不限</span>压缩高且慢；<span class="text-blue-emph">1</span>用 cu 分裂后的信息 + 差异信息描述自身 (推荐)；<span class="text-blue-emph">2</span>据单个 cb 的差异信息建立 pu；<span class="text-blue-emph">3=1+2</span>。</p>
             <code class="code-bold">--rskip</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2&gt;前 cu 分块被跳过时，判断后 cu 接着搜索分块还是提前退出的参数。画面越接近录屏/低成本动漫就用得越多。</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">0</span>继续分析。适合信噪比差/高噪源。原画很干净则不如<span class="text-blue-emph">1</span></li>
                 <li><span class="text-blue-emph">1</span>rd 0~4 下据临 cu 是否细分而定；rd5~6 下看附近 2Nx2N cu 分块难度而定，高压和一般情况推荐</li>
                 <li><span class="text-blue-emph">2</span>直接对比 cu 纹理密度 Edge Density，快且不比前者差，但存在对源的画质要求及客观判断“画质”的能力</li>
@@ -1436,7 +1436,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 1~6，默认 1&gt;psy 参数改动 qp 的最大范围，宏观影响大，片源含明显边缘失真时会不应使用，以防止进一步的失真。</p>
             <code class="code-bold">--psy-rd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点偏移值 0~50，默认 2.0，<span class="text-red-emph">需 rd 3</span>，加 <code>--psy-rdoq</code> 后构成 x264 psy-rd 参数&gt;心理视觉优化往高影响量化块的能量 J，使 md 偏好保留细节的程度，值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加。</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
                 <li><span class="text-blue-emph">0.2</span>高压或片源暗场有一点点边缘失真</li>
                 <li><span class="text-blue-emph">0.5~2</span>根据要保留的边缘峭度以及文件大小，VBR 模式的峰值码率决定</li>
@@ -1448,13 +1448,13 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <h3>优化量化</h3>
             <code class="code-bold">--rdoq-level</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，0~2&gt;ABR/CRF 分配量化值的宏观调控强度，大则慢，0 则关。</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">1</span>逐分块进行率失真优化量化，psy-rdoq 开启则倾向低量化</li>
                 <li><span class="text-blue-emph">2</span>对比 4x4 块高频信息/残差是否有利于整个编码组 (CTU 内分块) 画质，同时对所有系子进行同类分析，大量减少 4×4 块，降低 psy-rdoq 效果，适合一般及高压缩用途</li>
             </ul>
             <code class="code-bold">--psy-rdoq</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~50，默认 0 关&gt;心理视觉往高影响量化块的能量 J，改量化偏好为保留细节。值随分辨率增加而增加，随片源边缘失真增加而降低，并随量化强度增加而增加。</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">0~0.1</span>片源有明显边缘失真（和细节同是高频信号），优化则降低画质</li>
                 <li><span class="text-blue-emph">2.3~2.8</span>电脑录屏，中低成本动漫等几乎没有动态背景变化的情况</li>
                 <li><span class="text-blue-emph">3~4.8</span>分辨率从 1280x720 到 3840x2160 的高成本电影动漫，要求片源无明显边缘失真</li>
@@ -4146,7 +4146,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt;将假设对照解码参数 Hypothetical Reference Decoder Parameter 估计不丢包无延迟的瞬间码率，写在每段 SPS 及 SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
             <code class="code-bold">--hash</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0/关，推荐关&gt;SEI 里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力（但是，一般来说校验可以通过直接对输出的视频文件添加，而且解码器一般为了性能等原因会忽略掉“多余”的 SEI）：</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">1</span>：checksum 校验，性能占用最小</li>
                 <li><span class="text-blue-emph">2</span>：CRC 校验，性能占用略高，准确率较高</li>
                 <li><span class="text-blue-emph">3</span>：CRC 校验，性能占用略高，准确率高</li>
@@ -4246,10 +4246,9 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </table>
 
             <code class="code-bold">--frame-threads</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~16~线程数÷2，默认 0 自动&gt;同时压制多少帧：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~线程数÷2，默认 0 自动，推荐默认&gt;同时压制多少帧：</p>
             <ul class="font-monospace pl-5 text-smaller">
-                <li>如<span class="text-blue-emph">1</span>能让编码器做到前后整帧可完全分析参考，设 1 的代价是 cpu 占用显著降低，压制显著减速，建议搭配 mcstf 使用</li>
-                <li>非<span class="text-blue-emph">1</span>则因为编码顺序，只有 ctu 下方的一行 ctu 可供参考，损失一半可能的参考范围</li>
+                <li><span class="text-blue-emph">1</span>：让编码器做到前后整帧可完全分析参考，但代价是 CPU 占用受限、压制速度大减。提升存在，但只有望进度条止渴（placebo）的程度。<del>因此建议搭配 mcstf 使用</del>（mcstf 可能会遇到残影画面问题，取消推荐）</li>
             </ul>
 
             <h2 id="h2-19">色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
@@ -4588,7 +4587,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;full/limited，默认留空&gt;指定视频源的色深范围，full：完整，limited：有限。剪辑时应额外检查剪辑软件的输出设定一致性。</p>
             <code class="code-bold">--chromaloc</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~5，默认留空&gt;指定色度采样缩减分辨率时所用的像素，相对于缩小前像素的位置（chroma location），涉及到解码端的色度像素对齐。如果源视频标注，则建议标注。</p>
-            <ul class="list-dotless font-monospace pl-5 text-smaller">
+            <ul class="list-dotless font-monospace pl-5 list-dotless text-smaller">
                 <li><b>0：</b>左</li>
                 <li><b>1：</b>中</li>
                 <li><b>2：</b>左上</li>
@@ -5057,7 +5056,7 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;不写入 profile 和 level，绕过 HEVC 标准规定，只要不是按照 h.265 规定写的命令行参数值就必须使用这个参数。</p>
             <code class="code-bold">--force-flush</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2，默认 0&gt;低能耗设备用的编码调度控制：</p>
-            <ul class="font-monospace pl-5 text-smaller">
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">0</span>等全部帧输入再编码</li>
                 <li><span class="text-blue-emph">1</span>不等全部帧输入完就编码</li>
                 <li><span class="text-blue-emph">2</span>取决于条带种类，调整 slice type 才能用</li>
@@ -5083,16 +5082,16 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
                 <table class="table-fit-container text-xs">
                     <thead>
                         <tr class="border-lr">
-                            <th>参数\预设</th>
-                            <th>superfast</th>
-                            <th>veryfast</th>
-                            <th>faster</th>
-                            <th>fast</th>
-                            <th>medium</th>
-                            <th>slow</th>
-                            <th>slower</th>
-                            <th>veryslow</th>
-                            <th>placebo</th>
+                            <th>参数值\预设</th>
+                            <th class="text-blue-emph">superfast</th>
+                            <th class="text-blue-emph">veryfast</th>
+                            <th class="text-blue-emph">faster</th>
+                            <th class="text-blue-emph">fast</th>
+                            <th class="text-blue-emph">medium</th>
+                            <th class="text-blue-emph">slow</th>
+                            <th class="text-blue-emph">slower</th>
+                            <th class="text-blue-emph">veryslow</th>
+                            <th class="text-blue-emph">placebo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -5263,13 +5262,44 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
 
             <code class="code-bold">--tune</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;zerolatency/animation/grain/film/fastdecode/psnr&gt;更改 preset 的一些参数，见下：</p>
-            <ul class="font-monospace pl-5 text-smaller">
-                <li><span class="text-blue-emph">zerolatency</span> 集中算力到一次编码一帧，并尽可能关闭率控制和 B 帧功能：<code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</code></li>
-                <li><span class="text-blue-emph">animation</span> 优化动漫场景画面：<code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</code></li>
-                <li><span class="text-blue-emph">grain</span> 保留高频信号/最高画质：<code>--aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0</code></li>
-                <li><span class="text-blue-emph">fastdecode</span> 降低解码算力占用以降低超高帧率 - 分辨率解码负载：<code>--no-weightb --no-weightp --no-deblock --no-sao</code></li>
-                <li><span class="text-blue-emph">psnr</span> 尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大：<code>--aq-mode 0 --rd 0 --no cutree</code></li>
-            </ul>
+            <div class="overflow-auto">
+                <table class="table-fit-container text-smaller">
+                    <thead>
+                        <tr class="border-lr">
+                            <th>预设</th>
+                            <th>说明</th>
+                            <th>对应参数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-lr">
+                            <th class="text-blue-emph px-1 t-light-gray">zerolatency</th>
+                            <td class="px-1 t-light-gray">集中算力到一次编码一帧，并尽可能关闭率控制和 B 帧功能</td>
+                            <td class="px-1 font-monospace t-light-gray"><code>--bframes 0 --b-adapt 0 --no-cutree --no-scenecut --frame-threads 1</code></td>
+                        </tr>
+                        <tr class="border-lr">
+                            <th class="text-blue-emph px-1">animation</th>
+                            <td class="px-1">优化动漫场景画面</td>
+                            <td class="px-1 font-monospace"><code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</code></td>
+                        </tr>
+                        <tr class="border-lr">
+                            <th class="text-blue-emph px-1 t-light-gray">grain</th>
+                            <td class="px-1 t-light-gray">保留高频信号/最高画质</td>
+                            <td class="px-1 font-monospace t-light-gray"><code>--aq-mode 0 --no-cutree --ipratio 1.1 --pbratio 1 --qp-step 1 --no-sao --psy-rdoq 0 --rskip 0</code></td>
+                        </tr>
+                        <tr class="border-lr">
+                            <th class="text-blue-emph px-1">fastdecode</th>
+                            <td class="px-1">降低解码算力占用以降低超高帧率——分辨率解码负载</td>
+                            <td class="px-1 font-monospace"><code>--no-weightb --no-weightp --no-deblock --no-sao</code></td>
+                        </tr>
+                        <tr class="border-lr">
+                            <th class="text-blue-emph px-1 t-light-gray">psnr</th>
+                            <td class="px-1 t-light-gray">尽可能降低编码结果和原画的均方差 MSE 差异，但与画质关系不大</td>
+                            <td class="px-1 font-monospace t-light-gray"><code>--aq-mode 0 --rd 0 --no cutree</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <h2 id="h2-22">附录：下载</h2>
             <h3>LibavFormat / lavf</h3>

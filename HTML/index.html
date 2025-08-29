@@ -44,7 +44,7 @@
                             <a class="toSelf" href="#h2-11">率控制</a>，
                             <a class="toSelf" href="#h2-12">自适应量化</a>，
                             <a class="toSelf" href="#h2-13">率失真优化</a>，
-                            <a class="toSelf" href="#h2-14">环路滤波</a>，
+                            <a class="toSelf" href="#h2-14">环路滤镜</a>，
                             <a class="toSelf" href="#h2-15">熵编码</a>，
                             <a class="toSelf" href="#h2-16">优化熵编码</a>，
                             <a class="toSelf" href="#h2-17">SEI</a>，
@@ -736,7 +736,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <code class="code-bold">--bframe-bias</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 -90~100，推荐默认&gt;设立 B 帧判定偏移，增大的同时搭配低 pbratio 可增加 B 帧数量，用负值搭配高 pbratio 可以减少 B 帧数量。</p>
 
-            <h3>网络抽象层单元 - 参数集</h3>
+            <h3>网络抽象层单元——参数集</h3>
             <p>Network abstraction layer unit 中含解码配置 profile，level 的数据包。x264 中的视频帧数即 <span class="text-blue-math"><code>sps->vui.i_num_units_in_tick</code></span> 或 <span class="text-blue-math"><code>sps->vui.i_time_scale÷2</code></span> 所得（÷1 则为分行交错视频）</p>
             <ul class="text-gray-side">
                 <li>视频参数集 Video parameter set</li>
@@ -1376,7 +1376,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~100，默认 5: 趋向于分块，<span class="text-red-emph">需 rskip 大于 1</span>&gt;用 Sobel 算法获取 cu 纹理密度，再将纹理密度除以块所占面积，得到密度占据面积的百分比。纹理密度&gt;阈值=分块，量化强度越高越关键。8×8 或 16×16 块下默认 5%（即含 3 或 12 个系子）就分。类似 x264 的 deadzone 参数。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>像素风：<span class="text-blue-emph">据像素变大的程度决定</span>。如分辨率宽÷2，分辨率高÷2 会回到 1x1 像素大小，则使默认值乘以 2 以提速</li>
-                <li>抗涂抹：<span class="text-blue-emph">rskip 2 rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比 rskip 0 快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</li>
+                <li>抗涂抹：<span class="text-blue-emph">--rskip 2 --rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比 <code>--rskip 0</code> 快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</li>
             </ul>
             <div class="align-items-center">
                 <img loading="lazy" src="files/rate-control/rSkip-Edge-Threshold.png" alt="image32" class="img-small" >
@@ -1401,15 +1401,15 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <p class="text-gray-side">图：率 - 失真表格中不断调整并得到“×”的实际效果</p>
             </div>
             <!-- } -->
-            <p>x265 的失真（块间差异）用均方差 Mean Squared Error（MSE）判断：</p>
+            <p>x265 的失真（块间差异）使用均方差 Mean Squared Error（MSE）判断：</p>
             <span class="text-blue-math">\[ \text{MSE} = \frac{1}{n^2}\sum_{x=0}^{n-1}\sum_{y=0}^{n-1} \left| f(x,y) - f'(x,y) \right|^2 \]</span>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：
                 <span class="text-red-emph">补充跳过的 x264 教程率失真优化部分，以及 <code>--psy-rd，--fgo</code> 等参数的科普，可略。</span>
             </button>
             <div class="coll-content">
-                <p>x264 中默认用更快的平方差 Sum of Squared Error（SSE）/ Sum of Squared Difference（SSD）:</p>
+                <p>x264 中使用更快的平方差 Sum of Squared Error（SSE）/ Sum of Squared Difference（SSD）判断:</p>
                 <span class="text-blue-math">$$\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ |f(x,y) - f^\prime(x,y)|^2}}$$</span>
-                <p>x264 中还可选用画质优先的高频加权平方差 Noise SSE（见 <a href="https://web.archive.org/web/20090916181521/http://x264dev.blogspot.com/2008/05/film-grain-optimization.html">Dark Shikari 帖子</a>和<a href="https://forum.doom9.org/showthread.php?p=1127999">doom9 论坛</a>）：</p>
+                <p>或者，x264 中可以选用画质优先的高频加权平方差 Noise SSE（见 <a href="https://web.archive.org/web/20090916181521/http://x264dev.blogspot.com/2008/05/film-grain-optimization.html">Dark Shikari 帖子</a>和<a href="https://forum.doom9.org/showthread.php?p=1127999">doom9 论坛</a>）：</p>
                 <span class="text-blue-math text-smaller">$$\sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}{\ \left| \left\lbrack N(x,y) - \ N\prime(x,y) \right\rbrack \cdot fgo \right| + |f(x,y) - f^\prime(x,y)|^2}}$$</span>
                 <p>其中 N/Noise 代表块的噪点强度，在一个 2x2 的区间下为四个像素两两加减得到，因为噪点和其它高频信号一样都是突兀的像素值（所以速度很慢）：</p>
                 <span class="text-blue-math">$$N(0,0)=|f(0,0)-f(0,1)+f(1,1)-f(0,1)|$$</span>
@@ -1428,6 +1428,24 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </div>
 
             <h3>优化模式决策</h3>
+            <p>环路滤镜作用于重建帧（编码结果）上，使其成为未来帧的参考。模式决策（帧内模式、运动矢量、块划分等）都在编码当前块时完成，不会在环路滤镜处理之后再复查和修改。但编码器在决策时通常会基于“滤镜处理后的参考帧”来进行运动估计和预测，以保证和解码端一致。模式决策对于帧内编码的块/帧尤其重要，因为帧内预测的模式是根据重建（并滤波）后的左侧、左上和顶部相邻像素做的（信息有限），因此很可能还有更好的编码模式可取。对于帧间编码的块，其前后的参考帧已经进行过滤镜处理（因为编解码顺序不同于播放顺序），因此编码器可以安全地根据处理后的参考帧复查动态向量。</p>
+            <ol>
+                <li><b>整合动态搜索与补偿可能性</b>：
+                    <ul>
+                        <li>计算并收集每种帧内，帧间预测模式的率失真分数（于下文解释）</li>
+                    </ul>
+                </li>
+                <li><b>整合分块参考量化可能性</b>：
+                    <ul>
+                        <li>计算并收集每种细分块方案（4x4，8x8，16x16），参考帧长度，量化强度下的率失真分数</li>
+                    </ul>
+                </li>
+                <li><b>压缩方案定制</b>：
+                    <ul>
+                        <li>选择码率最小的压缩方案并不是最优解，因此找出率失真分数最高的方案集，得到码率与画质最为平衡的方案</li>
+                    </ul>
+                </li>
+            </ol>
             <code class="code-bold">--dynamic-rd</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~4，<span class="text-red-emph">需 rd 小于 5</span>&gt;给 VBR 限码画面调高 rd 止损。1~4 为 rd 搜索面积倍数，大则慢。</p>
             <code class="code-bold">--splitrd-skip</code>
@@ -1573,7 +1591,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 </table>
             </div>
 
-            <h2 id="h2-14">环路滤波</h2>
+            <h2 id="h2-14">环路滤镜</h2>
             <!-- x264 教程副本，更改需手动同步 { -->
             <h3>去块滤镜</h3>
             <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
@@ -4215,7 +4233,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p>用多线程一次编码多帧来占满算力 vs 一次只编一帧，确保所有参考画面可用（大幅提高多核占用，画质和文件影响小）的决策。造成多线多参考帧困难的原因有：</p>
             <ul class="text-gray-side">
                 <li>CTU 的面积比宏块大，其中画面变化的概率增加</li>
-                <li>参考前要等环路滤波，率失真优化，以及已编码信息的依赖，使得很多参考（特别是高 ref）来不及找而被跳过</li>
+                <li>参考前等待环路滤镜、率失真优化以及已编码信息的依赖，使得很多参考（特别是高参考帧长度 <code>--ref</code>）来不及查找而被跳过</li>
             </ul>
             <p>因此有了“每帧线程”的并行编码帧数量分配概念。关--wpp 时，frame-thread 参数设为<span class="text-blue-math">\(\min(\text{cpuCount},\frac{\text{ctuRows}}{2})\)</span>，开则为下表：</p>
             <table class="table-center align-items-center">
@@ -4252,7 +4270,8 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </ul>
 
             <h2 id="h2-19">色彩空间标注，VUI/HDR 信息，黑边跳过</h2>
-            <p>Video usability information 是有工具就可以随时改的元数据。HDR 电视只读取 maxcll 和 maxfall，所以实际情况是 master-display 可略。光强/光压 Candela 等于尼特，即<span class="text-blue-math">\(1 \text{cd} = 1 \text{nit}\)</span>。因 bt601，709，HDR-PQ，HLG 标准重视的亮度范围，曲线所异（偏亮或偏暗），故需要量化曲线，心理学优化，模式决策的重适配。</p>
+            <p>Video usability information 是元数据，播放器会读取这些元数据来选择特定的色彩空间播放视频，由于 HDR 视频的标准受到厂商竞争割据等因素，用户需要手动指定 HDR 参数到 VUI 中才能正确播放（不过，有时电视厂商会为了节省成本而只读取一小部分信息，如只读取 MaxCLL 和 MaxFall）。</p>
+            <p>光强/光压 Candela 等于尼特，即<span class="text-blue-math">\(1 \text{cd} = 1 \text{nit}\)</span>。因 bt601，709，HDR-PQ，HLG 标准重视的亮度范围，曲线所异（偏亮或偏暗），故需要量化曲线，心理学优化，模式决策的重适配。</p>
             
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：色彩格式的具体转换变量与算法标准</button>
             <p>详见国际电信联盟（ITU-T）<a href="https://www.itu.int/rec/dologin.asp?lang=s&id=T-REC-H.265-201504-S!!MSW-E">H.265 Table E.3</a>。</p>

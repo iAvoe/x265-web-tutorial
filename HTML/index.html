@@ -1595,7 +1595,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p>x264、x265 中使用的一种率失真优化量化（RDOQ）算法，通过将所有可能的 CABAC 上下文状态量化结果组网（trellis 状态网络），并使用动态优化（动态规划编程）来找出一条率失真最小的路径，从而权衡量化失真与码率。</p>
             <p class="text-gray-side">注：Trellis 在量化进行 CABAC/CAVLC 熵编码之前，量化之后运行，所以“熵编码上下文结果”是估计出来的。</p>
 
-            <h4>4x4 块的伪熵编码上下文状态</h4>
+            <h4>构建状态网络</h4>
             <div class="align-items-center">
                 <img loading="lazy" src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image50" class="img-medium"><br>
                 <p class="text-gray-side">图：从左向右推演的 Trellis 有向无环图。其中节点代表各种状态，边代表状态转换路径。</p>
@@ -1604,15 +1604,15 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <li><code class="code-bold">NumEq1</code>：值等于 1 的系子个数</li>
                 <li><code class="code-bold">NumLg1</code>：值大于 1 的系子个数</li>
             </ul>
-            <p>系统将这两个参数的组合归纳为 8 种 CABAC 上下文状态：</p>
+            <p>然后，将这两个参数的组合归纳为 8 种 CABAC 上下文状态：</p>
             <ul>
                 <li><code>0_0~3_3</code>：<code class="code-bold">NumEq1_NumLg1</code> 皆在 3 个以内的状态</li>
                 <li><code>any_any</code>（<code>x_x</code>）：当 <code class="code-bold">NumLg1</code> 大于等于 4 的状态</li>
                 <li><code>any_0</code>（<code>x_0</code>）：当 <code class="code-bold">NumEq1</code>大于等于 4，且 <code class="code-bold">NumLg1</code> 等于 0 的状态</li>
             </ul>
-            <p>这些状态组网后构成上图的 4x4 块状态网络。</p>
+            <p>最后，这些状态组网后构成上图的“NxN 块用”状态网络。</p>
 
-            <h4>状态网络推演规则</h4>
+            <h4>状态推演规则</h4>
             <ul>
                 <li><b>当前频域系子值等于 1</b>：当前分块调用该频率一次来构成画面，<code class="code-bold">NumEq1</code> 加 1</li>
                 <li><b>当前频域系子值大于 1</b>：当前分块调用该频率多次来构成画面，<code class="code-bold">NumLg1</code> 加 1</li>
@@ -1621,11 +1621,11 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 
             <h4>软判决率失真优化统计</h4>
             <p>直接统计状态网络中所有线路的率失真程度，找出最优解路线，性能损耗远大于死区量化器，但画质也直接与给定的质量绑定，不需要根据经验设置了。仍然是从「开销=失真+λ⋅码率」得来，区别在它们的取值上：</p>
-            <span class="text-blue-math">\[J = D + \lambda \cdot R\]</span>
+            <span class="text-blue-math text-larger">\[J = D + \lambda \cdot R\]</span>
             <ul>
-                <li><span class="text-blue-math">(J)oule</span>：当前线路的率失真程度，越低越好</li>
-                <li><span class="text-blue-math">(D)istortion</span>：由每个频域分量系子的分量于优化前后的平方差（SSE）得出</li>
-                <li><span class="text-blue-math">(R)ate</span>：当前选用路径中，频域分量系子的值之和</li>
+                <li><span class="text-blue-math">(J)oule</span>：当前线路的率失真含量，越低越好（码率越低越好、失真越小越好）</li>
+                <li><span class="text-blue-math">(D)istortion</span>：失真，由每个“频域系子的分量”与“优化前分量”取平方差（SSE）得出</li>
+                <li><span class="text-blue-math">(R)ate</span>：码率，由当前选用路径中，频域分量系子的值之和得出</li>
                 <li><span class="text-blue-math">λ</span>：拉格朗日乘数</li>
             </ul>
 

@@ -254,9 +254,9 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         <li><b>帧内预测</b>：在 I 帧或 P 帧的 I 块上，从前面步骤中生成的候选夹角、DC、趋平中的最佳模式冗余帧内的块，得到预测块</li>
                         <li><b>帧内残差编码</b>：对比实际画面与帧内预测得到的残差块，进行变换和量化，存储在预测块中，在解码时与预测模式叠加以得到原始画面</li>
                         <li><b>跳过块编码</b>：跳过帧间或帧内残差编码的块，进行变换和量化。</li>
-                        <li><b>变换</b>：将图像从空间域转换到低频到高频信号分量之间的每个级别，也称为频域。</li>
-                        <li><b>量化</b>：根据用户设置的质量级别，削减高频信号分量，这一步骤对画质和文件大小影响最大。</li>
-                        <li><b>熵编码/文本编码</b>：将变换和量化后的频域分量统计为最小可能的二进制数。</li>
+                        <li><b>变换</b>：将图像从空间域转换到低频到高频信号分量系子之间的每个级别，也称为频域。</li>
+                        <li><b>量化</b>：根据用户设置的质量级别，削减高频信号分量系子，这一步骤对画质和文件大小影响最大。</li>
+                        <li><b>熵编码/文本编码</b>：将变换和量化后的频域分量系子统计为最小可能的二进制数。</li>
                     </ul>
                 </li>
                 <li><b>生成视频流</b>
@@ -372,7 +372,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：归一化/基本单位化 Normalize</button>
             <div class="coll-content">
                 <h3>归一化/基本单位化 Normalize</h3>
-                <p>将数据缩放到基本单位大小，以便计算和对比的处理。<span class="text-blue-math">\( \alpha(u) \)</span>和 <span class="text-blue-math">\( \alpha(v) \)</span> 两个缩放值来对齐，使得 <spanclass="text-blue-math">\( \text{RMS}_{\text{DCT}} = \text{RMS}_{f(x,y)} \)</span>：</p>
+                <p>将数据缩放到基本单位大小，以便计算和对比的处理。<span class="text-blue-math">\( \alpha(u) \)</span>和 <span class="text-blue-math">\( \alpha(v) \)</span> 两个缩放值来对齐，使得 <span class="text-blue-math">\( \text{RMS}_{\text{DCT}} = \text{RMS}_{f(x,y)} \)</span>：</p>
                 <span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{N}} & \text{if } u,v = 0 \text{ (DC)} \\ \frac{1}{\sqrt{2N}} & \text{if } u,v \neq 0\text{ (AC)} \end{cases} \]</span>
                 <p>而在 JPEG 中：</p>
                 <div class="overflow-auto"><span class="text-blue-math">\[ \alpha(u), \alpha(v) = \begin{cases} \frac{1}{\sqrt{2}} \approx 0.7071 & \text{if } u,v = 0 \text{ (DC)} \\ 1 & \text{if } u,v \neq 0 \text{ (AC)} \end{cases} \]</span></div>
@@ -468,7 +468,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         <li><span class="text-blue-math">\(B\prime(x+½,y),B\prime(x,y+½),B\prime(x+½,y+½),B\prime(x+¼,y),B\prime(x,y+¼),B\prime(x+¼,y+¼),B\prime(x+¼,y+½),B\prime(x+½,y+¼)\)</span></li>
                     </ul>
                 </li>
-                <li>选出 SATD 误差值最小的块——中的 x,y 分量，纠正帧间向量表的动态矢量，完成补偿</li>
+                <li>选出 SATD 误差值最小的块——中的 x，y 分量，纠正帧间向量表的动态矢量，完成补偿</li>
             </ol>
             <p class="text-gray-side">注：在参数值强度给高后，上述的对比步骤改成用 me hex 之类的动态搜索算法来找对齐</p>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
@@ -535,10 +535,10 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                     <p class="text-gray-side mt-0">图：Y 平面 FIR 插值和 subme 并行，调用 8²或 16²块的横/纵向参考源。若 subme 所得动态的：</p>
                 </div>
                 <ul>
-                    <li>向量横分量==0: [d][n] 分别用 7tapα或β采样整像素 [A]</li>
-                    <li>向量横分量!=0: [f][q] 分别用 7tapα或β采样子像素 [b]</li>
-                    <li>向量纵分量==0: [a][c] 分别用 7tapα或β采样整像素 [A]</li>
-                    <li>向量纵分量!=0: [i][k] 用 8tap 分别采样子像素 [a][c]</li>
+                    <li>向量横分量等于 0: [d][n] 分别用 7tapα或β采样整像素 [A]</li>
+                    <li>向量横分量非 0: [f][q] 分别用 7tapα或β采样子像素 [b]</li>
+                    <li>向量纵分量等于 0: [a][c] 分别用 7tapα或β采样整像素 [A]</li>
+                    <li>向量纵分量非 0: [i][k] 用 8tap 分别采样子像素 [a][c]</li>
                 </ul>
             </div>
 
@@ -1384,7 +1384,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p>Rate distortion optimization，RDO。原本有损压缩视频编码器的策略就是码率越小越好——所以量化强度越大越好。但实际情况是量化压缩相当程度的破坏了 P-B 帧原本可以参考 I 帧的部分——因为量化后差异太大而只能放弃参考，换成 I 块。解决这种乱量化问题的方法是将失真，码率分别看成两种越大越差的程度；将其中一个程度乘以一个缩放值以对齐另一个（使两值权重对等）以相互牵制出平衡点。再将这个“新的程度”应用到原本的编码器策略里，就是率失真优化。</p>
             <p>“编码器策略”就是模式决策。率失真程度由代价函数「开销=失真+λ⋅码率」（越小越好）得出：</p>
             <span class="text-blue-math">\[J = D + \lambda \cdot R\]</span>
-            <p>由于这个式子是一元一次函数（ <span class="text-blue-math">\(y = mx + b\)</span> ），所以可画图表示为每个方案 J 作为位于 D，R 坐标系，斜度 λ 线上的点；其中失真 D 用平方差 SSE 或总差异 SAD 判断（SSE 多取一步平方，使较大的差异呈指数增长）进而分到更多补偿的码率。拉格朗日值 λ 源于 qp，即 crf，abr 指定的率失真斜度区间。qp 越大斜度越小：</p>
+            <p>由于这个式子是一元一次函数（ <span class="text-blue-math">\(y = mx + b\)</span> ），所以可画图表示为每个方案 J 作为位于 D，R 坐标系，斜度 λ 线上的点；其中失真 D 用平方差 SSE 或总差异 SAD 判断（SSE 多取一步平方，使较大的差异呈指数增长）进而分到更多补偿的码率。拉格朗日值 λ 源于量化值 QP，即 CRF、ABR 指定的率失真斜度区间。量化值越大则斜度越小：</p>
             <ul>
                 <li><span class="text-blue-math">\(\lambda=0\)</span>则无斜度，则代价等于失真——码率变而画质不变，宜压缩。</li>
                 <li><span class="text-blue-math">\(\lambda \rightarrow 0\)</span>（趋 0）则开销趋失真——适当压缩就不会影响画质</li>
@@ -1393,7 +1393,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <div class="align-items-center">
                 <img loading="lazy" src="files/rate-distorsion-optimization/x264-JM-RDO-Lambda.png" alt="image33" class="img-medium">
                 <img loading="lazy" src="files/rate-distorsion-optimization/RDO-Lambda-Slopes.png" alt="image34" class="img-medium">
-                <p class="text-gray-side">图：率失真优化中λ的斜度变化与效果</p>
+                <p class="text-gray-side">图：率失真优化中 λ 的斜度变化与效果</p>
                 <img loading="lazy" src="files/rate-distorsion-optimization/RDO-qStep-Chart.png" alt="image35" class="img-medium">
                 <p class="text-gray-side">图：率 - 失真表格中不断调整并得到“×”的实际效果</p>
             </div>
@@ -1424,7 +1424,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 </ul>
             </div>
 
-            <h3>优化模式决策</h3>
+            <h3>模式决策优化</h3>
             <p>环路滤镜作用于重建帧（编码结果）上，使其成为未来帧的参考。模式决策（帧内模式、运动矢量、块划分等）都在编码当前块时完成，不会在环路滤镜处理之后再复查和修改。但编码器在决策时通常会基于“滤镜处理后的参考帧”来进行运动估计和预测，以保证和解码端一致。模式决策对于帧内编码的块/帧尤其重要，因为帧内预测的模式是根据重建（并滤波）后的左侧、左上和顶部相邻像素做的（信息有限），因此很可能还有更好的编码模式可取。对于帧间编码的块，其前后的参考帧已经进行过滤镜处理（因为编解码顺序不同于播放顺序），因此编码器可以安全地根据处理后的参考帧复查动态向量。</p>
             <ol>
                 <li><b>整合动态搜索与补偿可能性</b>：
@@ -1489,7 +1489,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 </ul>
             </div>
 
-            <h3>优化策略 - 随量化强度增加而增加</h3>
+            <h4>优化策略 - 随量化强度增加而增加</h4>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <div class="align-items-center">
@@ -1588,6 +1588,56 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 </table>
             </div>
 
+            <h3>死区量化器 Deadzone Quantizer</h3>
+            <p>x264、x265、AV1 默认的量化算法，通过在频域 0 值分量系子周围设定某个宽度的“死区”，使得其周围的小幅度系数被归零（分为帧间编码块、帧内编码块）实现压缩和，这种算法不需要进行统计，所以快速，但精确度低，需要有一定经验，根据画面类型，结合压缩策略才能调整出合适的值。尽管它被用于优化熵编码，但其算法本质是一种量化器。</p>
+
+            <h3>软判决状态网络优化量化 SDQ Trellis</h3>
+            <p>x264、x265 中使用的一种率失真优化量化（RDOQ）算法，通过将所有可能的量化结果组网（trellis 状态网络），并使用动态优化（动态规划编程）来找出率失真最小的路径，从而权衡量化失真。</p>
+            <p class="text-gray-side">注：Trellis 在动态规划编程中代表过程的可视化（各状态为节点，且都遵循一种从左推到右的规则而相互连成的网格）。</p>
+
+            <h4>4x4 块的 CABAC 上下文状态</h4>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image50" class="img-medium"><br>
+                <p class="text-gray-side">图：从左向右推演的 Trellis 有向无环图。其中节点代表各种状态，边代表状态转换路径。</p>
+            </div>
+            <ul>
+                <li><code class="code-bold">NumEq1</code>：值等于 1 的系子个数</li>
+                <li><code class="code-bold">NumLg1</code>：值大于 1 的系子个数</li>
+            </ul>
+            <p>系统将这两个参数的组合归纳为 8 种 CABAC 上下文状态：</p>
+            <ul>
+                <li><code>0_0~3_3</code>：<code class="code-bold">NumEq1_NumLg1</code> 皆在 3 个以内的状态</li>
+                <li><code>any_any</code>（<code>x_x</code>）：当 <code class="code-bold">NumLg1</code> 大于等于 4 的状态</li>
+                <li><code>any_0</code>（<code>x_0</code>）：当 <code class="code-bold">NumEq1</code>大于等于 4，且 <code class="code-bold">NumLg1</code> 等于 0 的状态</li>
+            </ul>
+            <p>这些状态组网后构成上图的 4x4 块状态网络。</p>
+
+            <h4>状态网络推演规则</h4>
+            <ul>
+                <li><b>当前频域系子值等于 1</b>：当前分块调用该频率一次来构成画面，<code class="code-bold">NumEq1</code> 加 1</li>
+                <li><b>当前频域系子值大于 1</b>：当前分块调用该频率多次来构成画面，<code class="code-bold">NumLg1</code> 加 1</li>
+                <li>若 <code class="code-bold">NumLg1</code> 大于 0，则切换路径到新的分支，弃用纯 <code class="code-bold">NumEq1</code> 的分支</li>
+            </ul>
+
+            <h4>软判决率失真优化统计</h4>
+            <p>直接统计所有线路的率失真程度，找出最优解路线，性能损耗远大于死区量化器。仍然是从「开销=失真+λ⋅码率」得来，区别在它们的取值上：</p>
+            <span class="text-blue-math">\[J = D + \lambda \cdot R\]</span>
+            <ul>
+                <li><span class="text-blue-math">(J)oule</span>：当前线路的率失真程度，越低越好</li>
+                <li><span class="text-blue-math">(D)istortion</span>：由每个频域分量系子的分量于优化前后的平方差（SSE）得出</li>
+                <li><span class="text-blue-math">(R)ate</span>：当前选用路径中，频域分量系子的值之和</li>
+                <li><span class="text-blue-math">λ</span>：拉格朗日乘数</li>
+            </ul>
+
+            <p>状态网络优化量化被称为“软判决量化（Soft decision quantization）”是因为采用了<i>欧几里得距离测量/欧氏测距/全局测量</i>：这里的率失真优化考虑了整个选区（如上例中的 4x4 块），相比直接按量化值对应的除法表在全局上更精确：相对的硬判决量化则是量化值所对应的 DCT 除法表，死区量化器（Deadzone Quantizer）等局部统计出的判决条件。</p>
+
+            <p class="text-gray-side">注：Trellis 还代表任何利用网格绘制方法统计的算法，在视频编码中的近义词还包括：</p>
+            <ul>
+                <li><b>Psy-trellis</b>：心理学优化，如 x264 的 <code>--psy-rd</code></li>
+                <li><b>Viterbi-trellis</b>：解决最短路径，隐马尔科夫问题的维特比寻路算法，用于推演 B 帧位置</li>
+                <li><b>Trellis-coded quantization（TCQ）</b>，h.263+ 的卷积内核有限状态机量化优化，停留在理论</li>
+            </ul>
+
             <h2 id="h2-14">环路滤镜</h2>
             <!-- x264 教程副本，更改需手动同步 { -->
             <h3>去块滤镜</h3>
@@ -1669,8 +1719,10 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--selective-sao</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~4，默认 0&gt;从条带（横向的一组 CTU）角度调整 sao 参数，1 启用 I 条带 sao，2 增加 P 条带，3 增加 B 条带，4 所有条带。可直接控制 sao，或搭配 limit-sao 的新方法。</p>
 
-            <h2 id="h2-15">熵编码/文本压缩</h2>
-            <p class="text-red-emph">本篇仅用于讲述熵编码的目的和相关算法。x265 中没有相关参数可用，x264 中仅有<code>--no-cabac</code>一项参数可用。</p>
+            <h2 id="h2-15">熵编码/文本压缩 Entropy Coding</h2>
+            <p>通过读取信息，统计数值的“结构”，洞察规律，将宏观到微观的“结构”记做符号，再以符号替代原始数据的匹配之处，从而实现信息的熵减。这种压缩手段集齐了所有优点（快速高能效无损高压缩）<del>而广为流传</del>。之所以“文本压缩”能够概括熵编码的定义，是因为音频、视频等数据最终还是以某种形式的文本储存，例如视频帧分块的频域分量系子（整数）和各种元数据（字符串），音频的采样点高度（整数）等。于是，这些数据里的“规律结构”会被称为上下文（Context、语境），压缩流程包括了读取数据、统计上下文和应用压缩。这些步骤环环相扣的形成了完整的编码流程，因此是“编码”。</p>
+            <p>虽然熵编码统计“频域分量系子”的路径在不同视频编码中可能会有所差别，但在标准定下后就只会固定使用一条或几条预设路线，且大致上都是某种从右下到左上的迂回（zig-zag）次序了。选择这种方向是因为量化会优先消除高频信号分量系子，使得高频信号分量系子聚集的右下角大减或归零，更容易被熵编码总结和冗余。</p>
+            <p class="text-gray-side">注：量化压缩削弱分块的高频信息分量系子后，除去当前分块的内容复杂凹凸外，分块会变成少量的低频分量系子和归零的中到高频分量系子。这本身就是明显的上下文规律。</p>
 
             <div class="align-items-center">
                 <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="image42" class="">
@@ -4102,7 +4154,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <p>前者在不考虑大小的情况下测量数字信号的差距，如<span class="text-blue-math">100</span>与<span class="text-blue-math">010</span>的汉明距离为 2，数值误差为 90，很明显信号偏差的程度并不如数值误差所说的那么离谱。汉明距离以累计各位数的异或门 ⊻ 得到，“累计”代表误差和 SAD。</p>
-                <p>欧几里得距离测量更高维度下，至少两点分别取值的平方差 SSE，如 GPS 的定位误差</p>
+                <p>欧几里得距离测量更高维度下，至少两点分别取值的平方差（SSE），如 GPS 的定位误差</p>
                 <div class="align-items-center">
                     <img loading="lazy" src="files/entropy-coding/Euclidean-distance.svg" alt="image48" class="img-medium">
                     <p class="text-gray-side">图：欧几里得距离利用平方差的算法，见<a href="https://en.wikipedia.org/wiki/Euclidean_distance">维基百科</a></p>
@@ -4124,52 +4176,24 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <img loading="lazy" src="files/entropy-coding/Run-Length-Coding.png" alt="image49" class="img-medium">
             </div>
 
-            <h3>Trellis</h3>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：
-                <span class="text-red-emph">补充因难度过高而跳过的 x264 教程 <code>--trellis</code> 参数相关科普，可略。</span>
-            </button>
-            <div class="coll-content">
-                <p>原指北欧建筑的白墙木条棋盘格子装修。在动态规划编程 Dynamic programming 中代表过程的可视化——各状态为节点，且都遵循一种从左推演到右的规则而相互连成的网格，视频编码中包括：</p>
-                <ul>
-                    <li>Psy-trellis 心理学优化，于 x264 的 --psy-rd</li>
-                    <li>Viterbi-trellis，解决最短路径，隐马尔科夫问题的导航寻路算法，用于推演 B 帧位置</li>
-                    <li>Trellis-coded quantization（TCQ，h.263+，trellis 卷积内核的有限状态机）中涉及的量化优化，停留在理论</li>
-                    <li>软判决率失真游程走线优化，于 x264 <code>--trellis</code> 参数</li>
-                </ul>
-            </div>
+            <h2 id="h2-17">补充优化信息 Supplemental enhance info（SEI）</h2>
+            <p>记录每帧的播放补充信息。涵盖正确解码新 GOP 用的缓冲区设定、解码时间戳校正设定，让显示主控切边、CC 字幕、HDR 信息等等。由于解码器对 SEI 读取和适应的能力参差不齐，因此请勿高估它的可靠性，而是应该让视频数据本身变得通用。</p>
 
-            <h3>软判决率失真游程走线优化 - SDQ trellis</h3>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：
-                <span class="text-red-emph">补充因难度过高而跳过的 x264 教程 <code>--trellis</code> 参数相关科普，可略。</span>
-            </button>
-            <div class="coll-content">
-                <p>算数编码的运行顺序是沿着游程/游标编码（从左上到右下）的倒序——先途经编码高频信号中，出字概率最大的一串连续 0、后途经编码概率越来越低的非 0 DCT 系子。可见算数编码累计单个 CTU/宏块中上下文的走线结构是一种只能增加，或维持不变的状态。将其组合起来，即可得到各个走线所组成的网格——trellis。这张网格代表了最小到最大的所有可能上下文 CTX 长度，以及所有（只能增不能减）的路线变更（下图）。由于文本编码是动态程序（一次编一字），所以路线一次只能改一条，且会保持出字概率而得斜线。</p>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image50" class="img-medium"><br>
-                </div>
-                <p>4x4 块的 16 个倒序 zig-zag 系子中，预测与总结系子强度（等于 1_大于 1，或<span class="text-blue-math">NumEq1_NumLg1</span>）的数量归纳为 8 种 CABAC 上下文长度的节点（0_0~any_any），如 2_0 对应<span class="text-blue-math">NumLg1×2</span>，<span class="text-blue-math">NumEq1×1</span>，即 2_0 线。</p>
-                <p>若<span class="text-blue-math">NumLg1 &gt;0</span>，则从当前系子节点切到下个系子的 ×_1 线并不再回到<span class="text-blue-math">NumEq1</span></p>
-                <p>若<span class="text-blue-math">NumLg1≥4</span>则构成 any_any 或 x_x，若<span class="text-blue-math">(NumEq1≥4 && NumLg1==0)</span>时则构成 any_0 或 x_0，为两种上下文长 4(最大) 的 CABAC 路线，一种只编码 0 和 1，另一种编码 0，1，&lt;其它&gt;。各线路上的率即强度 level，失真就是其系子节点平方差 SSE，而率失真最优的线路就是 SSE（失真）+ λ⋅R（码率）最小的线路</p>
-                <p>叫软判决量化是因为此处 SSE 相当于测量了欧几里得距离，相对的硬判决量化为 qp 值所对应的 DCT 除法表，死区量化器 deadzone quantizer 等局部统计出的判决条件。</p>
-            </div>
-            <p>应用于量化步骤之后，所以叫“再量化”。</p>
+            <code class="code-bold">--film-grain</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名&gt;将纹理细节模型 Film grain model 录入 SEI 中，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能。HEVC 解码器对此功能的兼容性未知，但 AV1 标准中集成了编码端的分离和解码端的重建，测试发现视频源的噪点越重，压缩越强，只有使用算法对比才能看出来噪点结构性变化导致的巨大画面差异（失真），即利用“噪点的画质不重要”这一点提高压缩。</p>
+            <p>支持 <a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a> 提取的噪声。AV1 编码器提取的噪声模型可能属于同类，但未经测试，兼容性不确定。</p>
 
-            <h2 id="h2-17">SEI 补充与优化消息</h2>
-            <p>Supplemental enhance info 记录每帧的补充信息。主要有正确解码新 GOP 用的缓冲 SEI，解码校正时间戳的 pic timing SEI，让显示主控切边的 SEI，cc 字幕 SEI，HDR-SEI 等等。缓冲 SEI 记录对应 SPS 的号；待解码图像缓冲 Coded picture buffer CPB 的延迟安全区等信息；时戳 SEI 记录哪些帧上/下场优先的变化；连帧/三连帧的位置等信息。</p>
-
-            <code class="code-bold">--hrd</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt;将假设对照解码参数 Hypothetical Reference Decoder Parameter 估计不丢包无延迟的瞬间码率，写在每段 SPS 及 SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
             <code class="code-bold">--hash</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0/关，推荐关&gt;SEI 里加效验码，播放时可用以对图像重建纠错来减少失真，但校验本身会消耗算力（但是，一般来说校验可以通过直接对输出的视频文件添加，而且解码器一般为了性能等原因会忽略掉“多余”的 SEI）：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0/关，推荐关&gt;于 SEI 中添加每帧的效验码，在人工修复视频时帮助识别哪些帧需要修复。由于校验本身会消耗算力，解码器就算知道也做不了什么，并且会一定程度上增加文件体积，因此不推荐：</p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">1</span>：checksum 校验，性能占用最小</li>
                 <li><span class="text-blue-emph">2</span>：CRC 校验，性能占用略高，准确率较高</li>
                 <li><span class="text-blue-emph">3</span>：CRC 校验，性能占用略高，准确率高</li>
             </ul>
             <code class="code-bold">--single-sei</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;只写一个装全部 SEI 信息的大 NALU 而非每 GOP 都写，提高很小一点压缩率，但可能会降低兼容性。</p>
-            <code class="code-bold">--film-grain</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;文件名&gt;将如<a href="https://bitbucket.org/multicoreware/libfgm">libfgm</a>提取的纹理细节模型 Film grain model 写进 SEI，将编码压缩掉的细节另存档，兼容解码器播放时恢复的功能。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，推荐关&gt;只写一个装全部 SEI 信息的大 NALU 而非每 GOP 都写，提高一点点压缩率，降低兼容性。</p>
+            <code class="code-bold">--hrd</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt;将假设对照解码参数 Hypothetical Reference Decoder Parameter 估计不丢包无延迟的瞬间码率，写在每段 SPS、SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
             <code class="code-bold">--idr-recovery-sei</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;SEI 写进 idr 帧，串流时防止整个 GOP 都找不到参考帧的机制。</p>
             <code class="code-bold">--frame-dup</code>
@@ -4597,8 +4621,18 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </div>
 
             <h3>VUI 元数据</h3>
-            <code class="code-bold">--input-csp</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;i400/i422/i444/nv12/nv16，默认 i420，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 时应设置</span>&gt;rgb，yuvj 等不支持需要滤镜转换。</p>
+
+            <h4>缺失元数据补充</h4>
+            <p>输入不带分辨率、帧率、位深等元数据的流、使用 RAW 管道而非 YUV for MPEG（y4m）管道时需要进行补充设置：</p>
+            <code class="code-bold">--input-csp</code>--input
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;i400/i422/i444/nv12/nv16，默认 i420&gt;视频源的色彩空间，即 YUV 4:0:0、4:2:2、4:4:4、nv12、nv16。</p>
+            <p class="text-gray-side">注；rgb，yuvj 等不支持需要滤镜转换。</p>
+            <code class="code-bold">--input-res</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串（宽x高）&gt;视频源的分辨率，如 1920x1080。</p>
+            <code class="code-bold">--fps</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/浮点/分数&gt;视频源的帧率，如 30，24000/1001 等。</p>
+
+            <h4>非常规播放条件指定</h4>
             <code class="code-bold">--range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;full/limited，默认留空&gt;指定视频源的色深范围，full：完整，limited：有限。剪辑时应额外检查剪辑软件的输出设定一致性。</p>
             <code class="code-bold">--chromaloc</code>
@@ -4615,7 +4649,6 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <img loading="lazy" src="files/video-usability-information/Chroma-Location-Type.png" alt="image51" class="img-medium" >
                 <p class="text-gray-side">图：色度采样位置</p>
             </div>
-
             <code class="code-bold">--colorprim</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;播放用三原色 (以及白点) 指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图 1 为 bt.2020。</p>
             <code class="code-bold">--colormatrix</code>
@@ -5061,11 +5094,11 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
             <p>以上表格见 <a href="https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding_tiers_and_levels">维基百科</a>。</p>
 
             <code class="code-bold">--seek</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第 x 帧开始压缩。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第几帧开始压缩。</p>
             <code class="code-bold">--frames</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认全部&gt;一共压缩 x 帧。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认全部&gt;手动限制一共压缩多少帧，或者补充空白的元数据，从而显示进度和预计完成时间（ETA）。</p>
             <code class="code-bold">--output</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第 x 帧开始压缩。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0&gt;从第几帧开始压缩。</p>
             <code class="code-bold">--dither</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;使用抖动功能以高质量的降低色深 (比如 10bit 片源降 8bit)，避免出现斑点和方块。</p>
             <code class="code-bold">--allow-non-conformance</code>
@@ -5079,10 +5112,6 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
             </ul>
             <code class="code-bold">--field</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;输入分行扫描视频时用，自动获取分场视频的帧率 + 优先场，x264 中中为 <code>--interlaced</code> 参数</p>
-            <code class="code-bold">--input-res</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;宽 x 高，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置</span>&gt;指定输入源的分辨率，如 1920x1080。</p>
-            <code class="code-bold">--fps</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/浮点/分数，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置</span>&gt;指定输入源的帧率，如 30，24000/1001 等。</p>
             <code class="code-bold">--temporal-layers</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;使 x265 更兼容 svc 标准，将非参考 b 帧（相当于空信息）分离到另一层视频流中，解码器可以选择跳过而降低性能损耗。</p>
             <p class="text-gray-side pl-5 m-0">注：可能会造成一般编解码方案的兼容性问题</p>

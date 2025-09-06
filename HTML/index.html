@@ -719,7 +719,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="text-gray-side pl-5 m-0">注：hist-threshold 参数于 x265 v3.5+69 被删。</p>
             <!-- x264 教程副本，需要手动同步更改 { -->
             <code class="code-bold">--rc-lookahead</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;帧数量，范围 1~250，推荐 keyint÷2&gt;指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;帧数量，范围 1~250，<span class="text-red-emph">需大于 <code>--bframes</code></span>，<span class="text-blue-emph">推荐 keyint÷2</span>&gt;指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
             <p class="text-gray-side pl-5 m-0 overflow-auto">注：mbtree/cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
             <!-- } -->
             <code class="code-bold">--no-cutree</code>
@@ -1380,7 +1380,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </div>
             <!-- x264 教程副本，更改需手动同步 { -->
             <h2 id="h2-13">率失真优化 Rate distortion optimization（RDO）</h2>
-            <p>视频压缩策略受到算力、分析算法、客户等诸多限制，尽管工程师和开发者付出了很多努力，最后也往往回归最直接的“码率越小越好”——给所有压缩步骤选择码率最小的编码模式，或者强行上马一个 CQP 就完事。这样做的结果是码率分配失衡，即“码率下去了、但画质全损”，而这里的“码率下去了”单纯是因为对比了无损或未压缩视频源的原因；实际上，如此“粗压”与“精压”相比还会露馅——后者在画质更高的情况下，码率往往更低。原因是 <i>过度的有损压缩使得本可用于无损压缩（冗余）的机会被因小失大地浪费</i>。例如，过度的量化会破坏 P-B 帧原本可以参考 I 帧的部分，由于差异太大，编码器只得放弃参考，把这个区域重编码为 I 块，或直接改成 I 帧。</p>
+            <p>视频压缩策略受到算力、分析算法、客户等诸多限制，尽管工程师和开发者付出了很多努力，最后也往往回归最直接的“码率越小越好”——给所有压缩步骤选择码率最小的编码模式，或者强行上马一个 CQP 就完事。这样做的结果是码率分配失衡，即“码率在握之画质全损”，而“码率在握”也只是因为作对比的是无损或未压缩视频源；实际上，如此“粗压”与“精压”相比还会露馅——后者在画质更高的情况下，码率往往更低。原因是 <i>过度的有损压缩使得本可用于无损压缩（冗余）的机会被因小失大地浪费</i>。例如，过度的量化会破坏 P-B 帧原本可以参考 I 帧的部分，由于差异太大，编码器只得放弃参考，把这个区域重编码为 I 块，或直接改成 I 帧。</p>
             <p>现代视频编码器已经具备了减免这种问题所需的信息——编码后失真、码率代价，以及编码后码率。将失真，码率分别看做两种“越大越差”的程度，再根据码率代价——“此处码率的宝贵程度”缩放出一个一元一次函数空间（<span class="text-blue-math">\(y = mx + b\)</span>），问题就迎刃而解——只要找到各种 <span class="text-blue-math">\(mx + b\)</span> 里最小的  <span class="text-blue-math">\(y\)</span> 即可，而“找到最小”的过程需要统计每个编码步骤下的多个至全部编码模式，这个过程就是率失真优化（RD）。率失真优化的性能占用虽然不小，但它带来的好处可以和动态搜索相媲美。</p>
             <p>“编码器策略”就是模式决策。率失真程度由代价函数「开销 = 失真+λ⋅码率」（越小越好）得出：</p>
             <span class="text-blue-math text-larger">\[J = D + \lambda \cdot R\]</span>
@@ -5325,7 +5325,7 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
                         <tr class="border-lr">
                             <th class="text-blue-emph px-1">animation</th>
                             <td class="px-1">优化动漫场景画面</td>
-                            <td class="px-1 font-monospace"><code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframe +=2</code></td>
+                            <td class="px-1 font-monospace"><code>--psy-rd 0.4 --aq-strength 0.4 --deblock 1:1 --no-cutree --bframes +=2</code></td>
                         </tr>
                         <tr class="border-lr">
                             <th class="text-blue-emph px-1 t-light-gray">grain</th>

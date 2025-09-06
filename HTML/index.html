@@ -411,17 +411,17 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <code class="code-bold">--max-tu-size</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16/8/4，默认 32&gt;大 tu 使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></p>
 
-            <h2 id="h2-5">动态预测 Motion Prediction</h2>
+            <h2 id="h2-5">动态预测 Motion Prediction（MP）</h2>
             <p>在参考帧（P-B 帧）的预测单元 Prediction Unit（PU）上，动态搜索（ME）之前，起到<i>提供动态搜索起点</i>功能的预测算法。x264 使用了 <code>--direct</code> 指定。x265 中则使用了更高级的 AMVP + Merge 算法。</p>
             <p>视频里往往会有占据画面不小的物件朝着一处平移，在视频帧中表现为“某个区域的分块拥有高度相似的运动向量”。这些重复性的动态向量分布规律肉眼可见，而动态搜索只能通过不断地计算差异（MSE，率失真代价）而一个一个方向和大小地把向量给试出来。这显然不如通过预测而快速地找出一组方向与大小（然后让整数像素动态搜索从这里开始微调到整数像素精度）直截了当。</p>
             <p>由于动态向量预测得到的向量本身就已经足够靠谱，因此编码器会以“预测动态向量（PMV）+ 动态向量差（MVD）”的形式记录每个帧间块的动态信息，再冗余掉相同的预测动态向量，从而进一步提高压缩。管一个动态向量的信息不多，但放眼到整个视频的所有帧间参考时，质变也就产生了。</p>
-            <div class="row">
-                <h4>并合模式预测 Merge Mode</h4>
-                <p id="LR-UD-011" class="col-8">为当前块提供一个运动信息候选列表。列表的 5 个参选块（Candidate），2 个备选块来自空域和时域相邻编码块（Neighbour CB）的运动信息（不是预测块 PB 或帧内编码的 CB，否则没有动态向量）。当前块合并多数相邻块的动态信息（动态向量和参考帧索引），<i>直接略过动态搜索</i>，降低完算性（Deterministic），在匀速移动和静止的画面中就能找到可靠的动态向量。</p>
-                <p>由于并合模式跳过了动态搜索，因此编码块中的“动态信息”即“对某个相邻块的引用注释”。</p>
-                <img loading="lazy" src="files/amvp-merge/Merge-Mode.png" alt="image21" id="LR-UD-012" class="img-medium img-right col-4 mb-auto" >
-            </div>
 
+            <h4>并合模式预测 Merge Mode</h4>
+            <p id="LR-UD-011" class="col-8">为当前块提供一个运动信息候选列表。列表的 5 个参选块（Candidate），2 个备选块来自空域和时域相邻编码块（Neighbour CB）的运动信息（不是预测块 PB 或帧内编码的 CB，否则没有动态向量）。当前块合并多数相邻块的动态信息（动态向量和参考帧索引），<i>直接略过动态搜索</i>，降低完算性（Deterministic），在匀速移动和静止的画面中就能找到可靠的动态向量。</p>
+            <p>由于并合模式跳过了动态搜索，因此编码块中的“动态信息”即“对某个相邻块的引用注释”。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/amvp-merge/Merge-Mode.png" alt="image21" class="img-medium">
+            </div>
             <h4>高级动态向量预测 Advanced Motion Vector Prediction（AMVP）</h4>
             <p>在并合模式预测之上，进一步地对比相邻编码块，包括帧间相邻编码块的预测动态向量（PMV），并进行“动态预搜索”（检查参选列表里的动态向量是否匹配，但不是正式的整数像素动态搜索步骤），从而给出准确的预测动态向量（PMV），以及整数像素动态搜索（ME）起点。</p>
             <div class="align-items-center">
@@ -753,8 +753,8 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </ul>
 
             <code class="code-bold">--opt-qp-pps --opt-ref-list-length-pps</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，已知兼容性问题&gt;据上个 GOP 改动当前 PPS 中默认的 qp/ref 参数值，从而整体上优化视频数据结构。尽管符合 HEVC 标准，但部分解码端，包括视频网站都不这么想</p>
-            <p class="text-gray-side pl-5 m-0">注：兼容性问题为<a href="https://forum.doom9.org/showthread.php?p=1978837">应该用 hev1 而非 hvc1 封装进 ISO-BMFF</a>。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">已知兼容性问题</span>&gt;据上个 GOP 改动当前 PPS 中默认的 qp/ref 参数值，从而整体上优化视频数据结构。纵然符合 HEVC 标准，但解码播放设备，包括视频网站都不兼容。</p>
+            <p class="text-gray-side pl-5 m-0">兼容性问题：<a href="https://forum.doom9.org/showthread.php?p=1978837">应该用 hev1 而非 hvc1 封装进 ISO-BMFF</a>。</p>
             <code class="code-bold">--repeat-headers</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;在流未封装的情况下提供 SPS，PPS 等信息，正常播放 HEVC 源码</p>
             <p class="text-gray-side pl-5 m-0">注：封装文件的科普<a href="https://www.nazorip.site/archives/63">见 x264 教程</a>。</p>
@@ -1088,26 +1088,27 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </div>
             <!-- } -->
             <h3>下层——VBR，CBR 模式</h3>
-            <p>带宽是有限资源。一旦网络、硬盘、内存、PCIE 等等带宽慢于当前视频码率，播放就会卡顿。因此在播放流媒体前，播放器会设置一段内存缓冲区，利用了传输速度有时会快于当前视频码率的随机条件，预加载一些数据以求播放不卡顿。此时问题变成了“缸里一端加水、另一端放水，注水量变化但缸里一直有水，求缸的大小”。如此，只要平均传输带宽大于 GOP 平均码率则播放流畅。有的大型 3D 游戏中没有加载缓冲区，导致无论电脑内存多大，只要玩家移动到触发地图加载的区域后，游戏才会开始读盘而突然卡顿。</p>
-            <p>基于缓冲区的量化控制 VBV 全称 Video Buffer Verifier：</p>
+            <p>带宽是有限资源。一旦网络、硬盘、内存、PCIE 等等带宽慢于当前视频码率，播放就会卡顿。因此在播放流媒体前，播放器会设置一段内存缓冲区，利用了传输速度有时会快于当前视频码率的随机条件，预加载一些数据以求播放不卡顿。此时问题变成了“缸里一端加水（进入缓存）、另一端放水（放出缓存），注水量变化但确保缸里一直有水，求缸的大小”。如此，只要平均传输带宽大于 GOP 平均码率则播放流畅。有的大型 3D 游戏中没有加载缓冲区，导致无论电脑内存多大，只要玩家移动到触发地图加载的区域后，游戏才会开始读盘而突然卡顿。</p>
+
+            <h4>基于缓冲区的量化控制 Video Buffer Verifier（VBV）</h4>
             <ol>
-                <li>保证 <code>rc-lookahead</code> 范围内，用户通过 <code>vbv-bufsize vbv-maxrate</code> 指定网络/设备元器件带宽所能及的缓冲速度是否大于等于码率流量</li>
+                <li>保证 <code>rc-lookahead</code> 范围内，用户通过 <code>--vbv-bufsize --vbv-maxrate</code> 指定网络/设备元器件带宽所能及的缓冲速度是否大于等于码率流量</li>
                 <li>码率超过缓冲区域则视频必然会卡顿，所以加大视频中「码率大于带宽处」的压缩强度。因此 VBV 对画质的破坏较大</li>
                 <li>与 CRF 上层模式一并使用时叫可变码率 Variable BitRate（VBR），或 Capped-CRF 模式</li>
                 <li>与 ABR 上层模式一并使用时叫固定码率 Constant BitRate（CBR），或 Capped-ABR 模式</li>
             </ol>
             <!-- x264 教程副本，更改需手动同步 { -->
             <code class="code-bold">--vbv-bufsize</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关=0，<span class="text-red-emph">小于 maxrate</span>&gt;编码器解出原画后，最多可占的缓存每秒。bufsize÷maxrate=播放时解码出每 gop 原画帧数的缓冲用时（秒）。<span class="text-blue-emph">值的大小相对于编完 GOP 平均大小。编码器用到是因为模式决策要解码出每个压缩步骤中的内容与原画作对比用</span>。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关（0），<span class="text-red-emph">需小于 <code>--vbv-maxrate</code></span>&gt;在编码器解码出原画后，每秒最多可占的缓存大小。此外，在对解码缓冲速度有要求的应用里，需要同时确保解码 GOP 缓冲时长的合规，时长即 <span class="text-blue-math">bufsize ÷ maxrate</span>（秒）。</p>
             <code class="code-bold">--vbv-maxrate</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关 0&gt;峰值红线。用「出缓帧码率——入缓帧码率必须小于等于 maxrate"」限制编码器在 GOP 码率超 bufsize，即缓存跑满时压缩超载帧（提高 qp 值 + 强降噪至码率合规为止）。当入缓帧较小时，出缓帧就算超 maxrate 也会因缓存有空而不被压缩。所以有四种状态，需经验判断：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关（0）&gt;峰值红线，在限制缓存占用之上确保码率峰值受控，不会大于播放设备预留的内存大小。方法是提高压缩（提高量化强度 + 强降噪）。据情景不同，maxrate 可以有 4 种状态，且这 4 种状态可以出现在同一视频中。<code>--vbv-bufsize --vbv-maxrate</code> 实际控制的还是这些状态的出现概率，需经验判断：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>大：GOP 大小=bufsize=2×maxrate，视频码率超出 maxrate 后等缓存满再压缩，避开多数涨落，适合限平均率的串流</li>
                 <li>小：GOP 大小=bufsize=1×maxrate，视频码率超出 maxrate 后直接压缩，避开部分涨落，适合限峰值的串流</li>
-                <li>超：GOP 大小&lt;bufsize=1~2×maxrate，视频码率超出 maxrate 后直接压缩，但因视频小/crf 大所以作用不大</li>
-                <li>欠：GOP 大小&gt;bufsize=1~2×maxrate，视频码率超出 maxrate 后直接压缩，但因视频大/crf 小所以全都糊掉</li>
+                <li>超：GOP 大小&lt;bufsize=1~2×maxrate，视频码率超出 maxrate 后直接压缩，但因视频小/CRF 大所以作用不大</li>
+                <li>欠：GOP 大小&gt;bufsize=1~2×maxrate，视频码率超出 maxrate 后直接压缩，但因视频大/CRF 小所以全都糊掉</li>
             </ul>
-            <p class="font-monospace pl-5 m-0 overflow-auto">由于 gop 多样，4 种状态可以出现在同一视频中。buf/max 实际控制了这些状态的出现概率</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">由于 GOP 的内容多样，因此</p>
             <!-- } -->
             <code class="code-bold">--crf-max</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;防止 vbv 把 crf 拉太高，但会导致码率失控。</p>

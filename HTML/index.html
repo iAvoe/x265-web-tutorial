@@ -470,7 +470,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p>在连续帧间画面中，进行运动估计的整数像素精度动态信息搜索步骤，涵盖各式搜索算法与各样的信号处理用途。具体步骤是以被参考帧内的已编码块（Coded Block）为起点，尝试通过位移来匹配相邻帧的画面，从而找到一个失真最小的向量 Direction of minimal distortion（DMD），这个向量就是整数动态向量。</p>
             <p>为了找到可用的最小失真朝向，并且避免进行算力占用巨大的全搜索（Exhausive Search），动态搜索演化出了多种匹配的图案和算法。其中，较为聪明的动态搜索算法是多级算法，它们首会先尝试在较大范围进行粗略搜索，再以大致最佳区域为中心进行精细搜索，从而（包括在噪点干扰下）多快好省地找到整数动态向量。在整数动态搜索之后，还会由子像素动态搜索（Sub-pel Motion Estimation）来进一步做对齐，最终，这个动态向量被用于冗余预测块，以及对高动态画面提高有损压缩强度，从而压缩体积并优化码率的分配。</p>
             <p>如果动态搜索的过程有缺失或不够理想，参考帧与分块的建立会变得低效，码率分配也会变得不够合理，导致画质的降低和码率的增加。</p>
-            <p class="text-gray-side">注：动态搜索的用途包括计算机视觉的目标跟踪（自动驾驶、监控与制导系统）、基于动态向量的分辨率超采样（如 DLSS）、视频驱动的 3D 建模与插帧、剪辑后期的视频去抖（如 Adobe Premiere 的变形稳定器效果）、智能电视内置的动态画质增强（虽然大多情况下效果一般）等等。</p>
+            <p class="text-gray-side">注：动态搜索的用途包括计算机视觉的目标跟踪（自动驾驶、监控与制导系统）、基于动态向量的分辨率超采样（如 DLSS）、视频驱动的 3D 建模与插帧、剪辑后期的视频去抖（如 Adobe Premiere 的变形稳定器效果）、智能电视内置的动态补偿画质增强（虽然大多情况下效果一般）等等。</p>
             <!-- } -->
             <h3>动态搜索算法示例</h3>
 
@@ -520,108 +520,106 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <code class="code-bold">--analyze-src-pics</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，推荐关&gt;动态搜索不再等待前瞻进程、分帧/帧类型决策和粗分块（包括 WPP）后的结果，而是直接搜索源帧像素。这样可以将动态搜索在独立线程上运行，提高并行效率；由于编码器最终编码的就是处理后的帧，而不是原帧，因此使用该选项反而会导致动态搜索准确度下降，降低画质。见 <a href="https://forum.doom9.org/showthread.php?s=3034a4a73f990075a4cd088d9902e9f3&p=1797539#post1797539">doom9 说明帖</a>。</p>
 
-            <h3>绝对变换差和 SATD</h3>
-            <p>Sum of absolute transformed difference 为两个变换块间做差，取和，取绝对值的步骤：</p>
+            <h3>绝对变换差和 Sum of Absolute Transformed Difference（SATD）</h3>
+            <p>为两个变换块间做差，取和，取绝对值的步骤。相比于直接与输入源做差，这样排除了变换操作本身所带来的一些失真：</p>
             <ol>
                 <li>首先计算两个块 B 的插值，记做残差块 D：<span class="text-blue-math">\(\text{D}(x,y) = B(x,y) - B\prime(x,y)\)</span></li>
                 <li>然后通过如 DCT 变换，得到变换残差块：<span class="text-blue-math">\(T(D)\)</span></li>
                 <li>最后，变换残差块的每个像素取绝对值和：<span class="text-blue-math">\(\text{SATD}(B,B\prime) = \sum_{x=0}^{n-1}{\sum_{y=0}^{n-1}}| T(D(x,y)) |\)</span></li>
             </ol>
-            <p class="text-gray-side">注：为了简化所以写作 <span class="text-blue-math">\(T(D(x,y))\)</span>，实际这样相当于每加一个像素值就要变换一遍</p>
+            <p class="text-gray-side">注：为了简化所以写作 <span class="text-blue-math">\(T(D(x,y))\)</span>，实际这样相当于每加一个像素值就要变换一遍。</p>
+            <p class="text-gray-side">注：即使使用 SATD 就不再真的是“与原画做差”，但为了表述方便易懂，本教程仍然会这么说。</p>
 
-            <h2 id="h2-7">子像素运动补偿</h2>
-            <p>动态预测的精度比起原画还差一点（最高 1px）导致了预测帧相比原画会欠缺大量的纹理细节；在此之上还常遭到动态噪点的干扰劫持。动态补偿 Motion Compensation MC 通过对比原画与预测块得到残差，并根据残差的分布动态向量的精度到¼子像素，使“精加工预测块”的画面残差尽可能地缩小，得到足够准确的预测帧。</p>
-            <p>至于对抗动态噪点，大体上是允许真正移动的物件（所涵盖的分块）有运动向量，拦截噪点在静止画面上的孤立运动向量，即「允动之移，防静所变」解决。</p>
-            <ol class="overflow-auto">
-                <li>此处省略以上帧画面与帧间向量表中的动态向量的和，得到一系列粗加工预测块的步骤</li>
-                <li>使用有限冲激响应插值滤镜 FIR filter 放大画面以便后面对齐</li>
-                <li>将“粗加工预测块”与源视频所对应的画面使用 SATD 做差，得到当前的误差程度</li>
-                <li>当前向量的 x，y 分量分别加减 ½，¼ 像素（插值放大的画面中是整数像素），即分别让这些块对比原画跑一遍 SATD：
-                    <ul class="text-smaller">
-                        <li><span class="text-blue-math">\(B\prime(x+½,y),B\prime(x,y+½),B\prime(x+½,y+½),B\prime(x+¼,y),B\prime(x,y+¼),B\prime(x+¼,y+¼),B\prime(x+¼,y+½),B\prime(x+½,y+¼)\)</span></li>
+            <h2 id="h2-7">运动补偿 Motion Compensation（MC）</h2>
+            <p>整数像素动态搜索虽看起来很准，但精度终归有限，只能算是“粗加工预测”；直接使用整数动态向量会导致纹理细节和物件边缘信息的丢失。为此，编码器需要对向量“精加工”——对齐到插值出的 half-pixel / hpel / ½ 像素，及 quarter-pixel / qpel / ¼ 像素，使预测画面（指 PU、PB）的残差变小，与输入源画面更一致。</p>
+
+            <h3>整数像素运动补偿</h3>
+            <p>视频编码中同动态搜索（ME）。</p>
+            
+            <h3>子像素运动补偿 Sub-pel Motion Compensation</h3>
+            <ol>
+                <li>线性插值参考帧（有限冲击响应滤镜 FIR），分别生成上采样/放大 2x 和 4x 的副本</li>
+                <li>以整数向量落点为起点搜索放大副本的位置，从而找出率失真代价最小的子像素动态向量位置：
+                    <ul>
+                        <li><b>(J)oule</b>：率失真代价（RD Cost），失真最小的候选最精确</li>
+                        <li><b>(D)istortion</b>：使用当前子像素动态向量编码预测块与输入源画面的差异（SATD）</li>
+                        <li><b>(R)ate</b>：计算编码这些新向量所产生的码率</li>
+                        <li><b>λ</b>：拉格朗日代价</li>
                     </ul>
                 </li>
-                <li>选出 SATD 误差值最小的块——中的 x，y 分量，纠正帧间向量表的动态矢量，完成补偿</li>
             </ol>
-            <p class="text-gray-side">注：在参数值强度给高后，上述的对比步骤改成用 me hex 之类的动态搜索算法来找对齐</p>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法表格：</button>
-            <div class="coll-content">
-                <div class="row">
-                    <div id="LR-UD-005" class="col-10 align-items-center">
-                        <table class="table-center">
-                            <tr>
-                                <th class="px-1">编码器</th>
-                                <th class="px-1">平面——块类型</th>
-                                <th class="px-1">范围精度</th>
-                                <th class="px-1">插值方法</th>
-                            </tr>
-                            <tr class="t-light-gray">
-                                <td class="px-1">x264 官方</td>
-                                <td class="px-1">亮度 Y</td>
-                                <td class="px-1">½ 像素（hpel）</td>
-                                <td class="px-1">6 tap FIR</td>
-                            </tr>
-                            <tr>
-                                <td class="px-1">x264 官方</td>
-                                <td class="px-1">亮度 Y</td>
-                                <td class="px-1">¼ 像素（qpel）</td>
-                                <td class="px-1">双线性插值（Bi-lerp）</td>
-                            </tr>
-                            <tr class="t-light-gray">
-                                <td class="px-1">x264 官方</td>
-                                <td class="px-1">色度 C</td>
-                                <td class="px-1">hpel+qpel</td>
-                                <td class="px-1">上下左右加权平均</td>
-                            </tr>
-                            <tr>
-                                <td class="px-1">x265 官方</td>
-                                <td class="px-1">亮度 Y</td>
-                                <td class="px-1">hpel+qpel</td>
-                                <td class="px-1">上下左右加权平均</td>
-                            </tr>
-                            <tr class="t-light-gray">
-                                <td class="px-1">x265 官方</td>
-                                <td class="px-1">亮度 Y</td>
-                                <td class="px-1">¼像素（qpel）</td>
-                                <td class="px-1">两种 7tap FIR</td>
-                            </tr>
-                            <tr>
-                                <td class="px-1">x265 官方</td>
-                                <td class="px-1">色度 C</td>
-                                <td class="px-1">hpel+qpel</td>
-                                <td class="px-1">4tap FIR</td>
-                            </tr>
-                        </table>
-                        <p class="text-gray-side mt-0">表：x264/5 的 h~qpel 插值计算（实现了浮点→整数变量的程序优化）</p>
-                    </div>
-                    <img loading="lazy" src="files/motion-compensation/hpel-qpel-interpolation.png" alt="hpel qpel interpolation" id="LR-UD-006" class="img-small img-right col-2 mb-auto" >
-                </div>
-            </div>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法细节：</button>
-            <div class="coll-content">
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/motion-compensation/7tap-8tap-interpolation-1.png" alt="7tap 8tap interpolation" class="img-medium">
-                    <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
-                </div>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/motion-compensation/7tap-8tap-interpolation-2.png" alt="7tap 8tap interpolation 2" class="img-medium">
-                    <p class="text-gray-side mt-0">图：Y 平面 FIR 插值和 subme 并行，调用 8²或 16²块的横/纵向参考源。若 subme 所得动态的：</p>
-                </div>
-                <ul>
-                    <li>向量横分量等于 0: [d][n] 分别用 7tapα或β采样整像素 [A]</li>
-                    <li>向量横分量非 0: [f][q] 分别用 7tapα或β采样子像素 [b]</li>
-                    <li>向量纵分量等于 0: [a][c] 分别用 7tapα或β采样整像素 [A]</li>
-                    <li>向量纵分量非 0: [i][k] 用 8tap 分别采样子像素 [a][c]</li>
-                </ul>
+            <p class="text-gray-side">注：率失真优化计算见下方版块的说明。</p>
+
+            <div class="align-items-center">
+                <table class="table-center">
+                    <tr>
+                        <th class="px-3">编码器（官方版）</th>
+                        <th class="px-3">平面——块类型</th>
+                        <th class="px-3">范围精度</th>
+                        <th class="px-3">插值方法</th>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">x264</td>
+                        <td class="px-1">亮度 Y</td>
+                        <td class="px-1">½ 像素（hpel）</td>
+                        <td class="px-1">6 tap FIR</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">x264</td>
+                        <td class="px-1">亮度 Y</td>
+                        <td class="px-1">¼ 像素（qpel）</td>
+                        <td class="px-1">双线性插值（Bi-lerp）</td>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">x264</td>
+                        <td class="px-1">色度 C</td>
+                        <td class="px-1">hpel+qpel</td>
+                        <td class="px-1">上下左右加权平均</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">x265</td>
+                        <td class="px-1">亮度 Y</td>
+                        <td class="px-1">hpel+qpel</td>
+                        <td class="px-1">上下左右加权平均</td>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">x265</td>
+                        <td class="px-1">亮度 Y</td>
+                        <td class="px-1">¼像素（qpel）</td>
+                        <td class="px-1">两种 7tap FIR</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">x265</td>
+                        <td class="px-1">色度 C</td>
+                        <td class="px-1">hpel+qpel</td>
+                        <td class="px-1">4tap FIR</td>
+                    </tr>
+                </table>
+                <p class="text-gray-side mt-0">表：x264/5 的 hpel~qpel FIR 插值放大算法使用。x264 使用 6tap FIR 滤镜，x265 使用 8tap、7tap 和 4tap FIR 滤镜。</p>
             </div>
 
+            <div class="align-items-center">
+                <img loading="lazy" src="files/mpmemc/7tap-8tap-interpolation-1.png" alt="7tap 8tap interpolation" class="img-medium">
+                <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
+            </div>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/mpmemc/7tap-8tap-interpolation-2.png" alt="7tap 8tap interpolation 2" class="img-medium">
+                <p class="text-gray-side mt-0">图：Y 平面 FIR 插值和 subme 并行，调用 8²或 16²块的横/纵向参考源。若 subme 所得动态的：</p>
+            </div>
+            <ul>
+                <li>向量横分量等于 0: [d][n] 分别用 7tapα或β采样整像素 [A]</li>
+                <li>向量横分量非 0: [f][q] 分别用 7tapα或β采样子像素 [b]</li>
+                <li>向量纵分量等于 0: [a][c] 分别用 7tapα或β采样整像素 [A]</li>
+                <li>向量纵分量非 0: [i][k] 用 8tap 分别采样子像素 [a][c]</li>
+            </ul>
+
             <code class="code-bold">--subme</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数范围 1~7，默认 2&gt;根据源帧率借下表判断。注：x264 的 rdo 选项和 subme 并用，所以与 x265 不通用；SATD 算法见 x264 教程。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数范围 1~7，默认 2&gt;根据源帧率借下表判断。注意 x264 的率失真优化选项和 <code>--subme</code> 放在一个参数里设置，所以 x264 中的设定偏高、x265 则偏低。</p>
 
             <table class="align-items-center table-center text-smaller mt-3">
                 <tbody>
                     <tr>
-                        <th class="px-1">范围——开 RDO</th>
+                        <th class="px-1">范围——开率失真优化</th>
                         <th class="px-1">推荐</th>
                         <th class="px-1">hpel 迭代</th>
                         <th class="px-1">hpel 搜索</th>
@@ -848,7 +846,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 </li>
                 <li><b>VBV/VBR/CBR 码率限制</b>：见<a href="../../x265-web-tutorial/HTML/index.html#h2-11">x265 教程网页版：下层——VBR，CBR 模式</a></li>
             </ol>
-            <p>视频编码的前瞻进程涉及多个复杂步骤，因此并无直观的图解；不过尽管原理不同，前瞻型纯追踪算法 Pure pursuit lookahead 有着一致的“让程序变聪明”概念，并解释了前瞻进程长度对精度的影响：</p>
+            <p>视频编码的前瞻进程涉及多个复杂步骤，因此并无直观的图解；不过尽管原理不同，前瞻型纯追踪算法 Pure pursuit lookahead 有着一致的“让程序变聪明”概念，并解释了前瞻进程长度对精度的影响（当然，影响取决于分辨率、帧率、色深等条件）：</p>
             <div class="align-items-center">
                 <img loading="lazy" src="files/Pure_Pursuit_Lookahead.png" alt="Pure Pursuit Lookahead" class="img-medium">
                 <p class="text-gray-side">图：前瞻型纯追踪算法 Pure pursuit lookahead。见<a href="https://www.mathworks.com/help/nav/ug/pure-pursuit-controller.html">MatLab</a></p>
@@ -866,7 +864,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="text-gray-side pl-5 m-0 overflow-auto">注：mbtree/cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
             <!-- } -->
             <code class="code-bold">--gop-lookahead</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0，视频帧数量，范围 0~<code>rc-lookahead</code>，<span class="text-blue-emph"><a href="https://x265.readthedocs.io/en/master/cli.html#cmdoption-gop-lookahead">x265 文档推荐小于 <code>min-keyint</code></a></span>&gt;指定遇到（ <code>--keyint</code> 指定的）GOP 边界时继续向后检查 N 帧，若发现转场机会就延长当前 GOP。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0，视频帧数量，范围 0~<code>rc-lookahead</code>，<span class="text-blue-emph"><a href="https://x265.readthedocs.io/en/master/cli.html#cmdoption-gop-lookahead">x265 文档推荐小于 <code>min-keyint</code></a></span>&gt;指定遇到（ <code>--keyint</code> 指定的）GOP 边界时继续向后检查 N 帧，若发现转场机会就将当前的 GOP 延长过去。</p>
             <p class="text-gray-side pl-5 m-0 overflow-auto">注：使用 SVT x265（并启用 miniGOP 结构）时，范围上限则是 0~<span class="text-blue-math"><code>rc-lookahead</code> - miniGOP</span>。</p>
             <code class="code-bold">--no-cutree</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关闭少见 CTU 量化增强偏移。可能只有近无损，<code>--crf</code> 小于 16 才用的到。</p>

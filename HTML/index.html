@@ -283,20 +283,20 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p>将帧内的像素组合成大的整体，以更多地冗余单个像素的帧间/帧内信息；同时要根据动静态以及图像边缘的变化，将图像细分为足够小的区域，以精确分配量化的强度。可以说既要大，又要小。</p>
             <p>在 High Efficiency Video Coding HEVC 中，帧的下级结构按照分辨率大小分为帧 → 瓦 tile（x265 编码器中暂未实现）/ 条带 slice → 条带分段 slice segment（ss）→ CTU 树单元 Coding Tree Unit → 编码单元 Coding Unit CU。多个 CTU 可以通过瓦 tile 和条带 slice 两种形式构成一帧，后者继承自 x264，代表按左右顺序划分的一排 CTU；前者较新，代表一定宽高范围的一系列 CTU，更适用于根据画面的分布而分配每个分区的码率。</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/block-splitting/Coding-Tree-Unit.png" alt="image1" class="img-medium">
+                <img loading="lazy" src="files/block-splitting/Coding-Tree-Unit.png" alt="CTU" class="img-medium">
                 <p class="text-gray-side mt-0">图：Coding Tree Unit 以及其下 Coding Unit 的划分</p>
             </div>
             <p>编码单元 Coding Unit CU 的大小有 64x64，32x32，16x16 和 8x8，代表逻辑上粗略划分的待编码区域。是 CTU 通过动态搜索 ME 与运动补偿 MC 隔离分块得到的初步细分结构。其中的 U/unit 代表 YCbCr 一体的结构。</p>
             <p>编码块 Coding Block CB 代表单指编码单元中的 Y，Cb 或 Cr 平面。</p>
             <p>每个 CU 通常包含一个或多个预测单元 Prediction unit PU，从而精确地划分出更小的区间。这个区间相对于当前 CU 的大小，所以不用像素值大小表示。具体为默认的 2Nx2N，NxN、启用 rectangle 划分后添加 2NxN，Nx2N、启用不对称划分后添加 2Nx1.5N+2Nx0.5N，0.5Nx2N+1.5Nx2N，2Nx0.5N+2Nx1.5N，1.5Nx2N+0.5Nx2N。亮度 PB 与色度 PB 的划分方法可以是不同的。</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/block-splitting/Prediction-Unit.png" alt="image2" class="img-medium">
+                <img loading="lazy" src="files/block-splitting/Prediction-Unit.png" alt="PU" class="img-medium">
                 <p class="text-gray-side mt-0">图：pu 的 4 种对称 rectangular 和 4 种不对称 asymmetric 划分</p>
             </div>
             
             <p class="same-line">变换单元 Transform unit TU 的划分与 CU 而非 PU 同步，实现变换和量化</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/block-splitting/Transform-Unit.png" alt="image3" class="img-medium">
+                <img loading="lazy" src="files/block-splitting/Transform-Unit.png" alt="TU" class="img-medium">
             </div>
 
             <p class="same-line">存取单元 Access unit AU 代表解码端用于启动解码的块，通常由 IDR 帧开始，所以一般叫做 IDR-AU</p>
@@ -326,7 +326,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 <p>波形有正弦波 sinusoidal / sine，余弦波 co-sinusoidal / cosine，直流波 direct current / DC，三角波，方形波，以及各种各样的噪声波等等。两波形相加能够得到中间态，通过修改其中波形的振幅强度还可以微调合成的中间态。因此，理论上只要有足够多的可调节波形，就可以让合成的中间态逼近原始波形，甚至做到完全一样。</p>
                 <p>除了一条横线以外，波形一般取自余弦 <span class="text-blue-math">\(\cos(x)\)</span> 或正弦 <span class="text-blue-math">\(\sin(x)\)</span>。这两者自带周期循环，通过单纯累计 <span class="text-blue-math">\(\cos(x)\)</span> 可以得到 cosine 的级数：</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/transforming/cosine-series.png" alt="image4" class="img-medium">
+                    <img loading="lazy" src="files/transforming/cosine-series.png" alt="Cosine Series" class="img-medium">
                     <p class="text-gray-side">图：此处使用 cos(πx) 以缩放到 0~2，2~4 为一周期，频率 n 限制范围 1-9 以保证可视化</p>
                 </div>
                 <p>正弦和余弦函数支持在坐标系中的频率周期缩放，如 <span class="text-blue-math overflow-auto">\(\cos(πx)\)</span> 可以将其缩放到每周期对齐一般坐标系的 x 轴，如果改成 <span class="text-blue-math overflow-auto">\(\cos(2πx)\)</span> 则可将其周期缩短一倍，即频率增加一倍。这里我们用 <span class="text-blue-math overflow-auto">\(\cos(nπx)\)</span> 来与要变换波形的长度 n 对齐。</p>
@@ -337,9 +337,9 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 </ul>
                 <p>如果将 <span class="text-blue-math">\(a_n\)</span> 随频率 <span class="text-blue-math">\(n\)</span>变化的状态用坐标系表示，就得到了“频域坐标系”：</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/transforming/frequency-domain.png" alt="image5" class="img-medium">
+                    <img loading="lazy" src="files/transforming/frequency-domain.png" alt="Frequency Domain" class="img-medium">
                     <p class="text-gray-side mt-0">图：时间域的周期波形映射到频域各个级数（频率 n）的振幅强度 amplitude <span class="text-blue-math">\(a_n\)</span>。来源 <a href="https://edu.svet.gob.gt/fourier-transform-hh-0jVkQOhD">edu.svet.gob.gt</a></p>
-                    <img loading="lazy" src="files/transforming/frequency-domain-2.png" alt="image6" class="img-medium">
+                    <img loading="lazy" src="files/transforming/frequency-domain-2.png" alt="Frequency Domain 2" class="img-medium">
                     <p class="text-gray-side mt-0">图：逼近方形波的各个级数（频率 n）以及振幅强度。来源 <a href="https://edu.svet.gob.gt/fourier-transform-hh-0jVkQOhD">edu.svet.gob.gt</a></p>
                 </div>
                 <p>而标准写法为：</p>
@@ -386,7 +386,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         <p>一种理解方法为：将信号分段或整体视为一个周期，再设定一条从最长周期（起伏很慢的周期线，如 <span class="text-blue-math">\(\cos(0.001x)\)</span>）开始的函数，穷举所有的相位，再穷举所有的振幅，而后记录匹配程度；再缩短一点周期，再穷举所有的相位，...，如此往复直到所有频率、相位、振幅的匹配程度被记录下来。</p>
                         <p>逆变换时，根据每个周期频率所记录的的相位和振幅生成这些波形，再加到一起即可转换回原始信号。计算过程中可能存在信号反相情况，因此还会绝对值的操作。</p>
                     </div>
-                    <img loading="lazy" src="files/transforming/Fourier-Transform-Phenomenons.png" alt="image7" id="LR-UD-002" class="img-medium img-right col-4 mb-auto">
+                    <img loading="lazy" src="files/transforming/Fourier-Transform-Phenomenons.png" alt="Fourier Transform Phenomenons" id="LR-UD-002" class="img-medium img-right col-4 mb-auto">
                 </div>
             </div>
 
@@ -417,20 +417,21 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p>由于动态向量预测得到的向量本身就已经足够靠谱，因此编码器会以“预测动态向量（PMV）+ 动态向量差（MVD）”的形式记录每个帧间块的动态信息，再冗余掉相同的预测动态向量，从而进一步提高压缩。管一个动态向量的信息不多，但放眼到整个视频的所有帧间参考时，质变也就产生了。</p>
 
             <h4>并合模式预测 Merge Mode</h4>
-            <p id="LR-UD-011" class="col-8">为当前块提供一个运动信息候选列表。列表的 5 个参选块（Candidate），2 个备选块来自空域和时域相邻编码块（Neighbour CB）的运动信息（不是预测块 PB 或帧内编码的 CB，否则没有动态向量）。当前块合并多数相邻块的动态信息（动态向量和参考帧索引），<i>直接略过动态搜索</i>，降低完算性（Deterministic），在匀速移动和静止的画面中就能找到可靠的动态向量。</p>
+            <p class="col-8">为当前块提供一个运动信息候选列表。列表的 5 个参选块（Candidate），2 个备选块来自空域和时域相邻编码块（Neighbour CB）的运动信息（不是预测块 PB 或帧内编码的 CB，否则没有动态向量）。当前块合并多数相邻块的动态信息（动态向量和参考帧索引），<i>直接略过动态搜索</i>，降低完算性（Deterministic），在匀速移动和静止的画面中就能找到可靠的动态向量。</p>
             <p>由于并合模式跳过了动态搜索，因此编码块中的“动态信息”即“对某个相邻块的引用注释”。</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/amvp-merge/Merge-Mode.png" alt="image21" class="img-medium">
+                <img loading="lazy" src="files/mpmemc/Merge-Mode.png" alt="Merge Mode" class="img-medium">
             </div>
             <h4>高级动态向量预测 Advanced Motion Vector Prediction（AMVP）</h4>
             <p>在并合模式预测之上，进一步地对比相邻编码块，包括帧间相邻编码块的预测动态向量（PMV），并进行“动态预搜索”（检查参选列表里的动态向量是否匹配，但不是正式的整数像素动态搜索步骤），从而给出准确的预测动态向量（PMV），以及整数像素动态搜索（ME）起点。</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/amvp-merge/Simplified-AMVP.png" alt="image22" class="img-medium">
+                <img loading="lazy" src="files/mpmemc/Simplified-AMVP.png" alt="Simplified AMVP" class="img-medium">
+                <p class="text-gray-side mt-0">图：AMVP 查找时间域动态向量预测（T-PMV）。来源：<a href="https://www.researchgate.net/figure/Simplified-example-of-Advanced-Motion-Vector-Prediction_fig5_358568355">ResearchGate</a></p>
             </div>
 
-            <h5>空间动态向量预测 Spatial MVP</h5>
+            <h5>空间域动态向量预测 Spatial MVP</h5>
             <p>限定必须指向同一张被参考帧，按顺序检查列表中帧内相邻 PU 的动态向量是否当前 PU 匹配：</p>
-            <ol class="mt-0">
+            <ol class="text-smaller">
                 <li>左下角帧内邻 PU</li>
                 <li>左侧帧内邻 PU</li>
                 <li>右上角帧内邻 PU</li>
@@ -439,9 +440,9 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </ol>
             <p>当列表中的 PU 不指向同一张被参考帧时，尝试根据帧间距离进行缩放调整匹配，如果差异或帧间距离太大则换到下一个方法。</p>
 
-            <h5>空间动态向量预测 Temporal MVP</h5>
+            <h5>时间域动态向量预测 Temporal MVP</h5>
             <p>以上方法没找到时，按顺序检查列表中 PU 的动态向量是否当前 PU 匹配：</p>
-            <ol class="mt-0">
+            <ol class="text-smaller">
                 <li>同位帧间临 PU</li>
                 <li>右下角帧间临 PU</li>
             </ol>
@@ -461,25 +462,45 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
 
             <h2 id="h2-6">动态搜索 Motion Estimation（ME）</h2>
             <!-- x264 教程副本，更改需手动同步 { -->
-            <p class="text-gray-side">注：它的专业术语是运动搜索、运动估计。</p>
-            <p>在连续帧间画面中，进行运动估计的整数像素精度动态信息搜索步骤，涵盖了多种搜索算法，也被用于不同的信号处理领域。具体步骤是以被参考帧内的已编码块（Coded Block）为起点，尝试通过位移来匹配相邻帧的画面，从而找到一个失真最小的向量 Direction of minimal distortion（DMD），这个向量就是整数动态向量。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/mpmemc/Motion-Vectors.png" alt="Motion Vectors" class="img-medium">
+                <p class="text-gray-side mt-0">图：Elephants Dream 视频素材某帧的动态向量分布。来源：<a href="https://en.wikipedia.org/wiki/Motion_estimation">维基百科</a></p>
+            </div>
+            <p class="text-gray-side">注：它的专业术语是运动搜索、运动估计；具体到视频编码时，要加上“整数像素”的前缀。</p>
+            <p>在连续帧间画面中，进行运动估计的整数像素精度动态信息搜索步骤，涵盖各式搜索算法与各样的信号处理用途。具体步骤是以被参考帧内的已编码块（Coded Block）为起点，尝试通过位移来匹配相邻帧的画面，从而找到一个失真最小的向量 Direction of minimal distortion（DMD），这个向量就是整数动态向量。</p>
             <p>为了找到可用的最小失真朝向，并且避免进行算力占用巨大的全搜索（Exhausive Search），动态搜索演化出了多种匹配的图案和算法。其中，较为聪明的动态搜索算法是多级算法，它们首会先尝试在较大范围进行粗略搜索，再以大致最佳区域为中心进行精细搜索，从而（包括在噪点干扰下）多快好省地找到整数动态向量。在整数动态搜索之后，还会由子像素动态搜索（Sub-pel Motion Estimation）来进一步做对齐，最终，这个动态向量被用于冗余预测块，以及对高动态画面提高有损压缩强度，从而压缩体积并优化码率的分配。</p>
             <p>如果动态搜索的过程有缺失或不够理想，参考帧与分块的建立会变得低效，码率分配也会变得不够合理，导致画质的降低和码率的增加。</p>
+            <p class="text-gray-side">注：动态搜索的用途包括计算机视觉的目标跟踪（自动驾驶、监控与制导系统）、基于动态向量的分辨率超采样（如 DLSS）、视频驱动的 3D 建模与插帧、剪辑后期的视频去抖（如 Adobe Premiere 的变形稳定器效果）、智能电视内置的动态画质增强（虽然大多情况下效果一般）等等。</p>
             <!-- } -->
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：十字搜索，大小菱搜索，UMH 搜索算法</button>
-            <div class="coll-content">
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/motion-estimation/Jain&Jain-Search.png" alt="image9" class="">
-                    <p class="text-gray-side mt-0">图：传统的 Jain & Jain 十字搜索。</p>
-                    <img loading="lazy" src="files/motion-estimation/LDSP&SDSP-Search.png" alt="image10" class="">
-                    <p class="text-gray-side mt-0">图：大小菱搜索。x264/5 中，六边形搜索 me hex 将 LDSP 的上下左右斜 8 个外点减到 6 个，SDSP 的细化规则不变。</p>
-                    <img loading="lazy" src="files/motion-estimation/Uneven-multi-hexagon-Search.png" alt="image11" class="">
-                    <p class="text-gray-side mt-0">图：umh 搜索。</p>
-                </div>
+            <h3>动态搜索算法示例</h3>
+
+            <h4>十字搜索 Jain&Jain（J&J）</h4>
+            <p>一种便于观测基本原理的传统搜索算法。在上下左右确立与当前块差异（MSE）最小的朝向，然后逐步细化出最可能的动态向量，其直径即 <code>--merange</code> 设定。实际应用中因为起始搜索锚点不多，因此容易被噪点误导。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/mpmemc/Jain&Jain-Search-v4-1.png" alt="Jain&Jain Search 1" class="img-small">
+                <img loading="lazy" src="files/mpmemc/Jain&Jain-Search-v4-2.png" alt="Jain&Jain Search 2" class="img-small">
+                <img loading="lazy" src="files/mpmemc/Jain&Jain-Search-v4-3.png" alt="Jain&Jain Search 3" class="img-small">
+                <img loading="lazy" src="files/mpmemc/Jain&Jain-Search-v4-4.png" alt="Jain&Jain Search 4" class="img-small">
+                <p class="text-gray-side mt-0">图：Jain & Jain 十字搜索。来源：<a href="https://youtu.be/jRrs9OxLTYM">YouTube/nptelhrd</a></p>
+            </div>
+            <p class="text-gray-side">注：由于每次迭代动态搜索都要统筹所有锚点，因此这里的搜索顺序不重要。</p>
+
+            <h4>大小菱形搜索 Diamond（Dia）</h4>
+            <p>分为大菱形 Large diamond search pattern 和小菱形 Small diamind search pattern。x264、x265 中的 <code>--me dia</code>，六边形搜索（<code>--me hex</code>）使用了简化版的菱形锚点图案（将大菱形（LDSP）的上下左右斜 8 个外点缩减到 6 个）。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/mpmemc/LDSP&SDSP-Search-v4-1.png" alt="LDSP SDSP Search 1" class="img-small">
+                <img loading="lazy" src="files/mpmemc/LDSP&SDSP-Search-v4-2.png" alt="LDSP SDSP Search 2" class="img-small">
+                <img loading="lazy" src="files/mpmemc/LDSP&SDSP-Search-v4-3.png" alt="LDSP SDSP Search 3" class="img-small">
+                <img loading="lazy" src="files/mpmemc/LDSP&SDSP-Search-v4-4.png" alt="LDSP SDSP Search 4" class="img-small">
+                <p class="text-gray-side mt-0">图：大小菱搜索。，SDSP 的细化规则不变。</p>
             </div>
 
-            <code class="code-bold">--analyze-src-pics</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，推荐关&gt;动态搜索不再等待前瞻进程、分帧/帧类型决策和粗分块（包括 WPP）后的结果，而是直接搜索源帧像素。这样可以将动态搜索在独立线程上运行，提高并行效率；由于编码器最终编码的就是处理后的帧，而不是原帧，因此使用该选项反而会导致动态搜索准确度下降，降低画质。见 <a href="https://forum.doom9.org/showthread.php?s=3034a4a73f990075a4cd088d9902e9f3&p=1797539#post1797539">doom9 说明帖</a>。</p>
+            <h4>不对称多六边形搜索 Uneven Multiple Hexagon（UMH）</h4>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/mpmemc/Uneven-multi-hexagon-Search.png" alt="UMH Search" class="">
+                <p class="text-gray-side mt-0">图：umh 搜索。</p>
+            </div>
+
             <code class="code-bold">--me</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，推荐 umh&gt;搜索算法，umh 平衡，star 四角星搜索之后收益递减，sea 是优化过的 x264 esa 穷举，但收益递减仍大。umh 和 star 通过多种分辨率大小的查找范围，减轻了动态噪点对传统搜索算法的干扰</p>
             <code class="code-bold">--merange</code>
@@ -496,7 +517,9 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;hex/umh/star/esa/full，<span class="text-red-emph">关 me</span>&gt;原画做三种分辨率，分别查找搜索动态信息，能够更好地消除动态噪点所导致的假动态向量。</p>
             <code class="code-bold">--hme-range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;三整数，<span class="text-red-emph">需 hme-search</span>，推荐默认<span class="text-blue-emph">16,32,48</span>&gt;对应 1/16，¼和全分辨率三画面。</p>
-            
+            <code class="code-bold">--analyze-src-pics</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，推荐关&gt;动态搜索不再等待前瞻进程、分帧/帧类型决策和粗分块（包括 WPP）后的结果，而是直接搜索源帧像素。这样可以将动态搜索在独立线程上运行，提高并行效率；由于编码器最终编码的就是处理后的帧，而不是原帧，因此使用该选项反而会导致动态搜索准确度下降，降低画质。见 <a href="https://forum.doom9.org/showthread.php?s=3034a4a73f990075a4cd088d9902e9f3&p=1797539#post1797539">doom9 说明帖</a>。</p>
+
             <h3>绝对变换差和 SATD</h3>
             <p>Sum of absolute transformed difference 为两个变换块间做差，取和，取绝对值的步骤：</p>
             <ol>
@@ -571,17 +594,17 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         </table>
                         <p class="text-gray-side mt-0">表：x264/5 的 h~qpel 插值计算（实现了浮点→整数变量的程序优化）</p>
                     </div>
-                    <img loading="lazy" src="files/motion-compensation/hpel-qpel-interpolation.png" alt="image12" id="LR-UD-006" class="img-small img-right col-2 mb-auto" >
+                    <img loading="lazy" src="files/motion-compensation/hpel-qpel-interpolation.png" alt="hpel qpel interpolation" id="LR-UD-006" class="img-small img-right col-2 mb-auto" >
                 </div>
             </div>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：补充 x264 的 6tap 滤镜，x265 的 8tap、7tap 和 4tap 滤镜算法细节：</button>
             <div class="coll-content">
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/motion-compensation/7tap-8tap-interpolation-1.png" alt="image13" class="img-medium">
+                    <img loading="lazy" src="files/motion-compensation/7tap-8tap-interpolation-1.png" alt="7tap 8tap interpolation" class="img-medium">
                     <p class="text-gray-side mt-0">图：此“子像素”特指插值出的 half-pixel(hpel)½像素，及 quarter-pixel(qpel)¼像素。</p>
                 </div>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/motion-compensation/7tap-8tap-interpolation-2.png" alt="image14" class="img-medium">
+                    <img loading="lazy" src="files/motion-compensation/7tap-8tap-interpolation-2.png" alt="7tap 8tap interpolation 2" class="img-medium">
                     <p class="text-gray-side mt-0">图：Y 平面 FIR 插值和 subme 并行，调用 8²或 16²块的横/纵向参考源。若 subme 所得动态的：</p>
                 </div>
                 <ul>
@@ -663,7 +686,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         <li>隐 Implicit：用参考帧距离做加权平均插值，距离越近权重越高</li>
                     </ul>
                 </div>
-                <img loading="lazy" src="files/weighted-prediction/Implicit-Weighted-Prediction.png" alt="image15" id="LR-UD-008" class="img-small img-right col-2 mt-3 mb-auto" >
+                <img loading="lazy" src="files/weighted-prediction/Implicit-Weighted-Prediction.png" alt="Implicit Weighted Prediction" id="LR-UD-008" class="img-small img-right col-2 mt-3 mb-auto" >
             </div>
 
             <code class="code-bold">--weightb</code>
@@ -674,7 +697,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <div class="coll-content">
                 <p>让短波像拉链一样划过一维信号，短波所到的时间域与源信号匹配（波形重合）的程度会变化，而变化本身记为时间频域信息。支持更换波形以提取特征（如特征采样式音频降噪滤镜）。解决了傅里叶变换只有空间频域，无法描述信号随时间变化过程的原生缺陷，缺点是分辨率低。详见<a href="https://www.youtube.com/watch?v=jnxqHcObNK4">科普视频</a>。一般用于检测特征片段，如将小波本身塑性为需要的特征，然后划过源波形，得到这些特征的时间域分布和强度变化。</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/weighted-prediction/Wavelet-Transform-Example.png" alt="image16" class="img-small" >
+                    <img loading="lazy" src="files/weighted-prediction/Wavelet-Transform-Example.png" alt="/Wavelet Transform Example" class="img-small" >
                     <p class="text-gray-side mt-0">图：用蓝色小波划过红色信号的变换例子</p>
                 </div>
             </div>
@@ -687,7 +710,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         <p>继续在 L<sub>1</sub>→L<sub>n</sub> 的 1 层向右迭代，分离出所有的 L，H 带，如此实现迭代 n 次即分离 2<sup>n</sup> 帧动静态，以及所有的预测与补偿，故不像传统动态搜索一样受缩放性 scalability（分辨率 vs 搜索范围）限制。是 Scalable Video Codec（SVC）编码的核心算法之一。</p>
                         <p>迭代后的高低频用 LL<sub>1</sub> LL<sub>2</sub> LH<sub>1</sub> LH<sub>2</sub> 表示低到高频的顺序，字母位数代表迭代次数。</p>
                     </div>
-                    <img loading="lazy" src="files/weighted-prediction/Lifting-Scheme-Temporal-MC.png" alt="image17" id="LR-UD-010" class="img-medium img-right col-4 mb-auto" >
+                    <img loading="lazy" src="files/weighted-prediction/Lifting-Scheme-Temporal-MC.png" alt="Lifting Scheme Temporal MC" id="LR-UD-010" class="img-medium img-right col-4 mb-auto" >
                 </div>
             </div>
 
@@ -702,9 +725,9 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <div class="coll-content">
                 <p>和卷积滤镜一样用 n×n 的滤镜格子逐像素扫图，区别在于滤镜中心会被替换为旁像素的中值。如此一来在扫描窗口任意两端几乎一致的像素值会被识别为线段或边缘，中间的像素值会被同化，而平面上的噪点/颗粒就会被抹除，生成仅有平/斜面和完整线条边缘的“模糊”结果。</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/bilateral-filter/Median-Filter.png" alt="image18" class="img-medium">
+                    <img loading="lazy" src="files/bilateral-filter/Median-Filter.png" alt="Median Filter" class="img-medium">
                     <p class="text-gray-side">图：中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate——Andrzej Bargiela</a></p>
-                    <img loading="lazy" src="files/bilateral-filter/Median-Filter-Example.jpg" alt="image19" class="img-medium">
+                    <img loading="lazy" src="files/bilateral-filter/Median-Filter-Example.jpg" alt="Median Filter Example" class="img-medium">
                     <p class="text-gray-side">图：中值滤镜效果。见<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2%E5%99%A8">维基百科</a></p>
                 </div>
             </div>
@@ -713,7 +736,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <div class="coll-content">
                 <p>将中值滤镜输出作为（2D）高斯模糊的权重蒙版（通过矩阵点除实现动态干涉滤镜强度）；因此平面/斜面/线条本身会决定高斯模糊正态分布钟在对应位置被保留/干涉/隔断的程度</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/bilateral-filter/Bilateral-Filter.png" alt="image20" class="img-medium">
+                    <img loading="lazy" src="files/bilateral-filter/Bilateral-Filter.png" alt="Bilateral Filter" class="img-medium">
                 </div>
                 <code class="code-bold">--mcstf</code>
                 <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">仅支持单线程，有残影失真，推荐关</span>&gt;时域动态补偿滤镜 mctf 搭配双阈滤镜的自动降噪，理论上提高细节保真。</p>
@@ -848,7 +871,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                     <p>以下图预测块 C 为例：编码块 B 处缺少参考源就用编码块 A 的最右侧存在参考源做副本。编码块 D 补充 A-B 两块参考源的逻辑同上；若 EDAB 四个编码块都没有参考源，就用编码块 F 的顶部参考源替代；若 EDABF 五个编码块都没有参考源，则给所有参考源填像素中值。</p>
                     <p class="text-gray-side mt-0">图：补充参考源的检查顺序。</p>
                 </div>
-                <img loading="lazy" src="files/intra-prediction/Reference-Replenishing-Order.png" alt="image22" id="LR-UD-014" class="img-medium img-right col-4 mb-auto" >
+                <img loading="lazy" src="files/intra-prediction/Reference-Replenishing-Order.png" alt="Reference Replenishing Order" id="LR-UD-014" class="img-medium img-right col-4 mb-auto" >
     
                 <div id="LR-UD-015" class="col-8">
                     <h3>强力平滑滤镜的启用条件</h3>
@@ -859,7 +882,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                     </ol>
                     <p class="text-gray-side mt-0">图：强力平滑滤镜的启用条件。</p>
                 </div>
-                <img loading="lazy" src="files/intra-prediction/Strong-Intra-Smoothing-Condition.png" alt="image24" id="LR-UD-016" class="img-medium img-right col-4 mb-auto" >
+                <img loading="lazy" src="files/intra-prediction/Strong-Intra-Smoothing-Condition.png" alt="Strong Intra Smoothing Condition" id="LR-UD-016" class="img-medium img-right col-4 mb-auto" >
                 
                 <div id="LR-UD-017" class="col-8">
                     <h3>强力平滑滤镜 Strong intra smoothing</h3>
@@ -869,7 +892,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                     </ol>
                     <p class="text-gray-side mt-0">图：强力平滑滤镜。</p>
                 </div>
-                <img loading="lazy" src="files/intra-prediction/Strong-Intra-Smoothing.png" alt="image25" id="LR-UD-018" class="img-medium img-right col-4 mb-auto" >
+                <img loading="lazy" src="files/intra-prediction/Strong-Intra-Smoothing.png" alt="Strong Intra Smoothing" id="LR-UD-018" class="img-medium img-right col-4 mb-auto" >
                 
                 <div id="LR-UD-019" class="col-8">
                     <h3>3-tap 有限冲击响应 Finite Impulse Reponse 滤镜</h3>
@@ -877,7 +900,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                     <p class="text-gray-side mt-0">图：3tap FIR 滤镜。</p>
                     <p>预处理后，用趋平，夹角，或 DC 模式初步编码 PB 到 CB。</p>
                 </div>
-                <img loading="lazy" src="files/intra-prediction/3tap-FIR-Filter.png" alt="image26" id="LR-UD-020" class="img-small img-right col-4 mb-auto" >
+                <img loading="lazy" src="files/intra-prediction/3tap-FIR-Filter.png" alt="3tap FIR Filter" id="LR-UD-020" class="img-small img-right col-4 mb-auto" >
 
                 <h3>趋平模式 Planar</h3>
                 <div id="LR-UD-021" class="col-8">
@@ -900,16 +923,16 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                     </p>
                     <p class="text-gray-side mt-0">图：得到一个平均预测像素 p(x,y) 的过程。</p>
                 </div>
-                <img loading="lazy" src="files/intra-prediction/Planar-Intra-Coding-Mode.png" alt="image27" id="LR-UD-022" class="img-medium img-right col-4 mb-auto" >
+                <img loading="lazy" src="files/intra-prediction/Planar-Intra-Coding-Mode.png" alt="Planar Intra Coding Mode" id="LR-UD-022" class="img-medium img-right col-4 mb-auto" >
 
                 <h3>夹角模式 Direct（35 种）</h3>
                 <div id="LR-UD-023" class="col-10">
                     <p>将渐变（斜面）预测块 PB 无损压缩为编码块 CB 中全部画面与参考源共角的夹角<span class="text-blue-math">\(\theta\)</span>拓补结构。通过穷举所有<span class="text-blue-math">\(p(x,y)\)</span>的夹角以尝试对齐上方横向参考源<span class="text-blue-math">\(t(x)\)</span>，或左侧纵向参考源<span class="text-blue-math">\(l(y)\)</span>中差异最小的点<span class="text-blue-math">\(t(x\pm n)\)</span>或纵向的<span class="text-blue-math">\(l(y\pm n)\)</span>构成直角三角。用三角函数<span class="text-blue-math">\(\frac{opp}{adj} = \tan\theta\)</span>得预测像素<span class="text-blue-math">\(p\)</span>的夹角<span class="text-blue-math">\(\theta\)</span>
                 </div>
 
-                <img loading="lazy" src="files/intra-prediction/Directional-Coding-Modes.png" alt="image28" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
+                <img loading="lazy" src="files/intra-prediction/Directional-Coding-Modes.png" alt="Directiona Coding Modes" id="LR-UD-024" class="img-small img-right col-2 mb-auto" >
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/intra-prediction/Directional-Angle-Algebra.png" alt="image29" class="img-small" >
+                    <img loading="lazy" src="files/intra-prediction/Directional-Angle-Algebra.png" alt="Directional Angle Algebra" class="img-small" >
                     <p class="text-gray-side mt-0">图：大体的精确夹角测算。见<a href="https://www.elecard.com/page/spatial_intra_prediction_in_hevc">Elecard 参考书</a></p>
                 </div>
             </div>
@@ -968,7 +991,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <h3>算出量化值</h3>
             <p>人眼对明暗变化与画面细节程度的感知呈对数 ㏒ 状，分别奠定了显示器的伽马曲线映射，以及量化值 qp（x 轴）到强度 qScale（y 轴）的强度映射。<span class="text-gray-side">图：量化值 qp 到 qScale 的映射，见<a href="https://www.desmos.com/calculator/vernjiiphf">desmos 互动例</a></span>；伽马矫正的科普见<a href="https://www.nazorip.site/archives/63">x264 教程</a>，<a href="https://www.artleds.com/blog/introduction-to-gamma-curves-and-gamma-correction-in-led-pixel-tapes-application">ArtLEDs 科普</a>。</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/rate-control/Logrithm-QP-to-qScale.png" alt="image30" class="img-medium">
+                <img loading="lazy" src="files/rate-control/Logrithm-QP-to-qScale.png" alt="Logrithm QP to qScale" class="img-medium">
             </div>
             <p>由于当前帧此时还未编码（码率未知），故寻已编码前帧的量化失真程度（越高则后帧理应越复杂），做推演复杂度/模糊复杂度。CRF 越高则除进推演复杂度的分母越大/ABR 越低则分子越小，得到的推演复杂度越低，推演出的量化值就越高。</p>
 
@@ -1355,7 +1378,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <h3>模式决策 Mode Decision</h3>
             <p>见率失真优化（下方）说明。</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/rate-control/Mode-Decision.png" alt="image31" class="img-medium">
+                <img loading="lazy" src="files/rate-control/Mode-Decision.png" alt="Mode Decision" class="img-medium">
             </div>
 
             <code class="code-bold">--rd</code>
@@ -1386,7 +1409,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <li>抗涂抹：<span class="text-blue-emph">--rskip 2 --rskip-edge-threshold 3</span>。即“有一点不平就应分块”。比 <code>--rskip 0</code> 快，用于已知要保留雪景等全屏大量动态信息的源的情况下，节省传统分块计算时间。可=在不添噪点的情况下达成抗涂抹的目的</li>
             </ul>
             <div class="align-items-center">
-                <img loading="lazy" src="files/rate-control/rSkip-Edge-Threshold.png" alt="image32" class="img-small" >
+                <img loading="lazy" src="files/rate-control/rSkip-Edge-Threshold.png" alt="rSkip Edge Threshold" class="img-small" >
                 <p class="text-gray-side">图：影响 DCT 系子分布的块中像素，而 DCT 系子的密度影响 rskip-edge-threshold 的设置</p>
             </div>
             <!-- x264 教程副本，更改需手动同步 { -->
@@ -1403,10 +1426,10 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </ul>
             <!-- } -->
             <div class="align-items-center">
-                <img loading="lazy" src="files/rate-distorsion-optimization/x264-JM-RDO-Lambda.png" alt="image33" class="img-medium">
-                <img loading="lazy" src="files/rate-distorsion-optimization/RDO-Lambda-Slopes.png" alt="image34" class="img-medium">
+                <img loading="lazy" src="files/rate-distorsion-optimization/x264-JM-RDO-Lambda.png" alt="x264 JM RDO Lambda" class="img-medium">
+                <img loading="lazy" src="files/rate-distorsion-optimization/RDO-Lambda-Slopes.png" alt="RDO Lambda Slopes" class="img-medium">
                 <p class="text-gray-side">图：率失真优化中 λ 的斜度变化与效果</p>
-                <img loading="lazy" src="files/rate-distorsion-optimization/RDO-qStep-Chart.png" alt="image35" class="img-medium">
+                <img loading="lazy" src="files/rate-distorsion-optimization/RDO-qStep-Chart.png" alt="RDO qStep Chart" class="img-medium">
                 <p class="text-gray-side">图：率失真表格中不断调整并得到“×”的实际效果</p>
             </div>
             <p>x265 的失真（块间差异）使用均方差 Mean Squared Error（MSE）判断：</p>
@@ -1504,7 +1527,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/rate-distorsion-optimization/RDO-Settings-Reference.jpg" alt="image37" class="img-medium">
+                    <img loading="lazy" src="files/rate-distorsion-optimization/RDO-Settings-Reference.jpg" alt="RDO Settings Reference" class="img-medium">
                     <p class="text-gray-side">图：左 1 源有微量边缘失真以及颗粒。2~4=高量化导致块失真，worm，蚊噪等。5 对应失真用 psy-rd(oq)，(limit)sao，deblock，aq，降 crf 抑制</p>
                 </div>
                 <table class="table-center">
@@ -1608,7 +1631,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 
             <h4>构建状态网络</h4>
             <div class="align-items-center">
-                <img loading="lazy" src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="image50" class="img-medium"><br>
+                <img loading="lazy" src="files/entropy-coding/Soft-Decision-Quantization-Trellis.png" alt="SDQ Trellis" class="img-medium"><br>
                 <p class="text-gray-side">图：从左向右推演的 Trellis 有向无环图。其中节点代表各种状态，边代表状态转换路径。</p>
             </div>
             <ul>
@@ -1654,8 +1677,8 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <h3>去块滤镜</h3>
             <p>修复“CRF/ABR 模式在某些场景的部分区域里分配量化值过高时，宏块间出现明显横纵割痕瑕疵”的平滑滤镜。编码器内去块利用了帧内帧间搜索到的信息，而理论上相比外部滤镜误判更少（当然外部滤镜也能做动态和帧内搜索）。去块大体上是检查 1 像素宽，且此块边缘没有较大像素值变化造成的横纵边缘（所以也存在误判）。块失真源自块间不统一的量化程度，有的块量化高流就会从邻近画面里凸现出来。而去块手段是平滑滤镜，因此要降低强度才适用于高码视频，动漫，素材录屏等锐利画面。边界强度 Boundary strength（去块力度判断）</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/deblocking-sao/Deblock-detection-visualization.png" alt="image38" class="img-medium">
-                <img loading="lazy" src="files/deblocking-sao/Deblock-edge-visualization.png" alt="image39" class="img-medium">
+                <img loading="lazy" src="files/deblocking-sao/Deblock-detection-visualization.png" alt="Deblock detection visualization" class="img-medium">
+                <img loading="lazy" src="files/deblocking-sao/Deblock-edge-visualization.png" alt="Deblock edge visualization" class="img-medium">
                 <p class="text-gray-side">图：取最小 8x8 范围（两个 4x4 CU）间的界线举例。</p>
             </div>
 
@@ -1680,12 +1703,12 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <h3>取样迁就偏移滤镜 Sample adaptive offset</h3>
             <div class="row">
                 <p id="LR-UD-025" class="col-10">沿着每个编码树单元 CTU 的划分，应用边缘偏移 Edge offset EO，带状偏移 Band offset BO 和融合 merge 滤镜。用于缓解量化或去块丢失所导致的边缘振铃失真，以及平面蠕虫失真。<span class="text-gray-side">图：上为边缘振铃失真，下为平面蠕虫失真</span></p>
-                <img loading="lazy" src="files/deblocking-sao/Sample-Adaptive-Offset-Case.jpg" alt="image40" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
+                <img loading="lazy" src="files/deblocking-sao/Sample-Adaptive-Offset-Case.jpg" alt="Sample Adaptive Offset Case" id="LR-UD-026" class="img-small img-right col-2 mb-auto" >
             </div>
             <h4>边缘振铃失真</h4>
             <div class="row">
                 <p id="LR-UD-027" class="col-10">表现为高对比度边缘附近的波纹重影效应，因为量化减少了遮盖低频信号，以使信号整体逼近方形波的高频信号。详见<a href="https://en.wikipedia.org/wiki/Ringing_artifacts">维基百科</a></p>
-                <img loading="lazy" src="files/deblocking-sao/Ringing-Distortion.png" alt="image41" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
+                <img loading="lazy" src="files/deblocking-sao/Ringing-Distortion.png" alt="Ringing" id="LR-UD-028" class="img-small img-right col-2 mb-auto" >
             </div>
             <ol>
                 <li><b>边缘偏移滤镜</b>：
@@ -1736,7 +1759,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="text-gray-side">注：量化压缩削弱分块的高频信息分量系子后，除去当前分块的内容复杂凹凸外，分块会变成少量的低频分量系子和归零的中到高频分量系子。这本身就是明显的上下文规律。</p>
 
             <div class="align-items-center">
-                <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="image42" class="">
+                <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="CABAC Flow Chart" class="">
                 <p class="text-gray-side">图：简化的上下文自适应二进制算数编码<a href="https://iphome.hhi.de/marpe/cabac.html">CABAC 流程</a>，分转二进制，出字概率统计和算数编码三步</p>
             </div>
 
@@ -1745,7 +1768,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <div class="coll-content">
                 <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Arithmetic-Coding.png" alt="image43" class="">
+                    <img loading="lazy" src="files/entropy-coding/Arithmetic-Coding.png" alt="Arithmetic Coding" class="">
                     <p class="text-gray-side">图：编码即逐字按出字概率缩窄概率条到最后一个字的出字概率，取上/下区间为编码结果，解码照概率位置（蓝线）的落点反推实现。</p>
                 </div>
     
@@ -3941,10 +3964,10 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <div class="coll-content">
                 <div class="row">
                     <p id="LR-UD-029" class="col-10">以状态描述程序/机器。如 1~2 间可过渡出无限个数字，代表机械运动到位的中间过程；去掉过程后（如取整后）剩下圆圈数字表示的①↔②两种状态，就足以抽象地表示按动式圆珠笔；将两态联系起来的操作表示为箭头，即按下笔的按钮，而输出就是下一状态。若需要将笔伸出（需②）而笔已收拢则写作 ①→⓶；若需收拢而笔已伸出则 ②→⓵</p>
-                    <img loading="lazy" src="files/entropy-coding/Double-Action-Ball-Point-Pen.png" alt="image44" id="LR-UD-030" class="img-small img-right col-2 mb-auto" >
+                    <img loading="lazy" src="files/entropy-coding/Double-Action-Ball-Point-Pen.png" alt="DB Point Pen" id="LR-UD-030" class="img-small img-right col-2 mb-auto" >
                 </div>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Finite-State-Machine-on-DB-Pen.png" alt="image45" class="img-medium">
+                    <img loading="lazy" src="files/entropy-coding/Finite-State-Machine-on-DB-Pen.png" alt="Finite State Machine DB Pen" class="img-medium">
                 </div>
             </div>
             
@@ -3958,7 +3981,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <p>视频编码器中，MPS 和 LPS 的分布由人工筛选，所以具体逻辑要看编码器源码。x264 中大体为输入 LPS 为 0/为 1 时的状态切换：若大于 0.5 则变成 MPS，LPS 最小为 0.01875；MPS 最大为
                     0.98125</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Finite-State-Machine-Context-Adaptation.png" alt="image46" class="img-medium">
+                    <img loading="lazy" src="files/entropy-coding/Finite-State-Machine-Context-Adaptation.png" alt="Finite State Machine Adaptation" class="img-medium">
                 </div>
             </div>
 
@@ -4055,7 +4078,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                     </li>
                 </ol>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Golomb-Rice-Coding-Variations.png" alt="image47" class="img-medium">
+                    <img loading="lazy" src="files/entropy-coding/Golomb-Rice-Coding-Variations.png" alt="Golomb Rice Codings" class="img-medium">
                     <p class="text-gray-side">图：M=1~32 时，<span class="text-blue-math">\(2^K - M\)</span> 的边界变化，见<a href="https://www.desmos.com/calculator/2gonwxfc1m">Desmos 例</a></p>
                 </div>
             </div>
@@ -4167,7 +4190,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <p>前者在不考虑大小的情况下测量数字信号的差距，如<span class="text-blue-math">100</span>与<span class="text-blue-math">010</span>的汉明距离为 2，数值误差为 90，很明显信号偏差的程度并不如数值误差所说的那么离谱。汉明距离以累计各位数的异或门 ⊻ 得到，“累计”代表误差和 SAD。</p>
                 <p>欧几里得距离测量更高维度下，至少两点分别取值的平方差（SSE），如 GPS 的定位误差</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Euclidean-distance.svg" alt="image48" class="img-medium">
+                    <img loading="lazy" src="files/entropy-coding/Euclidean-distance.svg" alt="Euclidean Distance" class="img-medium">
                     <p class="text-gray-side">图：欧几里得距离利用平方差的算法，见<a href="https://en.wikipedia.org/wiki/Euclidean_distance">维基百科</a></p>
                 </div>
                 <h3>软判决与硬判决解码 Soft/Hard Decision decoding</h3>
@@ -4184,7 +4207,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 
             <h3>游程/游标编码 Run-length/run-level coding</h3>
             <div class="align-items-center">
-                <img loading="lazy" src="files/entropy-coding/Run-Length-Coding.png" alt="image49" class="img-medium">
+                <img loading="lazy" src="files/entropy-coding/Run-Length-Coding.png" alt="Run Length Coding" class="img-medium">
             </div>
 
             <h2 id="h2-17">补充优化信息 Supplemental enhance info（SEI）</h2>
@@ -4657,7 +4680,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <li><b>5：</b>下</li>
             </ul>
             <div class="align-items-center">
-                <img loading="lazy" src="files/video-usability-information/Chroma-Location-Type.png" alt="image51" class="img-medium" >
+                <img loading="lazy" src="files/video-usability-information/Chroma-Location-Type.png" alt="Chroma Location Type" class="img-medium" >
                 <p class="text-gray-side">图：色度采样位置</p>
             </div>
             <code class="code-bold">--colorprim</code>
@@ -4676,9 +4699,9 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p>原本是高端音响的标准，代表最小音量下没有一点电流噪声，最大音量可以和真实场景媲美的性能。与扬声器的大小和材质是否匹配场景相关，即「重硬件轻软件」。因为只要硬件达到 HDR 1000 规格，那么只要调高亮度就可以了；而随便一个中位水平的电视/显示器/手机屏幕亮度都能达到 HDR 400 标准。</p>
             <p>HDR 信息分为硬件、软件、以及数据，共 3 类不统一的标准。为保证色彩正确，压制时应额外检查并确保与视频源的一致性。如：</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/video-usability-information/Metadata-for-VUI-HDR-1.png" alt="image51" class="img-medium" >
+                <img loading="lazy" src="files/video-usability-information/Metadata-for-VUI-HDR-1.png" alt="Metadata for VUI HDR" class="img-medium" >
                 <p class="text-gray-side">图 1：cll 1000,640. master-display 由 G(13250…) 开头，L(10000000,1) 结尾</p>
-                <img loading="lazy" src="files/video-usability-information/Metadata-for-VUI-HDR-2.png" alt="image52" class="img-medium">
+                <img loading="lazy" src="files/video-usability-information/Metadata-for-VUI-HDR-2.png" alt="Metadata for VUI HDR 2" class="img-medium">
                 <p class="text-gray-side">图 2：cll 1655,117/L(40000000,50)/colorprim bt2020/colormatrix bt2020nc/transfer smpte2084</p>
             </div>
             <code class="code-bold">--master-display</code>

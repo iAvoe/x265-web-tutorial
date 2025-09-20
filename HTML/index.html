@@ -239,12 +239,14 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 </li>
                 <li><b>编码过程</b>
                     <ul>
-                        <li><b>前瞻进程</b>：Lookahead 从更小的分辨率预先分析未来几帧的复杂度、运动和场景切换 scenecut 的估计。</li>
-                        <li><b>分帧/帧类型决策</b>：根据前瞻进程的结果和关键帧间隔 keyframe interval 设置关键帧 I 帧与参考帧 P-B 帧。</li>
-                        <li><b>粗分块</b>：
+                        <li><b>前瞻进程（Lookahead）</b>：预先分析未来几帧的复杂度、运动和场景切换 scenecut 的估计、I-P-B 帧类型决策
+                            <ul><li>帧类型决策由最短路径算法（Shortest Path）确立</li></ul>
+                        </li>
+                        <li><b>粗分块</b>：虚拟的步骤，编码器直接根据指定可用的分块大小开始编解码操作，因此搜索等操作默认这步已经完成
                             <ul>
-                                <li>x264 中粗分到宏块 Macroblock MB</li>
-                                <li>x265 中粗分到编码树单元 Coding Tree Unit CTU </li>
+                                <li>x264：宏块 Macroblock MB（16x16）</li>
+                                <li>x265：编码树单元 Coding Tree Unit CTU（最大 64x64、最小 32x32）</li>
+                                <li>AV1：特大块 Superblock（最大 128x128，但为了兼容现有硬编硬解、所以很多步骤上等效于 64x64）</li>
                             </ul>
                         </li>
                         <li><b>动态搜索</b>：Motion Estimation ME 找到当前帧与参考帧之间的相似区域，并为每个块分配动态向量</li>
@@ -414,7 +416,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <h2 id="h2-5">动态预测 Motion Prediction（MP）</h2>
             <p>在参考帧（P-B 帧）的预测单元 Prediction Unit（PU）上，动态搜索（ME）之前，起到<i>提供动态搜索起点</i>功能的预测算法。x264 使用了 <code>--direct</code> 指定。x265 中则使用了更高级的 AMVP + Merge 算法。</p>
             <p>视频里往往会有占据画面不小的物件朝着一处平移，在视频帧中表现为“某个区域的分块拥有高度相似的运动向量”。这些重复性的动态向量分布规律肉眼可见，而动态搜索只能通过不断地计算差异（MSE，率失真代价）而一个一个方向和大小地把向量给试出来。这显然不如通过预测而快速地找出一组方向与大小（然后让整数像素动态搜索从这里开始微调到整数像素精度）直截了当。</p>
-            <p>由于动态向量预测得到的向量本身就已经足够靠谱，因此编码器会以“预测动态向量（PMV）+ 动态向量差（MVD）”的形式记录每个帧间块的动态信息，再冗余掉相同的预测动态向量，从而进一步提高压缩。管一个动态向量的信息不多，但放眼到整个视频的所有帧间参考时，质变也就产生了。</p>
+            <p>由于动态向量预测得到的向量本身就已经足够靠谱，因此编码器会以“预测动态向量（PMV）+ 动态向量差（MVD）”的形式记录每个帧间块的动态信息，再冗余掉相同的预测动态向量，从而进一步提高压缩。纵然一支动态向量的信息不多，但放眼到整个视频的所有帧间参考时，质变也就产生了。</p>
 
             <h4>并合模式预测 Merge Mode</h4>
             <p class="col-8">为当前块提供一个运动信息候选列表。列表的 5 个参选块（Candidate），2 个备选块来自空域和时域相邻编码块（Neighbour CB）的运动信息（不是预测块 PB 或帧内编码的 CB，否则没有动态向量）。当前块合并多数相邻块的动态信息（动态向量和参考帧索引），<i>直接略过动态搜索</i>，降低完算性（Deterministic），在匀速移动和静止的画面中就能找到可靠的动态向量。</p>
@@ -532,6 +534,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
 
             <h2 id="h2-7">运动补偿 Motion Compensation（MC）</h2>
             <p>整数像素动态搜索虽看起来很准，但精度终归有限，只能算是“粗加工预测”；直接使用整数动态向量会导致纹理细节和物件边缘信息的丢失。为此，编码器需要对向量“精加工”——对齐到插值出的 half-pixel / hpel / ½ 像素，及 quarter-pixel / qpel / ¼ 像素，使预测画面（指 PU、PB）的残差变小，与输入源画面更一致。</p>
+            <p class="text-gray-side">注：虽然看起来只有一个子像素补偿，但这不妨碍运动补偿作为一个完整独立的步骤存在。此外，在 AV1 标准中，运动补偿就不只有一种了。</p>
 
             <h3>整数像素运动补偿</h3>
             <p>视频编码中同动态搜索（ME）。</p>
@@ -702,13 +705,16 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：基于提升式小波变换的时域动态补偿 lifting-scheme temporal MC</button>
             <div class="coll-content">
-                <div class="row">
-                    <div id="LR-UD-009" class="col-8">
-                        <p>类似于 crf/abr 模式推演量化值中以 a-b 帧之差做复杂度累计。此处是用以预测 b-c 帧的差，而<span class="text-blue-emph">预测对的更新到低频 L 带，差错的更新到（不再参与下轮预测）的高频 H 带</span>，得 0-1-2，2-3-4，4-5-6 等（prediction）帧以及其 H 带（update）构成第 0 层</p>
-                        <p>继续在 L<sub>1</sub>→L<sub>n</sub> 的 1 层向右迭代，分离出所有的 L，H 带，如此实现迭代 n 次即分离 2<sup>n</sup> 帧动静态，以及所有的预测与补偿，故不像传统动态搜索一样受缩放性 scalability（分辨率 vs 搜索范围）限制。是 Scalable Video Codec（SVC）编码的核心算法之一。</p>
-                        <p>迭代后的高低频用 LL<sub>1</sub> LL<sub>2</sub> LH<sub>1</sub> LH<sub>2</sub> 表示低到高频的顺序，字母位数代表迭代次数。</p>
-                    </div>
-                    <img loading="lazy" src="files/weighted-prediction/Lifting-Scheme-Temporal-MC.png" alt="Lifting Scheme Temporal MC" id="LR-UD-010" class="img-medium img-right col-4 mb-auto" >
+                <p>类似于 CRF 或 ABR 模式推演量化值中，以前两帧之差累计复杂度。这个复杂度在此用以预测后两帧的差（帧 A-B 的差异预测 B-C 的差异），而<span class="text-blue-emph">预测对的记在 L 带“低频”中、有差错的更新到的高频 H 带中，下轮预测只预测 L 带，并不断推演</span>，最终得到足够精确的时域复杂度分布数据。</p>
+                <ul>
+                    <li>第一次推演得 0-1-2，2-3-4，4-5-6 等 L 带（prediction）以及其 H 带（update）的 0 层</li>
+                    <li>继续在 L<sub>1</sub>→L<sub>n</sub> 的 1 层向右迭代，分离出所有的 L，H 带，如此实现迭代 n 次即分离 2<sup>n</sup> 帧动静态，以及所有的预测与补偿</li>
+                    <li>迭代后的高低频用 LL<sub>1</sub> LL<sub>2</sub> LH<sub>1</sub> LH<sub>2</sub> 表示低到高频的顺序，字母位数代表迭代次数。</li>
+                </ul>
+                <div class="align-items-center">
+                    <img loading="lazy" src="files/weighted-prediction/Lifting-Scheme-Temporal-MC.png" alt="Lifting Scheme Temporal MC" class="">
+                    <p class="text-gray-side">图：基于提升式小波变换的时域动态补偿。</p>
+                </p>
                 </div>
             </div>
 
@@ -721,7 +727,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：中值滤镜 Median filter</button>
             <div class="coll-content">
-                <p>和卷积滤镜一样用 n×n 的滤镜格子逐像素扫图，区别在于滤镜中心会被替换为旁像素的中值。如此一来在扫描窗口任意两端几乎一致的像素值会被识别为线段或边缘，中间的像素值会被同化，而平面上的噪点/颗粒就会被抹除，生成仅有平/斜面和完整线条边缘的“模糊”结果。</p>
+                <p>用 NxN 的滤镜格子逐像素扫描全图（卷积法）。滤镜中心会被替换为旁像素的中值，除非滤镜格子两端的像素值差异较大。如此一来，平面上的噪点/颗粒会被抹除、边缘被保留、生成仅有平/斜面和完整线条边缘的“模糊”结果。</p>
                 <div class="align-items-center">
                     <img loading="lazy" src="files/bilateral-filter/Median-Filter.png" alt="Median Filter" class="img-medium">
                     <p class="text-gray-side">图：中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate——Andrzej Bargiela</a></p>
@@ -741,20 +747,20 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </div>
 
             <h2 id="h2-9">前瞻进程 Lookahead</h2>
-            <p>最先启动，设立关键帧和参考帧，决定了 GOP 划分、帧类型推演、转场设立、逐帧量化强度等多项初始数据。</p>
+            <p>最先启动，设立关键帧和参考帧，决定了 GOP 划分、I-P-B 帧类型确立、转场设立、逐帧量化强度等多项初始数据。</p>
             <ol>
                 <li><b>启动和初始化</b>：
                     <ul class="font-monospace pl-5 text-smaller">
-                        <li>从视频或 <code>--seek</code> 参数指定的位置开始，顺序导入视频帧到 Lookahead 过程</li>
+                        <li>从视频或 <code>--seek</code> 参数指定的位置开始，顺序导入视频帧到前瞻进程</li>
                         <li>导入的视频帧会被缩小一半以提高速度</li>
-                        <li>后续步骤发现 GOP 结尾时，当前的 Lookahead 帧列表（<code>h-&gt;Lookahead-&gt;next-&gt;list</code>）会更新 Lookahead 起点。</li>
+                        <li>后续步骤发现 GOP 结尾时，当前的前瞻进程帧列表（<code>h-&gt;Lookahead-&gt;next-&gt;list</code>）会更新前瞻进程起点。</li>
                     </ul>
                 </li>
-                <li><b>软转场 Scenecut</b>：
+                <li><b>软转场 Scenecut</b>：根据画面内容变化判断是否拆分 GOP（设立 IDR 帧）
                     <ul class="font-monospace pl-5 text-smaller">
-                        <li>如果输入的首帧是自动 AUTO 模式或 I 帧，则设为 IDR 帧</li>
-                        <li>如果使用 <code>--no-open-gop</code>，且输入帧与之前的非 B 帧画面差距达到 <code>--scenecut</code> 阈值触发转场，则设立 IDR 帧以建立新的 GOP</li>
-                        <li>IDR 帧（于 <code>--min-keyint</code> 范围内则设 I 帧）的前一帧会被强制改为 P 帧，以阻止 B 帧的双向参考特性</li>
+                        <li>如果输入的首帧是 I 帧（或 <code>AUTO</code> 模式的未标记帧），则设为 IDR 帧</li>
+                        <li>如果使用 <code>--no-open-gop</code>，且输入帧与之前的 I/P 帧画面差距达到 <code>--scenecut</code> 阈值（触发转场），则设立 IDR 帧</li>
+                        <li>IDR 帧（于 <code>--min-keyint</code> 范围内则设 I 帧）的前一帧强制改为 P 帧（阻断参考范围）</li>
                     </ul>
                 </li>
                 <li><b>启用/关闭连续 B 帧</b>：
@@ -765,77 +771,20 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                         <li><code>--b-pyramid</code> 参数允许连续 B 帧中的偶数帧作为参考帧使用，保证了长距离的连续 B 帧</li>
                     </ul>
                 </li>
-                <li><b>维特比算法推演 P/B/b 帧</b>：
-                    <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：维特比算法的推演例子，可略</button>
-                    <ul class="coll-content font-monospace pl-5 text-smaller">
-                        <li>Viterbi shortest path 是一种多起点 - 多终点，类似于 A*和 Dijkstra 的最短路径算法。假设一种成本模型：
-                            <ul>
-                                <li>I 帧成本最高，记为设立成本 <span class="text-blue-math">\(cost_I=10\)</span>；I 帧后的非 I 帧成本 +1，记为转换成本 <span class="text-blue-math">\(cost_{IS}=1\)</span></li>
-                                <li>P 帧成本次之，记为设立成本 <span class="text-blue-math">\(cost_P=5\)</span>；P 帧后的非 P 帧成本 +1，记为转换成本 <span class="text-blue-math">\(cost_{PS} = 1\)</span></li>
-                                <li>B 帧成本最低，记为设立成本 <span class="text-blue-math">\(cost_B=2\)</span>；B 帧压缩最高，记为转换成本 <span class="text-blue-math">\(cost_{BS} = 0\)</span></li>
-                                <li><code>--ref</code> 参数设定了参考帧的最远范围，使编码器不总选择成本最低的 B 帧</li>
-                            </ul>
-                        </li>
-                        <li>应用到推演各帧的可能路径图：
-                            <ul class="text-gray-side">
-                                <li>Frame 0: I0, -, -（GOP 首帧只能是路径中的 I 帧）</li>
-                                <li>Frame 1: I1, P1, B1</li>
-                                <li>Frame 2: I2, P2, B2</li>
-                                <li>Frame 3: I3, P3, B3</li>
-                                <li>Frame 4: I4, P4, B4</li>
-                                <li>...</li>
-                            </ul>
-                        </li>
-                        <li>由此推演第 0，第 1 帧的成本，其中<span class="text-blue-math">\(cost(I_0)\)</span>代表第 0 帧为 I 帧的成本，<span class="text-blue-math">\(cost(I)\)</span>代表设立 I 帧的成本，则记为转换成本（当然此处严格一些应该直接写成 1）：
-                            <ul class="text-gray-side">
-                                <li>Frame 0: <span class="text-blue-math">\(10\)</span>, <span class="text-blue-math">\(\text{-}\)</span>, <span class="text-blue-math">\(\text{-}\)</span></li>
-                                <li>Frame 1: <span class="text-blue-math">\(cost_{I0} + 10\)</span>, <span class="text-blue-math">\(cost_{P0} + cost_{IS} + 5\)</span>, <span class="text-blue-math">\(cost_{B0} + cost_{IS} + 2\)</span></li>
-                                <li>Frame 1: 20, 16, 13，或 <span class="text-blue-math">\(cost_{I1} = 20\)</span>，<span class="text-blue-math">\(cost_{P1} = 16\)</span>，<span class="text-blue-math">\(cost_{B1} = 13\)</span></li>
-                            </ul>
-                        </li>
-                        <li>正式采用维特比算法——选择每个帧的成本变为枝梢计算：设立成本 + 上帧三条路径中的最小值，推演第 2 帧及其后帧的成本：
-                            <ul>
-                                <li><span class="text-blue-math">\(I2 = min(cost_{I1} + 10, cost_{P1} + cost_{PS} + 10, cost_{B1} + 10) = min(20 + 10, 16 + 1 + 10, 13 + 10) = min(30,27,23) = 23\)</span></li>
-                                <li><span class="text-blue-math">\(P2 = min(cost_{I1} + cost_{IS} + 5, cost_{P1} + 5, cost_{B1} + 5) = min(20 + 1 + 5, 16 + 5, 13 + 5) = min(26,21,18) = 18\)</span></li>
-                                <li><span class="text-blue-math">\(B2 = min(cost_{I1} + cost_{IS} + 2, cost_{P1} + cost_{PS} + 2, cost_{B1} + 2) = min(20 + 1 + 2, 16 + 1 + 2, 13 + 2) = min(23,19,15) = 15\)</span></li>
-                                <li class="text-gray-side">Frame 2: 23, 18, 15</li>
-                                
-                                <li><span class="text-blue-math">\(I3 = min(cost_{I2} + 10, cost_{P2} + cost_{PS} + 10, cost_{B2} + 10) = min(23 + 10, 18 + 1 + 10, 15 + 10) = min(33,29,25) = 25\)</span></li>
-                                <li><span class="text-blue-math">\(P3 = min(cost_{I2} + cost_{IS} + 5, cost_{P2} + 5, cost_{B2} + 5) = min(23 + 1 + 5, 18 + 5, 15 + 5) = min(29,23,20) = 20\)</span></li>
-                                <li><span class="text-blue-math">\(B3 = min(cost_{I2} + cost_{IS} + 2, cost_{P2} + cost_{PS} + 2, cost_{B2} + 2) = min(23 + 1 + 2, 18 + 1 + 2, 15 + 2) = min(26,21,17) = 17\)</span></li>
-                                <li class="text-gray-side">Frame 3: 25, 20, 17</li>
-
-                                <li><span class="text-blue-math">\(I4 = min(cost_{I3} + 10, cost_{P3} + cost_{PS} + 10, cost_{B3} + 10) = min(25 + 10, 20 + 1 + 10, 17 + 10) = min(35,31,27) = 27\)</span></li>
-                                <li><span class="text-blue-math">\(P4 = min(cost_{I3} + cost_{IS} + 5, cost_{P3} + 5, cost_{B2} + 5) = min(25 + 1 + 5, 20 + 5, 17 + 5) = min(26,25,22) = 22\)</span></li>
-                                <li><span class="text-blue-math">\(B4 = min(cost_{I3} + cost_{IS} + 2, cost_{P3} + cost_{PS} + 2, cost_{B2} + 2) = min(25 + 1 + 2, 20 + 1 + 2, 17 + 2) = min(28,23,19) = 19\)</span></li>
-                                <li class="text-gray-side">Frame 3: 27, 22, 19</li>
-                                <li class="text-gray-side">Frame 4: 29, 24, 21</li>
-                            </ul>
-                        </li>
-                        <li>将复杂度（前后两帧画面差距）视作分母 <span class="text-blue-math">\(cplx_{0→1}\)</span>，将路径的值视作分子，就得到了该简化例子下的路径成本：
-                            <ul class="text-gray-side">
-                                    <li>Frame 0: I0, -, -（GOP 首帧只能是路径中的 I 帧）</li>
-                                    <li>Frame 1: <span class="text-blue-math">\(\frac{cplx_{1→2}}{I1}\)</span>, <span class="text-blue-math">\(\frac{cplx_{0→1}}{P1}\)</span>, <span class="text-blue-math">\(\frac{cplx_{0→1}}{B1}\)</span></li>
-                                    <li>Frame 2: <span class="text-blue-math">\(\frac{cplx_{2→3}}{I2}\)</span>, <span class="text-blue-math">\(\frac{cplx_{1→2}}{P2}\)</span>, <span class="text-blue-math">\(\frac{cplx_{1→2}}{B2}\)</span></li>
-                                    <li>Frame 3: <span class="text-blue-math">\(\frac{cplx_{3→4}}{I3}\)</span>, <span class="text-blue-math">\(\frac{cplx_{2→3}}{P3}\)</span>, <span class="text-blue-math">\(\frac{cplx_{2→3}}{B3}\)</span></li>
-                                    <li>Frame 4: <span class="text-blue-math">\(\frac{cplx_{4→5}}{I4}\)</span>, <span class="text-blue-math">\(\frac{cplx_{3→4}}{P4}\)</span>, <span class="text-blue-math">\(\frac{cplx_{3→4}}{B4}\)</span></li>
-                                    <li>...</li>
-                            </ul>
-                        </li>
-                        <li>如此一来，编码器就能得知什么时候设什么帧了</li>
-                    </ul>
-                </li>
-                <li><b>宏块树搜索/CU 树搜索 MBTree/CUTree</b>：
+                <li><b>维特比算法推演 I/P/B/b 帧</b>：判断设立 I/P/B 帧，例子见下</li>
+                <li><b>宏块树搜索/CU 树搜索（MBTree/CUTree）/帧间粗分块自适应量化</b>：
                     <ul class="font-monospace pl-5 text-smaller">
-                        <li>分析时间空间范围内的块分布，找出少见的宏块/CTU，并计算出这些块的压缩强度偏移，以提高这些块的压缩</li>
-                        <li>偏移程度的计算考虑了 Lookahead 中快速动态预测的准确度（当前和未来两帧相减，差距越大越复杂）</li>
-                        <li>偏移程度的计算还考虑了当前帧与软转场 GOP 首帧的距离，距离越远越少见，分配的压缩强度越大</li>
-                        <li>在这之前的软转场已将画面分界，所以“距离远”代表画面不变的情况下的距离远</li>
+                        <li>在前瞻进程的范围（帧数）里对宏块/CTU 的分布，排序常见到少见的粗分块</li>
+                        <li>通过降低常见粗分块的初始量化强度、提高少见粗分块的初始量化强度，实现码率分配的自适应</li>
+                    </ul>
+                    <ul class="font-monospace pl-5">
+                        <li>判断取决于快速动态预测的准确度，与当前帧与 GOP 首帧的距离（距离越远越少见、量化强度增加越多）</li>
+                        <li>注：在这之前，软转场已将画面分界，所以“距离远”代表画面不变的情况下的距离远</li>
                     </ul>
                 </li>
                 <li><b>硬转场 keyint</b>：
                     <ul class="font-monospace pl-5 text-smaller">
-                        <li>（等 mbtree 完成后）如果使用 <code>--no-open-gop</code>，且当前 GOP 长度达 <code>--min-keyint</code> 大小，则设立 IDR 帧以建立新的 GOP</li>
+                        <li>在 如果使用 <code>--no-open-gop</code>，且当前 GOP 长度达 <code>--min-keyint</code> 大小，则设立 IDR 帧以建立新的 GOP</li>
                         <li>IDR 帧（于 <code>--min-keyint</code> 范围内则设 I 帧）的前一帧会被强制改为 P 帧，以阻止 B 帧的双向参考特性</li>
                     </ul>
                 </li>
@@ -846,6 +795,64 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 </li>
                 <li><b>VBV/VBR/CBR 码率限制</b>：见<a href="../../x265-web-tutorial/HTML/index.html#h2-11">x265 教程网页版：下层——VBR，CBR 模式</a></li>
             </ol>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：维特比算法的推演例子，可略</button>
+            <ul class="coll-content font-monospace pl-5">
+                <li>Viterbi shortest path 是一种多起点、多终点，类似于 A*、Dijkstra 的最短路径算法。假设一种成本模型：
+                    <ul>
+                        <li>I 帧最远，记为设立成本 <span class="text-blue-math">\(cost_I=10\)</span>；I 帧后的非 I 帧成本 +1，记为转换成本 <span class="text-blue-math">\(cost_{IS}=1\)</span></li>
+                        <li>P 帧次之，记为设立成本 <span class="text-blue-math">\(cost_P=5\)</span>；P 帧后的非 P 帧成本 +1，记为转换成本 <span class="text-blue-math">\(cost_{PS} = 1\)</span></li>
+                        <li>B 帧最近，记为设立成本 <span class="text-blue-math">\(cost_B=2\)</span>；B 帧压缩最高，记为转换成本 <span class="text-blue-math">\(cost_{BS} = 0\)</span></li>
+                        <li><code>--ref</code> 参数设定了参考帧的最远范围，使编码器不总选择成本最低的 B 帧</li>
+                    </ul>
+                </li>
+                <li>应用到推演各帧的可能路径图：
+                    <ul class="text-gray-side">
+                        <li><b>Frame 0:</b> I0, -, -（GOP 首帧只能是路径中的 I 帧）</li>
+                        <li><b>Frame 1:</b> I1, P1, B1</li>
+                        <li><b>Frame 2:</b> I2, P2, B2</li>
+                        <li><b>Frame 3:</b> I3, P3, B3</li>
+                        <li><b>Frame 4:</b> I4, P4, B4</li>
+                        <li>...</li>
+                    </ul>
+                </li>
+                <li>由此推演第 0，第 1 帧的成本，其中<span class="text-blue-math">\(cost(I_0)\)</span>代表第 0 帧为 I 帧的成本，<span class="text-blue-math">\(cost(I)\)</span>代表设立 I 帧的成本，则记为转换成本（当然此处严格一些应该直接写成 1）：
+                    <ul class="text-gray-side">
+                        <li><b>Frame 0:</b> <span class="text-blue-math">\(10\)</span>, <span class="text-blue-math">\(\text{-}\)</span>, <span class="text-blue-math">\(\text{-}\)</span></li>
+                        <li><b>Frame 1:</b> <span class="text-blue-math">\(cost_{I0} + 10\)</span>, <span class="text-blue-math">\(cost_{P0} + cost_{IS} + 5\)</span>, <span class="text-blue-math">\(cost_{B0} + cost_{IS} + 2\)</span></li>
+                        <li><b>Frame 1:</b> 20, 16, 13，或 <span class="text-blue-math">\(cost_{I1} = 20\)</span>，<span class="text-blue-math">\(cost_{P1} = 16\)</span>，<span class="text-blue-math">\(cost_{B1} = 13\)</span></li>
+                    </ul>
+                </li>
+                <li>正式采用维特比算法——选择每个帧的成本变为枝梢计算：设立成本 + 上帧三条路径中的最小值，推演第 2 帧及其后帧的成本：
+                    <ul>
+                        <li><span class="text-blue-math">\(I2 = min(cost_{I1} + 10, cost_{P1} + cost_{PS} + 10, cost_{B1} + 10)\)<br>\(= min(20 + 10, 16 + 1 + 10, 13 + 10)\)<br>\(= min(30,27,23) = 23\)</span></li>
+                        <li><span class="text-blue-math">\(P2 = min(cost_{I1} + cost_{IS} + 5, cost_{P1} + 5, cost_{B1} + 5)\)<br>\(= min(20 + 1 + 5, 16 + 5, 13 + 5)\)<br>\(= min(26,21,18) = 18\)</span></li>
+                        <li><span class="text-blue-math">\(B2 = min(cost_{I1} + cost_{IS} + 2, cost_{P1} + cost_{PS} + 2, cost_{B1} + 2)\)<br>\(= min(20 + 1 + 2, 16 + 1 + 2, 13 + 2)\)<br>\(= min(23,19,15) = 15\)</span></li>
+                        <li class="text-gray-side"><b>Frame 2:</b> 23, 18, 15</li>
+                        
+                        <li><span class="text-blue-math">\(I3 = min(cost_{I2} + 10, cost_{P2} + cost_{PS} + 10, cost_{B2} + 10)\)<br>\(= min(23 + 10, 18 + 1 + 10, 15 + 10)\)<br>\(= min(33,29,25) = 25\)</span></li>
+                        <li><span class="text-blue-math">\(P3 = min(cost_{I2} + cost_{IS} + 5, cost_{P2} + 5, cost_{B2} + 5)\)<br>\(= min(23 + 1 + 5, 18 + 5, 15 + 5)\)<br>\(= min(29,23,20) = 20\)</span></li>
+                        <li><span class="text-blue-math">\(B3 = min(cost_{I2} + cost_{IS} + 2, cost_{P2} + cost_{PS} + 2, cost_{B2} + 2)\)<br>\(= min(23 + 1 + 2, 18 + 1 + 2, 15 + 2)\)<br>\(= min(26,21,17) = 17\)</span></li>
+                        <li class="text-gray-side"><b>Frame 3:</b> 25, 20, 17</li>
+                        
+                        <li><span class="text-blue-math">\(I4 = min(cost_{I3} + 10, cost_{P3} + cost_{PS} + 10, cost_{B3} + 10)\)<br>\(= min(25 + 10, 20 + 1 + 10, 17 + 10)\)<br>\(= min(35,31,27) = 27\)</span></li>
+                        <li><span class="text-blue-math">\(P4 = min(cost_{I3} + cost_{IS} + 5, cost_{P3} + 5, cost_{B2} + 5)\)<br>\(= min(25 + 1 + 5, 20 + 5, 17 + 5)\)<br>\(= min(26,25,22) = 22\)</span></li>
+                        <li><span class="text-blue-math">\(B4 = min(cost_{I3} + cost_{IS} + 2, cost_{P3} + cost_{PS} + 2, cost_{B2} + 2)\)<br>\(= min(25 + 1 + 2, 20 + 1 + 2, 17 + 2)\)<br>\(= min(28,23,19) = 19\)</span></li>
+                        <li class="text-gray-side"><b>Frame 3:</b> 27, 22, 19</li>
+                        <li class="text-gray-side"><b>Frame 4:</b> 29, 24, 21</li>
+                    </ul>
+                </li>
+                <li>将复杂度（前后两帧差距）视作分母 <span class="text-blue-math">\(cplx_{0→1}\)</span>，将路径的值视作分子，就得到了该简化例子下的路径成本：
+                    <ul class="text-gray-side">
+                        <li><b>Frame 0:</b> I0, -, -（GOP 首帧只能是路径中的 I 帧）</li>
+                        <li><b>Frame 1:</b> <span class="text-blue-math text-larger">\(\frac{cplx_{1→2}}{I1}\)，\(\frac{cplx_{0→1}}{P1}\)，\(\frac{cplx_{0→1}}{B1}\)</span></li>
+                        <li><b>Frame 2:</b> <span class="text-blue-math text-larger">\(\frac{cplx_{2→3}}{I2}\)，\(\frac{cplx_{1→2}}{P2}\)，\(\frac{cplx_{1→2}}{B2}\)</span></li>
+                        <li><b>Frame 3:</b> <span class="text-blue-math text-larger">\(\frac{cplx_{3→4}}{I3}\)，\(\frac{cplx_{2→3}}{P3}\)，\(\frac{cplx_{2→3}}{B3}\)</span></li>
+                        <li><b>Frame 4:</b> <span class="text-blue-math text-larger">\(\frac{cplx_{4→5}}{I4}\)，\(\frac{cplx_{3→4}}{P4}\)，\(\frac{cplx_{3→4}}{B4}\)</span></li>
+                        <li>...</li>
+                    </ul>
+                </li>
+                <li>如此一来，编码器就能得知什么时候设什么帧了</li>
+            </ul>
             <p>视频编码的前瞻进程涉及多个复杂步骤，因此并无直观的图解；不过尽管原理不同，前瞻型纯追踪算法 Pure pursuit lookahead 有着一致的“让程序变聪明”概念，并解释了前瞻进程长度对精度的影响（当然，影响取决于分辨率、帧率、色深等条件）：</p>
             <div class="align-items-center">
                 <img loading="lazy" src="files/Pure_Pursuit_Lookahead.png" alt="Pure Pursuit Lookahead" class="img-medium">
@@ -860,14 +867,14 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="text-gray-side pl-5 m-0">注：hist-threshold 参数于 x265 v3.5+69 被删。</p>
             <!-- x264 教程副本，需要手动同步更改 { -->
             <code class="code-bold">--rc-lookahead</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，视频帧数量，范围 1~250，<span class="text-red-emph">需大于 <code>--bframes</code></span>，<span class="text-blue-emph">推荐 keyint÷2</span>&gt;指定 cutree 的检索帧数，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
-            <p class="text-gray-side pl-5 m-0 overflow-auto">注：mbtree/cutree 会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，视频帧数量，范围 1~250，<span class="text-red-emph">需大于 <code>--bframes</code></span>，<span class="text-blue-emph">推荐 keyint÷2</span>&gt;指定前瞻进程，包括宏块树/CU 树（MBTree/CUTree）的搜索帧数范围，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
+            <p class="text-gray-side pl-5 m-0 overflow-auto">注：宏块树/CU 树（MBTree/CUTree）会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
             <!-- } -->
             <code class="code-bold">--gop-lookahead</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0，视频帧数量，范围 0~<code>rc-lookahead</code>，<span class="text-blue-emph"><a href="https://x265.readthedocs.io/en/master/cli.html#cmdoption-gop-lookahead">x265 文档推荐小于 <code>min-keyint</code></a></span>&gt;指定遇到（ <code>--keyint</code> 指定的）GOP 边界时继续向后检查 N 帧，若发现转场机会就将当前的 GOP 延长过去。</p>
             <p class="text-gray-side pl-5 m-0 overflow-auto">注：使用 SVT x265（并启用 miniGOP 结构）时，范围上限则是 0~<span class="text-blue-math"><code>rc-lookahead</code> - miniGOP</span>。</p>
             <code class="code-bold">--no-cutree</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关闭少见 CTU 量化增强偏移。可能只有近无损，<code>--crf</code> 小于 16 才用的到。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关闭宏块树/CU 树（MBTree/CUTree）/帧间自适应量化，不推荐。</p>
 
             <h3 class="mb-0">P/B 帧推演——Viterbi 最短路径算法</h3>
             <p class="mt-0">见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>

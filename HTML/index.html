@@ -784,7 +784,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 </li>
                 <li><b>硬转场 keyint</b>：
                     <ul class="font-monospace pl-5 text-smaller">
-                        <li>在 如果使用 <code>--no-open-gop</code>，且当前 GOP 长度达 <code>--min-keyint</code> 大小，则设立 IDR 帧以建立新的 GOP</li>
+                        <li>如果使用 <code>--no-open-gop</code>，且当前 GOP 长度达 <code>--min-keyint</code> 大小，则设立 IDR 帧以建立新的 GOP</li>
                         <li>IDR 帧（于 <code>--min-keyint</code> 范围内则设 I 帧）的前一帧会被强制改为 P 帧，以阻止 B 帧的双向参考特性</li>
                     </ul>
                 </li>
@@ -870,9 +870,6 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，视频帧数量，范围 1~250，<span class="text-red-emph">需大于 <code>--bframes</code></span>，<span class="text-blue-emph">推荐 keyint÷2</span>&gt;指定前瞻进程，包括宏块树/CU 树（MBTree/CUTree）的搜索帧数范围，通常设在帧率的 2.5~3 倍。高则占用内存增加延迟，低则降低压缩率和平均画质。</p>
             <p class="text-gray-side pl-5 m-0 overflow-auto">注：宏块树/CU 树（MBTree/CUTree）会自动选择 <code>--rc-lookahead</code> 和 <span class="text-blue-math text-smaller">\( \max\left( \text{keyint}, \max\left( \text{vbv-maxrate}, \text{bitrate}\right)\div\text{vbv-bufsize} \times \text{fps} \right) \)</span> 中最小的值作为检索帧数</p>
             <!-- } -->
-            <code class="code-bold">--gop-lookahead</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0，视频帧数量，范围 0~<code>rc-lookahead</code>，<span class="text-blue-emph"><a href="https://x265.readthedocs.io/en/master/cli.html#cmdoption-gop-lookahead">x265 文档推荐小于 <code>min-keyint</code></a></span>&gt;指定遇到（ <code>--keyint</code> 指定的）GOP 边界时继续向后检查 N 帧，若发现转场机会就将当前的 GOP 延长过去。</p>
-            <p class="text-gray-side pl-5 m-0 overflow-auto">注：使用 SVT x265（并启用 miniGOP 结构）时，范围上限则是 0~<span class="text-blue-math"><code>rc-lookahead</code> - miniGOP</span>。</p>
             <code class="code-bold">--no-cutree</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关闭宏块树/CU 树（MBTree/CUTree）/帧间自适应量化，不推荐。</p>
 
@@ -919,8 +916,11 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <h3>关键帧</h3>
             <h5>刷新解码帧 Instant decoder refresh IDR</h5>
             <ul class="text-gray-side text-smaller">
-                <li>自身储存完整图片，但同时还负责 GOP 间划界分段，播完令解码器清理前 GOP 缓存的大写 I 帧</li>
-                <li>清缓存是为了防止参考/内存错误传播，错误可能源自硬件/软件/网络/干扰等</li>
+                <li>自身储存完整图片，但同时还负责 GOP 间划界分段，播完令解码器刷新播放缓冲区的 I 帧</li>
+                <li>刷新播放缓冲区会切断源自存储/解码/网络等各种导致画面错误的信息一直传播</li>
+                <li>IDR 帧距离越近（GOP 越短）时，错误传播的距离就越短，解码播放的压力越低，但同时视频也越大，带宽压力越高</li>
+                <li>播放时，解码器遇到 IDR 帧会刷新参考帧缓冲区，弃用 IDR 帧前的所有数据。这个特性使得播放器拖动进度条时，一定会从 IDR 帧开始解码</li>
+                <li>若解码器支持精确定位，则拖动进度条后，解码器会快速从上一个 IDR 帧解码到实际进度；解码器不支持，拖动进度条会照旧从上个 IDR 帧开始播放，造成视频格式间不统一的进度条拖动体验</li>
             </ul>
             <h5>随机访问点 Random access point RAP</h5>
             <ul class="text-gray-side text-smaller">
@@ -940,12 +940,23 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
 
             <code class="code-bold">--no-open-gop</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，建议开&gt;不用 cra/bla，增加码率增加兼容性，适合长 GOP 策略。</p>
+            <!-- x264 教程副本，需要手动同步更改 { -->
             <code class="code-bold">--keyint</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 25&gt;判断新发现的转场距上个 IDR 帧的距离是否短于此值。有两种设定逻辑，而它们给出的画质都一样：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 250，推荐 9~12 倍帧率（即 9~12 秒）&gt;指定最长关键帧间隔（GOP 长度）。当距离上一个 IDR 帧达到阈值时，覆盖帧类型推演而直接设立 IDR 帧，开始一个新 GOP，并弃用 IDR 帧前的所有数据。</p>
             <ul class="font-monospace pl-5 text-smaller">
-                <li>设 5 或更高，省了设立一些 IDR 帧拖慢速度。快速编码/直播环境直接设=keyint</li>
-                <li>设 1 来增加 IDR 帧的数量，一帧被判转场本来就意味着前后溯块价值不高。而单/双向参考（P/B）帧内可以放置 I 宏块，x264/5 倾向插 P/B 帧。好处是进度条落点在激烈的动作场面更密集</li>
+                <li>如果视频用于多轨剪辑素材（且频繁拖动进度条），则建议 6~8 倍帧率（即 6~8 秒）以降低解码器负载，提高流畅度</li>
             </ul>
+            <code class="code-bold">--min-keyint</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 25&gt;指定最小关键帧（IDR 帧）间隔。当转场判断（scenecut）被触发时，这个间隔之内的设立为 I 帧，之外的设立为 IDR 帧。非关键帧的 I 帧虽然也是独立图像，但不刷新解码器缓冲区，因此帧间参考会继续。有两种设定逻辑，而它们给出的画质都一样，区别在于体积：</p>
+            <ul class="font-monospace pl-5 text-smaller">
+                <li><span class="text-blue-emph">keyint÷2 ~ keyint</span>：设立新 I 帧意味着一批帧内编码任务被设立，而设立 IDR 帧还要重新开始帧间编码，不急着设立 IDR 帧虽然对压缩/画质不好，但也不容易在录制时卡顿</li>
+                <li><span class="text-blue-emph">1</span>：一帧被判为 I 帧，而不是 P、B 帧，已经说明了说明前后并不适合参考。因此即使两帧挨得很近，也有可能是两个不同的场景，于是设立 IDR 帧拆分成 GOP 是画质最好，但帧间参考最差的选项。</li>
+                <li><span class="text-blue-emph">5~10</span>：相比 1 在 24~60 fps 帧率下略微放宽要求（约 0.1~.15 秒），避免画面闪烁、闪回插入镜头（如意识流蒙太奇剪辑）时 IDR 帧数暴涨，维持帧间参考；推荐搭配 <code>--gop-lookahead</code> 使用</li>
+            </ul>
+            <!-- } -->
+            <code class="code-bold">--gop-lookahead</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数，默认 0，视频帧数量，范围 0~<code>rc-lookahead</code>，<span class="text-blue-emph"><a href="https://x265.readthedocs.io/en/master/cli.html#cmdoption-gop-lookahead">x265 文档推荐小于 <code>min-keyint</code></a></span>&gt;指定遇到（ <code>--keyint</code> 指定的）GOP 边界时先延迟 N 帧，若发现转场机会就破例延长 GOP 过去。</p>
+            <p class="text-gray-side pl-5 m-0 overflow-auto">注：使用 SVT-x265（并启用 miniGOP 结构）时，范围上限则是 0~<span class="text-blue-math"><code>rc-lookahead</code> - miniGOP</span>。</p>
             <code class="code-bold">--fades</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;找流中的虚实渐变 fade-in，给小到帧间条带，大到整个帧间范围改用 I 条带，并根据渐变后最亮的帧重设码率控制历史记录，解决转场致模糊的问题</p>
             <p class="text-gray-side pl-5 m-0">注：与 weightb 殊路同归但效果更强，增加码率更多。</p>
@@ -5551,30 +5562,38 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
             <table class="table-center">
                 <tbody>
                     <tr class="border-bottom">
+                        <th class="px-3 t-light-gray"><a href="https://bluesky-soft.com/en/DXVAChecker.html">DXVA Checker</a></th>
+                        <td class="px-1">
+                            <p>检测 PC 上支持的硬件编解码、渲染器的输入输出色彩空间、色度采样，以及监控编解码占用的轻量工具。可选择下载安装版（Installer）或便携版（ZIP）</p>
+                        </td>
+                    </tr>
+                    <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffmpeg~ffprobe</a></th>
-                        <td class="px-1">顶级开源多系统多媒体 CLI 处理~检测工具</td>
+                        <td class="px-1">
+                            <p>顶级开源多系统多媒体 CLI 处理工具；后者还支持读取视频帧/GOP SEI 信息，可以用于分析码率构成与趋势，以及挑选出不同压制结果中的最优选。</p>
+                        </td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://mpv.io/installation/">mpv</a></th>
-                        <td class="px-1">支持便携的开源多系统现代视频播放器。见<a href="https://nazorip.site/archives/1052/">安装与配置</a>教程</td>
+                        <td class="px-1"><p>支持便携的开源多系统现代视频播放器。见<a href="https://nazorip.site/archives/1052/">安装与配置</a>教程</td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://www.voukoder.org/">Voukoder</a></th>
-                        <td class="px-1">开源 Premiere Vegas After Effects 压制导出插件，分为 Voukoder 和 V-Connector 两部分</td>
+                        <td class="px-1"><p>Premiere Vegas After Effects 压制导出插件，分为 Voukoder 和 V-Connector 两部分</p></td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://obsproject.com/zh-cn/download">OBS</a></th>
-                        <td class="px-1">开源直播框架和录制软件，设置略比传统录屏软件复杂，但效果也更好</td>
+                        <td class="px-1"><p>开源直播框架和录制软件，设置略比传统录屏软件复杂，但效果也更好</p></td>
                     </tr>
                     <tr class="border-bottom">
                         <th class="px-3 t-light-gray"><a href="https://mediaarea.net/zh-CN/MediaInfo">MediaInfo</a></th>
-                        <td class="px-1">开源 GUI 媒体元数据/视音频格式读取器，用于配置正确的压制参数</td>
+                        <td class="px-1">
+                            <p>开源 GUI 媒体元数据/视音频格式读取器，这些数据是配置合理压制参数的关键</p>
+                            <p class="text-gray-side">注：由于苹果应用商店收取上架费，因此需要在 <a href="https://mediaarea.net/zh-CN/MediaInfo/Download/Mac_OS">MediaInfo 官网下载安装包（下载 GUI，不是 CLI）</a>并侧载安装。</p>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-
-            <h3>VapourSynth 帧服务器滤镜工具</h3>
-            <p>临时内容，具体是否应该，以及如何放于 x264/5 教程内有待讨论。</p>
         </div>
 
         <!-- Footer -->

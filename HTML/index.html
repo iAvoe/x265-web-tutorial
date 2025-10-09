@@ -718,22 +718,28 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 </div>
             </div>
 
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：高斯模糊 Gaussian blur</button>
-            <div class="coll-content">
-                <p>利用正态分布函数面积不变的特性，通过设定偏差程度 σ 决定正态分布钟型线的梯度：σ 大则钟扁——滤镜中心分到的权重/面积越被更多分到权/面积的旁像素冲淡模糊掉，设计行业常用。见<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A">维基百科</a>和<a href="https://www.desmos.com/calculator/jxzs8fz9qr">Desmos 互动例</a>。2D 高斯模糊写作：<span class="text-blue-math">
-                    $${\displaystyle G(x,y)={\frac {1}{2\pi \sigma ^{2}}}e^{-{\frac {x^{2}+y^{2}}{2\sigma ^{2}}}}}$$
-                </span></p>
+            <h3>高斯模糊 Gaussian blur</h3>
+            <p>利用正态分布函数面积不变的特性，通过设定偏差程度 σ 决定正态分布钟型线的梯度：σ 大则钟扁——滤镜中心分到的权重/面积越被更多分到权/面积的旁像素冲淡模糊掉，设计行业常用。见<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A">维基百科</a>和<a href="https://www.desmos.com/calculator/jxzs8fz9qr">Desmos 互动例</a>。2D 高斯模糊写作“半径的散布（r^σ）”，其中半径 r 代表高斯内核的宽高、散布 σ 代表中心的高点向外扩散的程度：
+                <span class="text-blue-math text-larger">$$
+                    \displaystyle G(x,y)={\frac {1}{2\pi \sigma ^{2}}}e^{-{\frac {x^{2}+y^{2}}{2\sigma ^{2}}}}
+                $$</span>
+            </p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/bilateral-filter/2D-Gaussian-kernel.png" alt="Gaussian Kernel" class="img-medium">
+                <p class="text-gray-side">图：2D 高斯内核。来源：<a href="https://www.researchgate.net/figure/Distribution-of-2D-Gaussian-filter-kernel_fig7_357236614">ResearchGate/357236614</a></p>
+                <img loading="lazy" src="files/bilateral-filter/imagemagick-gaussian_blur.jpg" alt="Gaussian Blur" class="img-medium">
+                <p class="text-gray-side">图：高斯模糊滤镜中，使用不同宽高，使用，来源：<a href="https://legacy.imagemagick.org/Usage/blur/">imagemagick 文档</a></p>
             </div>
 
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：中值滤镜 Median filter</button>
-            <div class="coll-content">
-                <p>用 NxN 的滤镜格子逐像素扫描全图（卷积法）。滤镜中心会被替换为旁像素的中值，除非滤镜格子两端的像素值差异较大。如此一来，平面上的噪点/颗粒会被抹除、边缘被保留、生成仅有平/斜面和完整线条边缘的“模糊”结果。</p>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/bilateral-filter/Median-Filter.png" alt="Median Filter" class="img-medium">
-                    <p class="text-gray-side">图：中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate——Andrzej Bargiela</a></p>
-                    <img loading="lazy" src="files/bilateral-filter/Median-Filter-Example.jpg" alt="Median Filter Example" class="img-medium">
-                    <p class="text-gray-side">图：中值滤镜效果。见<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2%E5%99%A8">维基百科</a></p>
-                </div>
+            <h3>中值滤镜 Median filter</h3>
+            <p>一般由卷积滤镜实现。将卷积内核的中心点会被替换为旁像素的中值，除非滤镜格子两端的像素值差异较大。如此一来，平面上的噪点/颗粒会被抹除、边缘被保留、生成仅有平/斜面和完整线条边缘的“模糊”结果。当然，图中的低频噪声（纹理的粗细大于卷积内核面积）不会被这种方法找出，自然也不受影响（见下图 Despeckle 滤镜效果）。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/bilateral-filter/Median-Filter.png" alt="Median Filter" class="img-medium">
+                <p class="text-gray-side">图：卷积中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate——Andrzej Bargiela</a></p>
+                <img loading="lazy" src="files/bilateral-filter/Median-Filter-Example.jpg" alt="Median Filter Example" class="img-small">
+                <p class="text-gray-side">图：中值滤镜效果。见<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2%E5%99%A8">维基百科</a></p>
+                <img loading="lazy" src="files/bilateral-filter/imagemagick-blur-despecle-sharpen.webp" alt="ImageMagick Median-like Example" class="img-medium">
+                <p class="text-gray-side">图：基于中值滤镜原理的 DeSpeckle 滤镜（搭配前置轻模糊+后置轻锐化）效果，适合修复 JPEG 失真和印刷纹路。见 <a href="hhttps://docs.gimp.org/3.0/en/plug-in-despeckle.html">GIMP 文档</a>、<a href="https://legacy.imagemagick.org/Usage/blur/">imagemagick 文档</a></p>
             </div>
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：双边滤镜 Bilateral filter</button>
@@ -873,7 +879,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <code class="code-bold">--no-cutree</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;关闭宏块树/CU 树（MBTree/CUTree）/帧间自适应量化，不推荐。</p>
 
-            <h3 class="mb-0">P/B 帧推演——Viterbi 最短路径算法</h3>
+            <h3 class="mb-0">P、B 帧推演——Viterbi 最短路径算法</h3>
             <p class="mt-0">见<a href="https://www.nazorip.site/archives/63">x264 教程</a></p>
 
             <code class="code-bold">--b-adapt</code>
@@ -979,14 +985,16 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 <li>动漫片源中连续长 B 帧出现几率增多，有时会找不到合适的参考源导致画质损失，用<span class="text-blue-emph">1.2</span>或更小分配一定码率</li>
                 <li>可据比例换算帧类型的 qp，如<span class="text-blue-emph">I-qp17</span>，<span class="text-blue-emph">P-qp20</span>，<span class="text-blue-emph">B-qp22</span>即<span class="text-blue-emph">--qp/crf 17 --ipratio 1.1765 --pbratio 1.1</span></li>
             </ul>
+            <!-- x264 教程副本，需要手动同步更改 { -->
             <code class="code-bold">--bframes</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~16&gt;最多可连续插入的 B 帧数量：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~16&gt;最多可连续插入的双向参考帧 B 帧数量（超过后插入 P 帧）：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>一般录像/录屏快速，以及视频剪辑素材设<span class="text-blue-emph">3~6</span>以防止录制和剪辑的解码算力要求过高</li>
                 <li>电影片源快速设<span class="text-blue-emph">8</span>左右</li>
                 <li>低成本动画片源，或播放设备配置或硬解兼容高的话可设在<span class="text-blue-emph">13</span>左右</li>
             </ul>
-            <p class="text-gray-side pl-5 m-0">注：bframes 大于 8，同时 keyint 大于 250 会大增内存占用，但也取决于视频分辨率</p>
+            <p class="text-gray-side pl-5 m-0">注：<code>--bframes &gt; 8</code>，同时 <code>--keyint &gt; 250</code> 会根据视频分辨率而显著增加内存占用。</p>
+            <!-- } -->
 
             <h2 id="h2-10">帧内预测/单图压缩</h2>
             <div class="row">

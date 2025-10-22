@@ -735,7 +735,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p>一般由卷积滤镜实现。将卷积内核的中心点会被替换为旁像素的中值，除非滤镜格子两端的像素值差异较大。如此一来，平面上的噪点/颗粒会被抹除、边缘被保留、生成仅有平/斜面和完整线条边缘的“模糊”结果。当然，图中的低频噪声（纹理的粗细大于卷积内核面积）不会被这种方法找出，自然也不受影响（见下图 Despeckle 滤镜效果）。</p>
             <div class="align-items-center">
                 <img loading="lazy" src="files/bilateral-filter/Median-Filter.png" alt="Median Filter" class="img-medium">
-                <p class="text-gray-side">图：卷积中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate——Andrzej Bargiela</a></p>
+                <p class="text-gray-side">图：卷积中值滤镜，来源：<a href="https://www.researchgate.net/figure/Example-of-Median-Filtering-using-a-33-sampling-window-keeping-border-values-unchanged_fig1_276304662">Research Gate/Andrzej Bargiela</a></p>
                 <img loading="lazy" src="files/bilateral-filter/Median-Filter-Example.jpg" alt="Median Filter Example" class="img-small">
                 <p class="text-gray-side">图：中值滤镜效果。见<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2%E5%99%A8">维基百科</a></p>
                 <img loading="lazy" src="files/bilateral-filter/imagemagick-blur-despecle-sharpen.webp" alt="ImageMagick Median-like Example" class="img-medium">
@@ -4373,8 +4373,20 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~99，默认 70&gt;相似度判定值，默认达 70% 重复就判为相似。</p>
 
             <h2 id="h2-18">线程与节点控制</h2>
-            <code class="code-bold">--asm</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串或整数，默认除 avx512 以外全开&gt;通过指定以下列表中特定位置的指令集名称或序号，从而禁用比它新的指令集，从而支持老旧处理器。此外，可以手动指定 <code>avx512</code>，但仅 ZEN4、Arrow Lake 及更新架构的处理器正常支持，其它处理器有的完全不支持，有的假装支持。</p>
+            
+            <h3>线程 Thread</h3>
+            <p>在软件开发理论中，线程 Thread 是软件层面的抽象概念，与 CPU 超线程的硬件线程（逻辑核心）不是一个东西。在 Windows 系统上开任务管理器，切换到 [性能] 栏目，其中与“进程数”相关的“线程数”就是说它。当然，CPU 是无法<span class="text-blue-emph">同时</span>处理这么多线程的，这个数量的上限就是硬件线程数（逻辑核心）。</p>
+
+            <h3>生产者—消费者 Producer—Consumer 模型</h3>
+            <p>一批生产者线程向共享队列添加任务、另一批消费者线程从共享队列中拿走任务；共享队列资源（L3 缓存或内存区域）为空则消费者线程暂停，共享队列资源满则生产者线程暂停，从而将复杂任务分成可以多线程处理的小任务，且能自动根据处理状况释放 CPU 资源。</p>
+            <p>本质上这就是管道（Pipe）的流程，而创建生产者、消费者的数量都是手动设置的，而 CPU 同时只能处理逻辑核心数量的任务，因此这种多线程模型难以适应复杂多变的任务类型。同时，为了处理复杂任务，消费者进程往往是中间生产者/中继线程，而如果有消费者进程慢了，那么就很容易在整个队列中积压任务，占用大量内存。</p>
+
+            <h3>异步任务 Asynchronous Task（无界线程）</h3>
+            <p>一个主线程按需创建工作者线程（Worker Thread）。例如网页服务器（软件）收到一份用户请求时创建一个线程来对接和传输，用户关闭连接（关网页）时直接删除进程释放资源，从而使得主线程完全不参与用户交互（不会慢下来、用户误操作只卡死某个线程而不宕机）、且能在一定程度上自动拒绝过多的请求。</p>
+            <p>这种多线程虽然已经能处理视频编码任务，但有着严重的性能问题：任务多时，CPU 需要频繁在各个任务间切换（清空 L3 缓存，再加载相关任务到缓存）来保证所有线程同步推进，同时，创建和删除线程的操作本身就占用算力。同理，即使是网页服务器也会因为请求过多而拒绝新的连接。</p>
+
+            <h3>线程池 Thread Pool（有界线程）</h3>
+            <p>结合生产者—消费者与异步任务这两种多线程控制的优点。其结构分为任务队列 Task queue、工作者线程 Worker Thread，以及一套管理系统（Java：<code>ExecutorService</code>，<code>ThreadPoolExecutor</code>；C#：<code>ThreadPool</code>；Python：<code>concurrent.futures.ThreadPoolExecutor</code>）。它的性能提升在于生产者—消费者模型的线程复用（工作者线程一开始就创建且不删除），异步任务中“主线程光指挥”的非阻塞特性，且额外支持根据 CPU 的逻辑核心数量来设置并行的线程数（解决生产者—消费者模型需要手动设置，且 CPU 同时处理的任务数量有上限），才使得程序能合理地吃满 CPU。</p>
 
             <h3>大缓存处理器是否有优势</h3>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
@@ -4391,25 +4403,20 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 
             <h3>多节点/多路主机</h3>
             <p>如电脑连接超过一台打印机，超过一个网卡（如有线 + 无线）就称为多节点部署。此处特指 CPU 节点——同主板上超过一颗处理器以及其对应内存的系统环境。这种环境的缺点是节点 0 的处理器访问节点 1 的内存的延迟很大，所以一般通过虚拟机，或专门优化的程序来限制软件只占用一个节点的 CPU 核心。</p>
-
+            
             <code class="code-bold">--pools</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/加减符“,,,”，默认*（占用任意节点电脑的全部线程）&gt;x264 中--threads 的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有 4 个 CPU 节点，使用首个节点</li>
                 <li>设为<span class="text-blue-emph">pools none</span>时关闭</li>
                 <li>单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的 8 个线程</li>
-                <li>若--wpp，--pmode，--pme，--lookahead-slices 全关，则--pools 参数无效</li>
-                <li>若指定--pools none，则--wpp，--pmode，--pme，--lookahead-slices 无效</li>
+                <li>若 <code>--wpp</code>，<code>--pmode</code>，<code>--pme</code>，<code>--lookahead-slices</code> 全关，则<code>--pools</code> 参数无效</li>
+                <li>若指定 <code>--pools none</code>，则 <code>--wpp</code>，<code>--pmode</code>，<code>--pme</code>，<code>--lookahead-slices</code> 无效</li>
             </ul>
-
-            <h3>线程池 Threadpool</h3>
-            <p>同网络下整台电脑的所有可用线程，或此处所有节点 CPU 线程的数量。若 x265 占用超过 64 个线程（32bit 系统下为 32 个），则这些线程本身还可以细分出最多 64 个子线程（32bit 系统下为 32 个）。子线程池的大小和 pool 参数设置出的大小一致，但因为性能和系统兼容性的限制，子线程可能会比预期少。</p>
-
-            <h3>工作者线程/分工线程-Worker thread</h3>
-            <p>一种多线程优化，能部分解决跨节点运行性能问题——主程序分出一个活跃的分工线程持续重复执行任务，如监听端口 8080，监听信息的后台进程；或者是 x265 外包任务给其它核心或节点上的 pme/pmode Worker thread，使 x265 可以略好的跨节点运行。</p>
-
+            <p>当 x265 编码器占用了超过 64 个线程（32bit 系统下为 32 个）时，这些线程本身还可以细分出最多 64 个子线程（32bit 系统下为 32 个）。尽管因为性能和系统兼容性的限制，子线程可能会比预期少，但在 CPU 核心特别多的环境下可以提高 CPU 利用率。子线程池的大小和 pool 参数设置出的大小一致。</p>
+            
             <code class="code-bold">--pmode</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 pools</span>&gt;创建平行模式决策 Parallel Mode Decision 的 Worker thread 以更改 pools 参数功能。推荐先于 pme 打开，推荐搭配 rd 3 + rect，而 rd 5 时可以先确认占用率未跑满再打开。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 <code>--pools</code></span>&gt;创建平行模式决策（Parallel Mode Decision）的工作者线程以更改 pools 参数功能。推荐先于 pme 打开，推荐搭配 rd 3 + rect，而 rd 5 时可以先确认占用率未跑满再打开。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>如<span class="text-blue-emph">--pme --pmode</span>表明使用整个线程池，分配平行动态搜索，平行模式决策以更好地增加多线程节点占用。</li>
                 <li>模式决策独立线程化会使本可提前退出的策略因信息孤立而不可跳过，使理论率失真最优推理更准（无损压缩略微提升）</li>
@@ -4420,6 +4427,9 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <li>如<span class="text-blue-emph">--pme</span>表明使用整个线程池，并分配平行动态搜索的分工线程</li>
                 <li>开 pme 时，遇到性能（比仅一个节点）更差状况的可能性不低</li>
             </ul>
+
+            <code class="code-bold">--asm</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串或整数，默认除 avx512 以外全开&gt;通过指定以下列表中特定位置的指令集名称或序号，从而禁用比它新的指令集，从而支持老旧处理器。此外，可以手动指定 <code>avx512</code>，但仅 ZEN4、Arrow Lake 及更新架构的处理器正常支持，其它处理器有的完全不支持，有的假装支持。</p>
 
             <h3>多线程 vs 多参考（frame-thread）</h3>
             <p>用多线程一次编码多帧来占满算力 vs 一次只编一帧，确保所有参考画面可用（大幅提高多核占用，画质和文件影响小）的决策。造成多线多参考帧困难的原因有：</p>

@@ -4386,7 +4386,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p>这种多线程虽然已经能处理视频编码任务，但有着严重的性能问题：任务多时，CPU 需要频繁在各个任务间切换（清空 L3 缓存，再加载相关任务到缓存）来保证所有线程同步推进，同时，创建和删除线程的操作本身就占用算力。同理，即使是网页服务器也会因为请求过多而拒绝新的连接。</p>
 
             <h3>线程池 Thread Pool（有界线程）</h3>
-            <p>结合生产者—消费者与异步任务这两种多线程控制的优点。其结构分为任务队列 Task queue、工作者线程 Worker Thread，以及一套管理系统（Java：<code>ExecutorService</code>，<code>ThreadPoolExecutor</code>；C#：<code>ThreadPool</code>；Python：<code>concurrent.futures.ThreadPoolExecutor</code>）。它的性能提升在于生产者—消费者模型的线程复用（工作者线程一开始就创建且不删除），异步任务中“主线程光指挥”的非阻塞特性，且额外支持根据 CPU 的逻辑核心数量来设置并行的线程数（解决生产者—消费者模型需要手动设置，且 CPU 同时处理的任务数量有上限），才使得程序能合理地吃满 CPU。</p>
+            <p>结合生产者—消费者与异步任务这两种多线程控制的优点。其结构分为任务队列 Task queue、工作者线程 Worker Thread，以及一套管理系统（Java：<code class="code-bold">ExecutorService</code>，<code class="code-bold">ThreadPoolExecutor</code>；C#：<code class="code-bold">ThreadPool</code>；Python：<code class="code-bold">concurrent.futures.ThreadPoolExecutor</code>）。它的性能提升在于生产者—消费者模型的线程复用（工作者线程一开始就创建且不删除），异步任务中“主线程光指挥”的非阻塞特性，且额外支持根据 CPU 的逻辑核心数量来设置并行的线程数（解决生产者—消费者模型需要手动设置，且 CPU 同时处理的任务数量有限问题），使得程序能合理地吃满 CPU。</p>
 
             <h3>大缓存处理器是否有优势</h3>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
@@ -4405,11 +4405,11 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p>如电脑连接超过一台打印机，超过一个网卡（如有线 + 无线）就称为多节点部署。此处特指 CPU 节点——同主板上超过一颗处理器以及其对应内存的系统环境。这种环境的缺点是节点 0 的处理器访问节点 1 的内存的延迟很大，所以一般通过虚拟机，或专门优化的程序来限制软件只占用一个节点的 CPU 核心。</p>
             
             <code class="code-bold">--pools</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/加减符“,,,”，默认*（占用任意节点电脑的全部线程）&gt;x264 中--threads 的升级版。+代表全部处理器线程，-代表不使用处理器，数字代表占用多少个线程：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/加减符“,,,”，默认*（占用任意节点电脑的全部线程）&gt;x264 中--threads 的升级版。+代表全部处理器硬件线程/逻辑核心数，“-” 代表不使用处理器，数字代表占用多少个线程：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有 4 个 CPU 节点，使用首个节点</li>
                 <li>设为<span class="text-blue-emph">pools none</span>时关闭</li>
-                <li>单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的 8 个线程</li>
+                <li>单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的 8 个硬件线程/逻辑核心</li>
                 <li>若 <code>--wpp</code>，<code>--pmode</code>，<code>--pme</code>，<code>--lookahead-slices</code> 全关，则<code>--pools</code> 参数无效</li>
                 <li>若指定 <code>--pools none</code>，则 <code>--wpp</code>，<code>--pmode</code>，<code>--pme</code>，<code>--lookahead-slices</code> 无效</li>
             </ul>

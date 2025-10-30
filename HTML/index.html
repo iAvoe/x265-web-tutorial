@@ -20,65 +20,37 @@
 	<body class="text-gray-main">
         <div class="container-title">
             <h1>x265 教程<span class="text-blue-emph"> HTML 完整版</span></h1>
-            <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程是对 HEVC 编码的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。</p>
-            <!-- x264 教程副本，更改需手动同步 { -->
-            <h2>地图</h2>
-            <ol class="font-monospace">
-                <li><a href="../../x264-web-tutorial/HTML/index.html">x264 教程网页版</a></li>
-                <li>
-                    <a href="../../x265-web-tutorial/HTML/index.html" class="disabled">x265 教程网页版（你在这里）</a>
-                    <ul class="text-xs">
-                        <li>基础：
-                            <a class="toSelf" href="#h2-1">命令参考</a>，
-                            <a class="toSelf" href="#h2-2">视频的压制</a>
-                        </li>
-                        <li>编码：
-                            <a class="toSelf" href="#h2-3">分块</a>，
-                            <a class="toSelf" href="#h2-4">变换</a>，
-                            <a class="toSelf" href="#h2-5">动态预测</a>，
-                            <a class="toSelf" href="#h2-6">动态搜索</a>，
-                            <a class="toSelf" href="#h2-7">动态补偿</a>，
-                            <a class="toSelf" href="#h2-8">时域架网搜索</a>，
-                            <a class="toSelf" href="#h2-9">前瞻进程</a>，
-                            <a class="toSelf" href="#h2-10">帧内预测</a>，
-                            <a class="toSelf" href="#h2-11">率控制</a>，
-                            <a class="toSelf" href="#h2-12">自适应量化</a>，
-                            <a class="toSelf" href="#h2-13">率失真优化</a>，
-                            <a class="toSelf" href="#h2-14">环路滤镜</a>，
-                            <a class="toSelf" href="#h2-15">熵编码</a>，
-                            <a class="toSelf" href="#h2-16">优化熵编码</a>，
-                            <a class="toSelf" href="#h2-17">SEI</a>，
-                            <a class="toSelf" href="#h2-18">线程与节点控制</a>，
-                            <a class="toSelf" href="#h2-19">色彩，VUI，HDR</a>，
-                            <a class="toSelf" href="#h2-20">输入输出</a>
-                        </li>
-                        <li>附录：
-                            <a class="toSelf" href="#h2-21">预设参数</a>
-                            <a class="toSelf" href="#h2-22">下载</a>
-                        </li>
-                    </ul>
+            <p>欢迎阅读！若有任何问题，请加入 QQ 群<a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>691892901</a>。本教程是对 HEVC 编码的业余分析，仅具备业余参考价值。入门时，请先阅读 x264 视频压缩教程综合版，并可参考急用版教程进行编码压制。教程地图、工具下载见：<a href="https://iavoe.github.io/">iavoe.github.io</a>。</p>
+
+            <h2>目录</h2>
+            <ul class="font-monospace text-smaller">
+                <li>基础：
+                    <a class="toSelf" href="#h2-1">命令参考</a>，
+                    <a class="toSelf" href="#h2-2">视频的压制</a>
                 </li>
-                <li><a href="../../av1-web-tutorial/HTML/index.html">AV1 教程网页版</a></li>
-                <li>
-                    附录 α：
-                    <a href="https://www.nazorip.site/archives/44/">QAAC 音频压缩教程</a> 或
-                    <a href="https://github.com/iAvoe/QAAC-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a>
+                <li>编码：
+                    <a class="toSelf" href="#h2-3">分块</a>，
+                    <a class="toSelf" href="#h2-4">变换</a>，
+                    <a class="toSelf" href="#h2-5">动态预测</a>，
+                    <a class="toSelf" href="#h2-6">动态搜索</a>，
+                    <a class="toSelf" href="#h2-7">动态补偿</a>，
+                    <a class="toSelf" href="#h2-8">时域架网搜索</a>，
+                    <a class="toSelf" href="#h2-9">前瞻进程</a>，
+                    <a class="toSelf" href="#h2-10">帧内预测</a>，
+                    <a class="toSelf" href="#h2-11">率控制</a>，
+                    <a class="toSelf" href="#h2-12">自适应量化</a>，
+                    <a class="toSelf" href="#h2-13">率失真优化</a>，
+                    <a class="toSelf" href="#h2-14">环路滤镜</a>，
+                    <a class="toSelf" href="#h2-15">熵编码</a>，
+                    <a class="toSelf" href="#h2-16">优化熵编码</a>，
+                    <a class="toSelf" href="#h2-17">SEI</a>，
+                    <a class="toSelf" href="#h2-18">线程与节点控制</a>，
+                    <a class="toSelf" href="#h2-19">色彩，VUI，HDR</a>，
+                    <a class="toSelf" href="#h2-20">输入输出</a>，
+                    <a class="toSelf" href="#h2-21">预设参数</a>
                 </li>
-                <li>附录 β：<a href="https://nazorip.site/archives/334/">x264，libx264，x265，libx265 压制教程急用版</a></li>
-                <li>
-                    附录 γ：<a href="https://nazorip.site/archives/169/">ffprobe 教程</a> 或
-                    <a href="https://github.com/iAvoe/FFprobe-Tutorial-Standalone/blob/master/%E6%95%99%E7%A8%8B.md">Github 副本</a>
-                </li>
-                <li>附录 δ：<a href="https://nazorip.site/archives/1068/">ffprobe + Excel 绘制码率曲线，帧类型饼图</a></li>
-                <li>
-                    附录 ε：<a href="../../deint-ivtc-web-tutorial/HTML/index.html">交错转逐行与 IVTC 处理</a>
-                    <ul class="text-xs">
-                        <li>逐行与交错扫描，帧率与场率，仅交错，A:B Pulldown / telecine，2:2:2:4，3:2:3:2，Euro-pulldown，0.5:0.5，特殊情况，去交错的算法与滤镜，IVTC 滤镜用例，p/c/n/u/b，AviSynth 例，TFM-TDecimate 例，VapourSynth 例</li>
-                    </ul>
-                </li>
-                <li>附录 ζ：<a href="../../img-sequence-enc-web-tutorial/HTML/index.html">图像序列的处理</a></li><!-- 后续顺序：η θ ι κ λ μ -->
-                <li>相关：<a href="https://nazorip.site/archives/1052/">mpv 播放器的安装与设置</a></li>
-            </ol>
+            </ul>
+
             <h3>打印支持</h3>
             <button type="button" class="border-main rounded-3 ms-1 px-1" onclick="toggleCollapseAll()">1/5. 点击同步展开/折叠所有内容</button>
             <button type="button" class="border-main rounded-3 ms-1 px-1" onclick="printMode()">2. 点击进入文档的打印模式排版</button>
@@ -86,7 +58,7 @@
             <p class="font-monospace px-1">推荐打印设置：彩色模式、打印背景、含边距、打印页眉页脚</p>
             <button type="button" class="border-main rounded-3 ms-1 px-1" onclick="printModeOff()">4. 点击退出打印排版</button>
             <button type="button" class="border-main rounded-3 ms-1 px-1" onclick="toggleCollapseAll()">1/5. 点击同步展开/折叠所有内容</button>
-            <!-- } -->
+            
             <h3>移动端支持</h3>
             <p>点击图片即可轮询三种图片大小。窗口宽度大于窗口高度则切换到宽屏/桌面端/平板电脑排版，否则切换到窄屏/移动端排版。</p>
         </div>
@@ -138,6 +110,41 @@ format=yuv420p10le"
 -color_primaries bt709 -color_trc bt709 -colorspace bt709 -c:v rawvideo -pix_fmt yuv420p10le -strict experimental
 &lt;导出无损_yuv444p10le_bt709.yuv&gt;
             </code></pre>
+
+            <h4>ffmpeg 色深转换</h4>
+            <button type="button" class="collapsible border-main rounded-3 mb-3">点击展开/折叠内容</button>
+            <div class="coll-content">
+                <p>ffmpeg 转换到完整：</p>
+                <code>ffmpeg.exe -i "limited.mp4" -vf "scale=in_range=limited:out_range=full" -color_range 2 -pix_fmt yuv420p -movflags +write_colr "full.mp4"</code>
+                <p>ffmpeg 转换到有限：</p>
+                <code>ffmpeg.exe -i "limited.mp4" -vf "scale=in_range=full:out_range=limited" -color_range 1 -pix_fmt yuv420p -movflags +write_colr "full.mp4"</code>
+                <ul>
+                    <li><code>"scale=in_range=limited:out_range=full</code> 代表输入和输出的范围</li>
+                    <li><code>-color_range</code> 选择编码和封装的色深密度（0~2）</li>
+                    <li><code>-movflags +write_colr</code> 在 .mp4 封装下写入色深密度元数据</li>
+                </ul>
+            </div>
+
+            <h4>视频偏色检测与排查</h4>
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容</button>
+            <div class="coll-content">
+                <p>将编码前后的视频窗口至于同屏下，使用截图软件截图，再使用取色器测量特定区域的颜色：</p>
+                <ul>
+                    <li><b>偏黄：</b>
+                        Bt.709，Bt.2020 源被转换成了 Bt.601。可以通过 <code>colormatrix=源矩阵:目标矩阵</code> 参数转换一段原视频做测试复现：<br>
+                        <code>ffmpeg.exe -i "偏色前.mp4" -vf "colormatrix=bt709:bt601" -c:v libx264 -c:a copy -c:s copy "D:\Desktop\转601.mkv"</code>
+                    </li>
+                    <li><b>偏绿：</b>
+                        使用了英伟达 NVDEC 硬件解码器导致的颜色错误，目前已知 RTX 3000 系显卡有。见 <a href="https://nazorip.site/archives/1052/">MPV 播放器</a> 中的类似状况
+                    </li>
+                    <li><b>对比度过低（1）：</b>
+                        编码器设定输入位深为 8bit，源视频为 10bit 或更高，没有滤镜工具转换源到 8bit，直接编码后可能导致
+                    </li>
+                    <li><b>对比度过低（2）：</b>
+                        编码器设定输入色域为完整 Full，视频为有限色域 Limited，没有滤镜工具转换源到完整色域，直接编码后可能导致
+                    </li>
+                </ul>
+            </div>
 
             <h3>VapourSynth 传递参数</h3>
             <h4>R.54——API 3.0:</h4>
@@ -5488,7 +5495,7 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
 
             <code class="code-bold">--tune</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;zerolatency/animation/grain/film/fastdecode/psnr&gt;更改 preset 的一些参数，见下：</p>
-            <div class="overflow-auto">
+            <div class="overflow-auto mb-3">
                 <table class="table-fit-container text-smaller">
                     <thead>
                         <tr class="border-lr">
@@ -5526,101 +5533,16 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
                     </tbody>
                 </table>
             </div>
-
-            <h2 id="h2-22">附录：下载</h2>
-            <h3>LibavFormat / lavf</h3>
-            <p>一种用于处理封装和解封装的动态链接库，同时阅读封装文件的元数据并传给嵌入该库的程序。x264 一般都嵌入了 lavf，x265 则不多。由于只是复制元数据的值而没有做检测，所以元数据写错（情况不罕见）的源会导致编码跟着错，主要错在色彩空间和 HDR 设置上。</p>
-            <p class="text-gray-side">注：.hevc 代表不含 lavf 解码封装库，只能导出.hevc 视频流，需自行封装为 .mp4 .mkv 等格式；含 lavf 或使用 ffmpeg 内置的 libx265 则可以直接导出，使用见 x264/5 <a href="https://nazorip.site/archives/334/">急用版教程</a></p>
-
-            <h3>下载 x265.exe</h3>
-            <table class="table-center">
-                <tbody>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="http://www.mediafire.com/?6lfp2jlygogwa">LigH</a></th>
-                        <td class="px-1">.hevc [8-10-12bit]</td>
-                        <td class="px-1">附 x86 32bit 版，Windows XP x86 版，附 libx265.dll</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://github.com/jpsdr/x265/releases">jpsdr</a></th>
-                        <td class="px-1">.hevc [8-10-12bit] </td>
-                        <td class="px-1">GCC 12.2 + MSVC_llvm 1928，附 Broadwell 版，支持 aq-mode 5</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a
-                                href="https://drive.google.com/drive/u/0/folders/0BzA4dIFteM2dWEpvWGZXV3ZhdTA">Rigaya</a></th>
-                        <td class="px-1">.hevc [8-10-12bit]</td>
-                        <td class="px-1">GCC 9.3，附 x86 32bit 版</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://github.com/Patman86/x265-Mod-by-Patman/releases">Patman</a></th>
-                        <td class="px-1">.hevc [8-10-12bit]</td>
-                        <td class="px-1">GCC 11 + MSVC 1925</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a
-                                href="https://forum.doom9.org/showthread.php?p=1937773#post1937773">ShortKatz</a></th>
-                        <td class="px-1">arm64~64e（Mac OS，安卓等平台）</td>
-                        <td class="px-1">需运行编译命令文件，附 x86 32bit 版</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://github.com/DJATOM/x265-aMod/releases/">DJATOM-aMod</a></th>
-                        <td class="px-1">Intel 架构与 zen1~2 优化：[10bit]，zen3 优化：[10-12bit] </td>
-                        <td class="px-1">GCC 10.2.1 + GCC10.3</td>
-                    </tr>
-                    <tr>
-                        <th class="px-3 t-light-gray"><a href="https://down.7086.in/">MeteorRain-yuuki</a></th>
-                        <td class="px-1">.mp4 .mkv [8][10][12bit]+[8-10-12bit]</td>
-                        <td class="px-1">GCC 9.3 + ICC 1900 + MSVC 1916</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="text-gray-side">表：[8-10-12bit] 代表一个.exe 同时含三种色深，<span class="text-red-emph">未使用 YUV for MPEG（y4m）pipe 或 lavf 时应设置 <code>-D</code> 参数以选择正确的色深</span>，而 [8][10][12]bit 则代表三个 .exe 分别支持三种色深，压制时选择正确的 .exe 即可</p>
-
-            <h3>下载基本工具</h3>
-            <table class="table-center">
-                <tbody>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://bluesky-soft.com/en/DXVAChecker.html">DXVA Checker</a></th>
-                        <td class="px-1">
-                            <p>检测 PC 上支持的硬件编解码、渲染器的输入输出色彩空间、色度采样，以及监控编解码占用的轻量工具。可选择下载安装版（Installer）或便携版（ZIP）</p>
-                        </td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="http://ffmpeg.org/download.html">ffmpeg~ffprobe</a></th>
-                        <td class="px-1">
-                            <p>顶级开源多系统多媒体 CLI 处理工具；后者还支持读取视频帧/GOP SEI 信息，可以用于分析码率构成与趋势，以及挑选出不同压制结果中的最优选。</p>
-                        </td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://mpv.io/installation/">mpv</a></th>
-                        <td class="px-1"><p>支持便携的开源多系统现代视频播放器。见<a href="https://nazorip.site/archives/1052/">安装与配置</a>教程</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://www.voukoder.org/">Voukoder</a></th>
-                        <td class="px-1"><p>Premiere Vegas After Effects 压制导出插件，分为 Voukoder 和 V-Connector 两部分</p></td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://obsproject.com/zh-cn/download">OBS</a></th>
-                        <td class="px-1"><p>开源直播框架和录制软件，设置略比传统录屏软件复杂，但效果也更好</p></td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <th class="px-3 t-light-gray"><a href="https://mediaarea.net/zh-CN/MediaInfo">MediaInfo</a></th>
-                        <td class="px-1">
-                            <p>开源 GUI 媒体元数据/视音频格式读取器，这些数据是配置合理压制参数的关键</p>
-                            <p class="text-gray-side">注：由于苹果应用商店收取上架费，因此需要在 <a href="https://mediaarea.net/zh-CN/MediaInfo/Download/Mac_OS">MediaInfo 官网下载安装包（下载 GUI，不是 CLI）</a>并侧载安装。</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
 
         <!-- Footer -->
         <footer class="py-3 my-4 align-items-center border-top">
             <p>联系：
                 <a href='https://github.com/iAvoe/'>Github</a>，
-                <a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>QQ 群：691892901</a>
-            </p>
-            &#x24B8; iAvoe，2024
+                <a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>QQ 群：691892901</a></p>
+            <p>教程地图、工具下载：
+                <a href="https://iavoe.github.io/">iavoe.github.io</a></p>
+            &#x24B8; iAvoe，2025
         </footer>
 	</body>
 </html>

@@ -421,7 +421,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;32/16/8/4，默认 32&gt;大 tu 使压缩高而慢，以及瑕疵检测能力越差。码率换时间加画质。编码已有边缘损失的老片可搭配<span class="text-blue-emph">ctu 32</span>与<span class="text-blue-emph">max-tu-size 16</span></p>
 
             <h2 id="h2-5">动态预测 Motion Prediction（MP）</h2>
-            <p>在参考帧（P-B 帧）的预测单元 Prediction Unit（PU）上，动态搜索（ME）之前，起到<i>提供动态搜索起点</i>功能的预测算法。x264 使用了 <code>--direct</code> 指定。x265 中则使用了更高级的 AMVP + Merge 算法。</p>
+            <p>在参考帧（P-B 帧）的预测单元 Prediction Unit（PU）上，动态搜索（ME）之前，起到<span class="text-blue-emph">提供动态搜索起点</span>功能的预测算法。x264 使用了 <code>--direct</code> 指定。x265 中则使用了更高级的 AMVP + Merge 算法。</p>
             <p>视频里往往会有占据画面不小的物件朝着一处平移，在视频帧中表现为“某个区域的分块拥有高度相似的运动向量”。这些重复性的动态向量分布规律肉眼可见，而动态搜索只能通过不断地计算差异（MSE，率失真代价）而一个一个方向和大小地把向量给试出来。这显然不如通过预测而快速地找出一组方向与大小（然后让整数像素动态搜索从这里开始微调到整数像素精度）直截了当。</p>
             <p>由于动态向量预测得到的向量本身就已经足够靠谱，因此编码器会以“预测动态向量（PMV）+ 动态向量差（MVD）”的形式记录每个帧间块的动态信息，再冗余掉相同的预测动态向量，从而进一步提高压缩。纵然一支动态向量的信息不多，但放眼到整个视频的所有帧间参考时，质变也就产生了。</p>
 
@@ -5539,6 +5539,7 @@ ffmpeg.exe -i "源" -c:v copy -vbsf hevc_mp4toannexb -f hevc - | dovi_tool.exe e
         <footer class="py-3 my-4 align-items-center border-top">
             <p>联系：
                 <a href='https://github.com/iAvoe/'>Github</a>，
+                <a href="https://github.com/iAvoe/x265-web-tutorial/issues">Github Issues</a>，
                 <a href='https://jq.qq.com/?_wv=1027&k=5YJFXyf'>QQ 群：691892901</a></p>
             <p>教程地图、工具下载：
                 <a href="https://iavoe.github.io/">iavoe.github.io</a></p>

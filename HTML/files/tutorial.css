@@ -84,6 +84,7 @@
     --hex-dark-gold: #948A54; /* reserved */
     --hex-light-yellow: #FDFDCD; /* reserved */
     --hex-dark-purple: #5F497A; /* reserved */
+    --hex-dark-inkblue: #204060;
     --rgb-light-grayblue: 222,226,230; /* main body background & table border */
     --rgb-dark-gray: 89,89,89; /* main body text */
     --rgb-light-gray: 166,166,166; /* side body text */
@@ -95,7 +96,7 @@
     --rgb-light-blue: 88,174,188; /* side emphasize blue */
     --rgb-light-red: 255,153,153; /* side emphasize red */
     --rgb-bright-pink: 255,108,182; /* step over probability consequense */
-    --rgb-bright-blue: 121,121,255; /* step over enbcoding consequense */
+    --rgb-bright-blue: 121,121,255; /* step over encoding consequense */
     --rgb-pure-red: 192,0,0; /* lerp triangulation visual 1 */
     --rgb-pure-blue: 63,63,255; /* lerp triangulation visual 2 */
     --rgb-pure-green: 0,128,0; /* lerp triangulation visual 3 */
@@ -103,6 +104,7 @@
     --rgb-dark-gold: 148,138,84; /* reserved */
     --rgb-light-yellow: 253,253,205; /* reserved */
     --rgb-dark-purple: 95,73,122; /* reserved */
+    --rgb-dark-inkblue: 32,64,96;
     --bs-font-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'SweiGothic', 'Liberation Mono', 'Courier New', monospace, 'YouYuan';
     --font-style-main: 'Zhudou Sans', sans-serif;
@@ -121,6 +123,7 @@ pre { overflow: auto; margin: 0; }
 .font-monospace { font-family: var(--bs-font-monospace) !important; }
 .text-gray-main { color: rgba(var(--rgb-dark-gray), var(--no-opacity)) !important; }
 .text-dark-green-main { color: rgba(var(--rgb-dark-green), var(--no-opacity)) !important; }
+.text-dark-blue-main { color: rgba(var(--rgb-dark-inkblue), var(--no-opacity)) !important; }
 .text-gray-side {
     font-family: var(--font-style-side);
     color: rgba(var(--rgb-dark-gray), var(--no-opacity)) !important;

@@ -397,6 +397,10 @@ table thead { border-bottom: 1.25px solid var(--hex-light-grayblue); }
     background-color: rgba(var(--rgb-dark-gray), var(--no-opacity));
     color: white;
 }
+.t-invert-black {
+    background-color: black;
+    color: white;
+}
 .thead-no-border { border-bottom: 0px; }
 .border-lr td, .border-lr th {
     border-left: 1px solid #dee2e6 !important;

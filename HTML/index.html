@@ -329,42 +329,25 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </ul>
             
             <h2 id="h2-4">变换</h2>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：傅里叶级数</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：算法历史</button>
             <div class="coll-content">
-                <h3>傅里叶级数 Fourier Series</h3>
-                <p>波形有正弦波 sinusoidal / sine，余弦波 co-sinusoidal / cosine，直流波 direct current / DC，三角波，方形波，以及各种各样的噪声波等等。两波形相加能够得到中间态，通过修改其中波形的振幅强度还可以微调合成的中间态。因此，理论上只要有足够多的可调节波形，就可以让合成的中间态逼近原始波形，甚至做到完全一样。</p>
-                <p>除了一条横线以外，波形一般取自余弦 <span class="text-blue-math">\(\cos(x)\)</span> 或正弦 <span class="text-blue-math">\(\sin(x)\)</span>。这两者自带周期循环，通过单纯累计 <span class="text-blue-math">\(\cos(x)\)</span> 可以得到 cosine 的级数：</p>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/transforming/cosine-series.png" alt="Cosine Series" class="img-medium">
-                    <p class="text-gray-side">图：此处使用 cos(πx) 以缩放到 0~2，2~4 为一周期，频率 n 限制范围 1-9 以保证可视化</p>
-                </div>
-                <p>正弦和余弦函数支持在坐标系中的频率周期缩放，如 <span class="text-blue-math overflow-auto">\(\cos(πx)\)</span> 可以将其缩放到每周期对齐一般坐标系的 x 轴，如果改成 <span class="text-blue-math overflow-auto">\(\cos(2πx)\)</span> 则可将其周期缩短一倍，即频率增加一倍。这里我们用 <span class="text-blue-math overflow-auto">\(\cos(nπx)\)</span> 来与要变换波形的长度 n 对齐。</p>
-                <ul class="overflow-auto">
-                    <li>原波形可能会有 y 轴偏移（高 <span class="text-blue-math overflow-auto">\(h\)</span>），可以从 <span class="text-blue-math overflow-auto">\(\cos(nπx) + h\)</span> 还原</li>
-                    <li>原波形可能会有 x 轴偏移（相位 <span class="text-blue-math overflow-auto">\(\phi\)</span>），可用 <span class="text-blue-math overflow-auto">\(\cos(nπx + \phi_n)\)</span> 还原（每个波形的相位可能不一样，所以用下标 n 表示）</li>
-                    <li>最后逐个采样点地乘进原始波形，得到变换结果 <span class="text-blue-math overflow-auto">\(a_n \cos(nπx + \phi_n) + h\)</span></li>
+                <h3>热传导方程</h3>
+                <p>利用坐标系来描述温度从分布不均（高温凸低温凹）开始，随着时间变化到变成恒温直线段过程的算法。其中，凸起但占有尺度（长度/面积）小的“热点”或“冷点”会迅速被分散到周围而快速抹平，而尺度大的起伏消失则会慢的多。最终，将“时间”，“拉平”，“尺度”等现象作为参数，并找出其中的数学关系，就可以得出用坐标系描述的温度变化过程：<span class="text-blue-math">\[\frac{\partial u(x,t)}{\partial t}
+= \alpha \frac{\partial^2 u(x,t)}{\partial x^2}\]</span></p>
+                <ul>
+                    <li><span class="text-blue-math">\(u(x,t)\)</span>：位于 x 处，时间 t 的温度（y 轴）</li>
+                    <li><span class="text-blue-math">\(\alpha\)</span>：热扩散系数（取决于材料）</li>
                 </ul>
-                <p>如果将 <span class="text-blue-math">\(a_n\)</span> 随频率 <span class="text-blue-math">\(n\)</span>变化的状态用坐标系表示，就得到了“频域坐标系”：</p>
+                <p>这个思想启发了“将复杂波形分解为各个震荡频率”的分解法，也就是频域变换计算。</p>
+
+                <h3>傅里叶级数 Fourier Series</h3>
+                <p>波形有正弦波 sinusoidal / sine，余弦波 co-sinusoidal / cosine，直流波 direct current / DC，三角波，方形波，以及各种各样的噪声波等等。两波形相加能够得到中间态，通过修改其中波形的振幅强度还可以微调合成的中间态。因此，理论上只要有足够多的可调节波形，就可以让合成的中间态尽可能逼近原始波形，甚至做到完全一样。</p>
                 <div class="align-items-center">
                     <img loading="lazy" src="files/transforming/frequency-domain.png" alt="Frequency Domain" class="img-medium">
                     <p class="text-gray-side mt-0">图：时间域的周期波形映射到频域各个级数（频率 n）的振幅强度 amplitude <span class="text-blue-math">\(a_n\)</span>。来源 <a href="https://edu.svet.gob.gt/fourier-transform-hh-0jVkQOhD">edu.svet.gob.gt</a></p>
                     <img loading="lazy" src="files/transforming/frequency-domain-2.png" alt="Frequency Domain 2" class="img-medium">
                     <p class="text-gray-side mt-0">图：逼近方形波的各个级数（频率 n）以及振幅强度。来源 <a href="https://edu.svet.gob.gt/fourier-transform-hh-0jVkQOhD">edu.svet.gob.gt</a></p>
                 </div>
-                <p>而标准写法为：</p>
-                <span class="text-blue-math overflow-auto">\[f(t) =
-                    \frac{a_0}{2} + \sum_{n=1}^{\infty} \left( a_n \cos(n\omega t) \right) =
-                \]\[
-                    h + \sum_{n=1}^{\infty} \left( a_n \cos(n \frac{2\pi}{T} t) \right)
-                \]
-                </span>
-                <ul class="overflow-auto">
-                    <li>其中 <span class="text-blue-math">\(x\)</span> 换成了 <span class="text-blue-math">\(t\)</span>，代表时域信号的时间轴</li>
-                    <li><span class="text-blue-math">\(\frac{a_0}{2}\)</span> 代替了高度偏移 <span class="text-blue-math">\(h\)</span></li>
-                    <li><span class="text-blue-math">\(\omega = \frac{2\pi}{T}\)</span> 代表波形从<span class="text-blue-math">\(\pi\)</span>周期缩放到整数周期，接着缩放到输入信号长度中的基本宽度 <span class="text-blue-math">\(\frac{1}{T}\)</span></li>
-                    <li>由于 <span class="text-blue-math">\(\cos(\omega t + \phi_n) = \cos(\omega t) \cdot \cos(\phi_n)\)</span>，所以拆分出 <span class="text-blue-math">\(\cos(\phi_n)\)</span>，乘进 <span class="text-blue-math">\(a_n\)</span> 里：<span class="text-blue-math">\(a_n = a_n \cdot \cos(\phi_n)\)</span>，而简化成了 <span class="text-blue-math">\(a_n\)</span></li>
-                </ul>
-                <p>当然，理解这个式子背后的理论就足够了，说不定式子非得这样写，原因到底不过是为了好看...</p>
             </div>
 
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：均方根 RMS</button>

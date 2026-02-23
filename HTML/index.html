@@ -1398,8 +1398,14 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6&gt;模糊复杂度 cplxBlur 以及 mbtree 迭代每帧量化强度范围的曲线抑制参数。越小则复杂度迭代越符合实际状况，抑制 CRF，mb/cutree，bframes 影响的效果就越弱，搭配高 CRF 能使码率控制接近 VBV 的程度。越大则 CRF，mb-cutree，bframes 越没用，越接近 CQP</p>
 
             <h2 id="h2-12">自适应量化</h2>
-            <p>CRF/ABR设定每帧量化/qp后，方差自适应量化variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 QP 分配过程。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a></p>
-            
+            <p>CRF/ABR 设定每帧量化值（QP）之后，方差自适应量化 variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 QP 分配过程。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a>。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/rate-control/VAQ-Source3.webp" alt="VAQ Source" class="img-medium" >
+                <img loading="lazy" src="files/rate-control/VAQ-Source3-Mode1.png" alt="VAQ Mode1 Map" class="img-medium" >
+                <img loading="lazy" src="files/rate-control/VAQ-Source3-Mode1-Stat.png" alt="VAQ Mode1 Map" class="img-medium" >
+                <p class="text-gray-side">图：简单根据纹理（Mode 1）分布/密度增减量化值；来源及更多图例：<a href="https://github.com/Khrysoberyl/vs_AQVisualizer">Github/Khrysoberyl</a></p>
+            </div>
+
             <code class="code-bold">--aq-mode</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3&gt;据原画和 crf/abr 设定，以及码率不足时（crf&lt;18/低码 abr）如何分配 QP。</p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
@@ -1549,7 +1555,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </div>
 
             <code class="code-bold">--scc</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2，默认 0（关），<span class="text-red-emph">需 <code>--rd 6</code>；使用 <code>--dynamic-refine</code> 或 <code>--refine-inter</code> 参数时禁 <code>--rd-refine</code></span>&gt;开启录屏内容编码——帧内块拷贝 Intra Block Copy（IBC）编码功能以及指定搜索级别，有助于高效编码静态图像录屏（幻灯片课件录屏为主的）场景，理论上适用于对简笔画与低动态漫画材质动画场景的冗余。IBC 帧内编码详见 AV1 教程完整版。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2，默认 0（关），<span class="text-red-emph">需 <code>--rd 6</code>；使用 <code>--dynamic-refine</code> 或 <code>--refine-inter</code> 参数时禁 <code>--rd-refine</code></span>&gt;开启录屏内容编码——帧内块拷贝 Intra Block Copy（IBC）编码功能以及指定搜索级别，有助于高效编码静态图像录屏（幻灯片课件录屏为主的）场景，理论上适用于对简笔画与低动态漫画材质动画场景的冗余。IBC 帧内编码详见 <a href="../../av1-web-tutorial/HTML/index.html#h2-7">AV1 教程完整版</a>。</p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">1</span> 普通搜索</li>
                 <li><span class="text-blue-emph">2</span> 精确搜索，慢，高压缩场景</li>
@@ -1900,9 +1906,9 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;0~4，默认 0&gt;从条带（横向的一组 CTU）角度调整 sao 参数，可直接控制 sao，或搭配 limit-sao 的新方法。</p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li><span class="text-blue-emph">1</span> I 条带启用 SAO</li>
-                <li><span class="text-blue-emph">1</span> P 条带也用 SAO</li>
-                <li><span class="text-blue-emph">1</span> B 条带也用 SAO</li>
-                <li><span class="text-blue-emph">1</span> 其他条带皆 SAO</li>
+                <li><span class="text-blue-emph">2</span> P 条带也用 SAO</li>
+                <li><span class="text-blue-emph">3</span> B 条带也用 SAO</li>
+                <li><span class="text-blue-emph">4</span> 皆启用 SAO</li>
             </ul>
             <h2 id="h2-15">熵编码/文本压缩 Entropy Coding</h2>
             <p>通过读取信息，统计数值的“结构”，洞察规律，将宏观到微观的“结构”记做符号，再以符号替代原始数据的匹配之处，从而实现信息的熵减。这种压缩手段集齐了所有优点（快速高能效无损高压缩）<del>而广为流传</del>。之所以“文本压缩”能够概括熵编码的定义，是因为音频、视频等数据最终还是以某种形式的文本储存，例如视频帧分块的频域分量系子（整数）和各种元数据（字符串），音频的采样点高度（整数）等。于是，这些数据里的“规律结构”会被称为上下文（Context、语境），压缩流程包括了读取数据、统计上下文和应用压缩。这些步骤环环相扣的形成了完整的编码流程，因此是“编码”。</p>
@@ -4860,7 +4866,8 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <ul class="list-dotless font-monospace pl-5 list-dotless text-smaller">
                 <li>ffmpeg 理论上支持 yuva420 8bit（-pix_fmts 打印）：</li>
             </ul>
-<pre><code class="text-smaller language-powershell">FLAGS NAME     NB_COMPONENTS BITS_PER_PIXEL BIT_DEPTHS
+<pre><code class="text-smaller language-powershell">
+FLAGS NAME     NB_COMPONENTS BITS_PER_PIXEL BIT_DEPTHS
 -----
 IO... yuva420p 4             20             8-8-8-8
 </code></pre>
@@ -4925,7 +4932,7 @@ IO... yuva420p 4             20             8-8-8-8
                 <tbody>
                     <tr class="t-light-gray border-lr">
                         <th class="px-1">4</th>
-                        <td class="px-1">10bit hevc</td>
+                        <td class="px-1">10bit HEVC</td>
                         <td class="px-1">dvhe.04</td>
                         <td class="px-1">2</td>
                         <td class="px-1">1:¼</td>
@@ -4935,7 +4942,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="border-lr">
                         <th class="px-1">5</th>
-                        <td class="px-1">10bit hevc</td>
+                        <td class="px-1">10bit HEVC</td>
                         <td class="px-1">dvhe.05</td>
                         <td class="px-1">0</td>
                         <td class="px-1">仅 BL（DV-MEL）</td>
@@ -4945,7 +4952,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="t-light-gray border-lr">
                         <th class="px-1">7</th>
-                        <td class="px-1">10bit hevc</td>
+                        <td class="px-1">10bit HEVC</td>
                         <td class="px-1">dvhe.07</td>
                         <td class="px-1">6</td>
                         <td class="px-1">UHD = 1:¼, FullHD = 1:1</td>
@@ -4955,7 +4962,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="border-lr">
                         <th class="px-1">8.1</th>
-                        <td class="px-1">10bit hevc</td>
+                        <td class="px-1">10bit HEVC</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">1</td>
                         <td class="px-1">仅 BL（DV-MEL）</td>
@@ -4965,7 +4972,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="t-light-gray border-lr">
                         <th class="px-1">8.2</th>
-                        <td class="px-1">10bit hevc</td>
+                        <td class="px-1">10bit HEVC</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">2</td>
                         <td class="px-1">仅 BL（DV-MEL）</td>
@@ -4975,7 +4982,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="border-lr">
                         <th class="px-1">8.4</th>
-                        <td class="px-1">10bit hevc</td>
+                        <td class="px-1">10bit HEVC</td>
                         <td class="px-1">dvhe.08</td>
                         <td class="px-1">4</td>
                         <td class="px-1">仅 BL（DV-MEL）</td>
@@ -4985,7 +4992,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="t-light-gray border-lr">
                         <th class="px-1">9</th>
-                        <td class="px-1">8bit avc</td>
+                        <td class="px-1">8bit AVC</td>
                         <td class="px-1">dvav.09</td>
                         <td class="px-1">2</td>
                         <td class="px-1">仅 BL（DV-MEL）</td>
@@ -4995,7 +5002,7 @@ IO... yuva420p 4             20             8-8-8-8
                     </tr>
                     <tr class="border-lr">
                         <th class="px-1">10</th>
-                        <td class="px-1">10bit av1</td>
+                        <td class="px-1">10bit AV1</td>
                         <td class="px-1">dav1.10</td>
                         <td class="px-1">0,1,2,4</td>
                         <td class="px-1">仅 BL（DV-MEL）</td>

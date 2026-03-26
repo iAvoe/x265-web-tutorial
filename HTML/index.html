@@ -1409,7 +1409,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;由于第 -1 帧不存在，编码器无法算出第 0 帧的 cplxBlur，所以有保留默认值或手动指定的选择（但影响太小），如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
             <code class="code-bold">--qcomp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6 并使用自适应量化功能做上位替代&gt;量化强度范围曲线的抑制参数<span class="text-blue-math">\[\text{CRF_rate_factor} = \frac{\text{cplxBase}^{1-\text{qcomp}}}{qScale \times (\text{crf} + \text{cutree} + \text{bframe_offset})}\]</span></p>
-            <ul class="font-monospace pl-5 list-dotless text-smaller">
+            <ul class="font-monospace pl-5 list-dotless">
                 <li><span class="text-blue-emph">0</span>：<span class="text-blue-math">\(\text{cplxBase}^1 = \text{cplxBase}\)</span>，（前瞻进程获取的）帧复杂度（残差计量）完全参与率控制计算
                     <ul>
                         <li><span class="text-red-emph">不支持该值，仅说明</span></li>

@@ -1406,14 +1406,25 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--rc-grain</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<code>--tune grain</code> 时开启&gt;通过抑制 cplxBlur 的累积，从而保证一定场景下，GOP 分配量化值呈跌势以保证整个视频的码率受控。如果视频中的大多数高频信号都是细节而非噪点，且策略为画质编码则关</p>
             <code class="code-bold">--cplxblur</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur，所以保留默认值或手动指定，如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;由于第 -1 帧不存在，编码器无法算出第 0 帧的 cplxBlur，所以有保留默认值或手动指定的选择（但影响太小），如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
             <code class="code-bold">--qcomp</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6&gt;模糊复杂度 cplxBlur 以及 mbtree 迭代每帧量化强度范围曲线的抑制参数。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6 并使用自适应量化功能做质量相关调整&gt;量化强度范围曲线的抑制参数，模糊复杂度 cplxBlur 以及 mbtree/cutree 迭代每帧。<span class="text-blue-math">\[\text{CRF_rate_factor} = \frac{\text{cplxBase}^{1-\text{qcomp}}}{qScale \times (\text{crf} + \text{cutree} + \text{bframe_offset})}\]</span></p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
-                <li><span class="text-blue-emph">0.5</span> 不抑制 CRF，mb-cutree，bframes；得到线性范围映射，搭配高 CRF 能使码率控制接近 VBV 率控制</li>
-                <li><span class="text-blue-emph">0.6~0.7</span> 轻抑制，得到曲线范围映射，搭配高 CRF 能使码率控制类似 VBV 率控制</li>
-                <li><span class="text-blue-emph">0.8~0.9</span> 重抑制，得到曲线范围映射</li>
-                <li><span class="text-blue-emph">1</span> 相当于废掉 CRF，mb-cutree，bframes；直接赋值/CQP 率控制</li>
+                <li><span class="text-blue-emph">0</span>：<span class="text-blue-math">\(\text{cplxBase}^1 = \text{cplxBase}\)</span>，（前瞻进程获取的）帧复杂度（残差计量）完全参与率控制计算
+                    <ul>
+                        <li><span class="text-red-emph">不支持该值，仅说明</span></li>
+                        <li>画面变化越大码率越大，反之越小，质量波动大</li>
+                    </ul>
+                </li>
+                <li><span class="text-blue-emph">0.5</span>：<span class="text-blue-math">\(\text{cplxBase}^{0.5} = \sqrt{\text{cplxBase}}\)</span>
+                    <ul><li>画面变化越大码率大一些，反之小一些</li></ul>
+                </li>
+                <li><span class="text-blue-emph">0.8</span>：<span class="text-blue-math">\(\text{cplxBase}^{0.2} = \sqrt[5]{\text{cplxBase}}\)</span>
+                    <ul><li>画面变化越大码率大一点，反之小一点</li></ul>
+                </li>
+                <li><span class="text-blue-emph">1</span>：<span class="text-blue-math">\(\text{cplxBase}^0 = 1\)</span>，抹除帧复杂度值，量化值仍然由 CRF 模式指定的值映射，但不再因为复杂度变化而改，形成 CQP 率控制模式
+                    <ul><li>量化值仍受 cutree、bframe_offset 偏移影响，但主导因素消失</li></ul>
+                </li>
             </ul>
             <div class="align-items-center">
                 <img loading="lazy" src="files/rate-control/1-qComp.png" alt="1-qComp Curves" class="img-medium" >

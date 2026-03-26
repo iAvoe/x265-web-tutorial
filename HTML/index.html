@@ -1408,7 +1408,17 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--cplxblur</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;第 -1 帧不存在，无法算出第 0 帧的 cplxBlur，所以保留默认值或手动指定，如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
             <code class="code-bold">--qcomp</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6&gt;模糊复杂度 cplxBlur 以及 mbtree 迭代每帧量化强度范围的曲线抑制参数。越小则复杂度迭代越符合实际状况，抑制 CRF，mb/cutree，bframes 影响的效果就越弱，搭配高 CRF 能使码率控制接近 VBV 的程度。越大则 CRF，mb-cutree，bframes 越没用，越接近 CQP</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6&gt;模糊复杂度 cplxBlur 以及 mbtree 迭代每帧量化强度范围曲线的抑制参数。</p>
+            <ul class="font-monospace pl-5 list-dotless text-smaller">
+                <li><span class="text-blue-emph">0.5</span> 不抑制 CRF，mb-cutree，bframes；得到线性范围映射，搭配高 CRF 能使码率控制接近 VBV 率控制</li>
+                <li><span class="text-blue-emph">0.6~0.7</span> 轻抑制，得到曲线范围映射，搭配高 CRF 能使码率控制类似 VBV 率控制</li>
+                <li><span class="text-blue-emph">0.8~0.9</span> 重抑制，得到曲线范围映射</li>
+                <li><span class="text-blue-emph">1</span> 相当于废掉 CRF，mb-cutree，bframes；直接赋值/CQP 率控制</li>
+            </ul>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/rate-control/1-qComp.png" alt="1-qComp Curves" class="img-medium" >
+                <p class="text-gray-side">图：不同 qComp 下的曲线</p>
+            </div>
 
             <h2 id="h2-12">自适应量化</h2>
             <p>CRF/ABR 设定每帧量化值（QP）之后，方差自适应量化 variance adaptive quantizer 再根据复杂度判断高低频信号，来实现精确到宏块的 QP 分配过程。见 <a href="../../x264-web-tutorial/HTML/index.html#h2-9">x264 教程</a>。</p>

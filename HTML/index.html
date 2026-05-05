@@ -4908,7 +4908,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
 
             <h4>缺失元数据补充</h4>
             <p>输入不带分辨率、帧率、位深等元数据的流、使用 RAW 管道而非 YUV for MPEG（y4m）管道时需要进行补充设置：</p>
-            <code class="code-bold">--input-csp</code>--input
+            <code class="code-bold">--input-csp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;i400/i422/i444/nv12/nv16，默认 i420&gt;视频源的色彩空间，即 YUV 4:0:0、4:2:2、4:4:4、nv12、nv16。</p>
             <p class="text-gray-side">注；rgb，yuvj 等不支持需要滤镜转换。</p>
             <code class="code-bold">--input-res</code>
@@ -4920,18 +4920,37 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;full/limited，默认留空&gt;指定视频源的色深范围，full：完整，limited：有限。剪辑时应额外检查剪辑软件的输出设定一致性。</p>
             <code class="code-bold">--chromaloc</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~5，默认留空&gt;指定色度采样缩减分辨率时所用的像素，相对于缩小前像素的位置（chroma location），涉及到解码端的色度像素对齐。如果源视频标注，则建议标注。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~5，默认留空&gt;指定色度像素相对于缩小前画面的采样位置，涉及到解码端的色度像素对齐。如果源视频标注，则建议标注。</p>
             <ul class="list-dotless font-monospace pl-5 list-dotless text-smaller">
-                <li><span class="text-blue-emph">0</span> 左</li>
+                <li><span class="text-blue-emph">0</span> ←</li>
                 <li><span class="text-blue-emph">1</span> 中</li>
-                <li><span class="text-blue-emph">2</span> 左上</li>
-                <li><span class="text-blue-emph">3</span> 上</li>
-                <li><span class="text-blue-emph">4</span> 左下</li>
-                <li><span class="text-blue-emph">5</span> 下</li>
+                <li><span class="text-blue-emph">2</span> ↖</li>
+                <li><span class="text-blue-emph">3</span> ↑</li>
+                <li><span class="text-blue-emph">4</span> ↙</li>
+                <li><span class="text-blue-emph">5</span> ↓</li>
             </ul>
             <div class="align-items-center">
                 <img loading="lazy" src="files/video-usability-information/Chroma-Location-Type.png" alt="Chroma Location Type" class="img-medium" >
                 <p class="text-gray-side">图：色度采样位置</p>
+                <img loading="lazy" src="files/video-usability-information/Chroma-Location-Type-Semantic.png" alt="Chroma Location Type Semantics" class="img-small" >
+                <p class="text-gray-side">图：国际电信联盟（ITU-T）<a href="https://www.itu.int/rec/dologin.asp?lang=s&id=T-REC-H.265-201504-S!!MSW-E">H.265 Figure E.1（第 384 页）</a> 沿用了 <a href="https://www.itu.int/rec/dologin_pub.asp?lang=e&id=T-REC-H.264-202408-I!!PDF-E&type=items">H.264 Figure E.1（第 443 页）</a> 的色度采样位置，与上图所述一致，但更难看懂。</p>
+            </div>
+            <pre><code class="text-smaller language-powershell">
+$cl = switch ($ChromaLocation) {
+    'left'       { 0; break }
+    'center'     { 1; break }
+    'topleft'    { 2; break }
+    'top'        { 3; break }
+    'bottomleft' { 4; break }
+    'bottom'     { 5; break }
+    'unknown'    { $null; break }
+    'unspecified'{ $null; break }
+    default      { $null; break }
+}
+if ($null -ne $cl) { return "--chromaloc $cl" }
+            </code></pre>
+            <div class="align-items-center">
+                <p class="text-gray-side">例：PowerShell 中映射 ffmpeg/ffprobe chroma_location 值到 x264，x265 参数的示例</p>
             </div>
             <code class="code-bold">--colorprim</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;播放用三原色 (以及白点) 指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图 1 为 bt.2020。</p>

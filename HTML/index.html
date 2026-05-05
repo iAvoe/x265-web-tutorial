@@ -4916,18 +4916,19 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--fps</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数/浮点/分数&gt;视频源的帧率，如 30，24000/1001 等。</p>
 
-            <h4>非常规播放条件指定</h4>
+            <!-- x264 教程副本，更改需手动同步 {-->
+            <h4>播放条件</h4>
             <code class="code-bold">--range</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;full/limited，默认留空&gt;指定视频源的色深范围，full：完整，limited：有限。剪辑时应额外检查剪辑软件的输出设定一致性。</p>
             <code class="code-bold">--chromaloc</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~5，默认留空&gt;指定色度像素相对于缩小前画面的采样位置，涉及到解码端的色度像素对齐。如果源视频标注，则建议标注。</p>
             <ul class="list-dotless font-monospace pl-5 list-dotless text-smaller">
-                <li><span class="text-blue-emph">0</span> ←</li>
-                <li><span class="text-blue-emph">1</span> 中</li>
-                <li><span class="text-blue-emph">2</span> ↖</li>
-                <li><span class="text-blue-emph">3</span> ↑</li>
-                <li><span class="text-blue-emph">4</span> ↙</li>
-                <li><span class="text-blue-emph">5</span> ↓</li>
+                <li><span class="text-blue-emph">0</span> ←（left）</li>
+                <li><span class="text-blue-emph">1</span> 中（center）</li>
+                <li><span class="text-blue-emph">2</span> ↖（topleft）</li>
+                <li><span class="text-blue-emph">3</span> ↑（top）</li>
+                <li><span class="text-blue-emph">4</span> ↙（bottomleft）</li>
+                <li><span class="text-blue-emph">5</span> ↓（bottom）</li>
             </ul>
             <div class="align-items-center">
                 <img loading="lazy" src="files/video-usability-information/Chroma-Location-Type.png" alt="Chroma Location Type" class="img-medium" >
@@ -4953,13 +4954,14 @@ if ($null -ne $cl) { return "--chromaloc $cl" }
                 <p class="text-gray-side">例：PowerShell 中映射 ffmpeg/ffprobe chroma_location 值到 x264，x265 参数的示例</p>
             </div>
             <code class="code-bold">--colorprim</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;播放用三原色 (以及白点) 指标，查看视频信息可知：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图 1 为 bt.2020。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;原色色系：bt470m，bt470bg，smpte170m，smpte240m，film，bt2020，smpte428，smpte431，smpte432。如图 1 为 bt.2020。</p>
             <code class="code-bold">--colormatrix</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;播放用矩阵格式/系数指标：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020c，smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;矩阵格式：fcc，bt470bg，smpte170m，smpte240m，GBR，YCgCo，bt2020c，smpte2085，chroma-derived-nc，chroma-derived-c，ICtCp。</p>
             <p class="text-gray-side pl-5 m-0">注：不支持 bt2020nc</p>
             <code class="code-bold">--transfer</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符&gt;传输特质：bt470m，bt470bg，smpte170m，smpte240m，linear，log100，log316，iec61966-2-4，bt1361e，iec61966-2-1，bt2020-10，bt2020-12，smpte2084，smpte428，arib-std-b67。</p>
-            <p class="text-gray-side pl-5 m-0">上图图 2 的 PQ 即 st.2084 的标准，所以参数值为 smpte2084。</p>
+            <p class="text-gray-side pl-5 m-0">上方 HDR 部分图 2 的“PQ”字样即 st.2084，所以参数值为 smpte2084。</p>
+
             <code class="code-bold">--display-window</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;←,↑,→,↓&gt;指定黑边宽度，从而跳过加速编码，或者用 <code>--overscan crop</code> 裁掉。</p>
             <code class="code-bold">--alpha</code>

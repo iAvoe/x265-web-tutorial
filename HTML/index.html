@@ -4532,7 +4532,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </ul>
 
             <code class="code-bold">--asm</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串 MMX2|SSE|SSE2|SSE3|SSSE3|SSE4|SSE4.1|SSE4.2|AVX|XOP|FMA4|AVX2|FMA3|AVX512 或整数，默认除 AVX512 以外全开&gt;指定指令集使用上限。其中的 AVX512 选项默认关闭，这个指令集主要面向大批量数据设计，需要处理器，操作系统和任务工况（编码设置难度、视频复杂度）的合璧才能产生正收益，否则反而会导致编码减速。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串 MMX2|SSE|SSE2|SSE3|SSSE3|SSE4|SSE4.1|SSE4.2|AVX|XOP|FMA4|AVX2|FMA3|AVX512 或整数，默认除 AVX512 以外全开&gt;指定指令集使用上限。其中的 AVX512 选项默认关闭，这个指令集主要面向大批量数据处理，需要处理器，操作系统和任务工况（编码设置难度、视频复杂度）的合璧才能产生正收益（但功耗也会上升），否则反而会导致编码减速。</p>
             <p><code>common/cpu.cpp</code> 中开启 AVX-512 指令集支持的部分逻辑：</p>
             <pre><code class="text-smaller language-cpp">
 int x265_param_parse(x265_param* p, const char* name, const char* value)
@@ -4565,7 +4565,7 @@ int x265_param_parse(x265_param* p, const char* name, const char* value)
     ......
 }
             </code></pre>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：x265 检测 AVX-512 指令集支持的逻辑</button>
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：x265 检测 AVX-512 指令集支持程度的逻辑</button>
             <div class="coll-content">
                 <p><code>common/cpu.cpp</code></p>
                 <pre><code class="text-smaller language-cpp">
@@ -4736,8 +4736,19 @@ uint32_t cpu_detect(bool benableavx512 )
                         </tr>
                     </tbody>
                 </table>
-                <p class="text-gray-side">注：x265 通过操作系统的寄存器支持，以及处理器的 EBX 位判断处理器是否真的满足开启 AVX-512 支持。</p>
+                <p class="text-gray-side">注：x265 通过操作系统的寄存器支持，以及处理器的 EBX 位判断 AVX-512 支持程度是否达标。</p>
             </div>
+            <p>如有验收需求，可以在 Windows 系统下载 <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/coreinfo">CoreInfo</a>、Linux 系统用 <code>lscpu | grep -i avx512</code> 检测处理器是否满足 x265 开启 AVX512 的条件（上表）；以下是 AMD Ryzen 9000 系处理器的 CoreInfo 输出字样（* 代表支持）：</p>
+            <pre><code class="text-smaller language-powershell">...
+AVX-512-F       *       Supports AVX-512 Foundation instructions
+AVX-512-DQ      *       Supports AVX-512 double and quadword instructions
+AVX-512-IFAMA   *       Supports AVX-512 integer Fused multiply-add instructions
+AVX-512-PF      -       Supports AVX-512 prefetch instructions
+AVX-512-ER      -       Supports AVX-512 exponential and reciprocal instructions
+AVX-512-CD      *       Supports AVX-512 conflict detection instructions
+AVX-512-BW      *       Supports AVX-512 byte and word instructions
+AVX-512-VL      *       Supports AVX-512 vector length instructions
+...</code></pre>
 
             <h3>多线程 vs 多参考（frame-thread）</h3>
             <p>用多线程一次编码多帧来占满算力 vs 一次只编一帧，确保所有参考画面可用（大幅提高多核占用，画质和文件影响小）的决策。造成多线多参考帧困难的原因有：</p>

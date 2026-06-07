@@ -4513,12 +4513,13 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <li>例如<span class="text-blue-emph">pools +,-,-,-</span>表明电脑有 4 个 CPU 节点，使用首个节点</li>
                 <li>设为<span class="text-blue-emph">pools none</span>时关闭</li>
                 <li>单节点系统无需关心，或设置如<span class="text-blue-emph">pools 8</span>占用处理器的 8 个硬件线程/逻辑核心</li>
-                <li>若 <code>--wpp</code>、<code>--pmode</code>、<code>--pme</code>，<code>--lookahead-slices</code> 全关，则 <code>--pools</code> 参数失效</li>
-                <li>若指定 <code>--pools none</code>，则 <code>--wpp</code>、<code>--pmode</code>、<code>--pme</code>、<code>--lookahead-slices</code> 参数失效</li>
+                <li>若 <code>--wpp</code>、<del><code>--pmode</code></del>、<del><code>--pme</code></del>，<code>--lookahead-slices</code> 全关，则 <code>--pools</code> 参数失效</li>
+                <li>若指定 <code>--pools none</code>，则 <code>--wpp</code>、<del><code>--pmode</code></del>、<del><code>--pme</code></del>、<code>--lookahead-slices</code> 参数失效</li>
             </ul>
             <p>当 x265 编码器占用了超过 64 个线程（32bit 系统下为 32 个）时，这些线程本身还可以细分出最多 64 个子线程（32bit 系统下为 32 个）。尽管因为性能和系统兼容性的限制，子线程可能会比预期少，但在 CPU 核心特别多的环境下可以提高 CPU 利用率。子线程池的大小和 pool 参数设置出的大小一致。</p>
+            <p class="text-gray-side">注：在 x265 4.1 以及更高版本中，参数 <code>--pmode</code>、<code>--pme</code> 已被移除。</p>
             
-            <code class="code-bold">--pmode</code>
+            <!--<code class="code-bold">--pmode</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需 <code>--pools</code></span>&gt;创建平行模式决策（Parallel Mode Decision）的工作者线程以更改 pools 参数功能。推荐先于 pme 打开，推荐搭配 <code>--rd 3</code> + <code>--rect</code>，而 <code>--rd 5</code> 时可以先确认占用率未跑满再打开。</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>如<span class="text-blue-emph">--pme --pmode</span>表明使用整个线程池，分配平行动态搜索，平行模式决策以更好地增加多线程节点占用。</li>
@@ -4529,7 +4530,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <ul class="font-monospace pl-5 text-smaller">
                 <li>如<span class="text-blue-emph">--pme</span>表明使用整个线程池，并分配平行动态搜索的分工线程</li>
                 <li>开 pme 时，遇到性能（比仅一个节点）更差状况的可能性不低</li>
-            </ul>
+            </ul>-->
 
             <code class="code-bold">--asm</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;字符串 MMX2|SSE|SSE2|SSE3|SSSE3|SSE4|SSE4.1|SSE4.2|AVX|XOP|FMA4|AVX2|FMA3|AVX512 或整数，默认除 AVX512 以外全开&gt;指定指令集使用上限。其中的 AVX512 选项默认关闭，这个指令集主要面向大批量数据处理，需要处理器，操作系统和任务工况（编码设置难度、视频复杂度）的合璧才能产生正收益（但功耗也会上升），否则反而会导致编码减速。</p>

@@ -1475,12 +1475,12 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             </div>
 
             <code class="code-bold">--aq-mode</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3&gt;据原画和 crf/abr 设定，以及码率不足时（crf&lt;18/低码 abr）如何分配 QP。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~3，默认 0 关闭&gt;指定据画面分块的复杂度、CRF/ABR 模式给的逐帧量化值（QP）分化出每个画面块应有量化值的策略。</p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
-                <li><span class="text-blue-emph">1</span> 标准自适应量化，适合画面内容单调时使用</li>
-                <li><span class="text-blue-emph">2</span> 并且启用方差（AQ-Variance），自适应 <code>--aq-strength</code> 强度（录像~电影以及 crf&lt;17 推荐）</li>
-                <li><span class="text-blue-emph">3</span> 且在码率不够用时倾向保暗场（接受更明显的涂抹失真）</li>
-                <li><span class="text-blue-emph">4</span> 且码率不够用时更加倾向保纹理（接受平面上的涂抹失真，<span class="text-red-emph">实验性</span>，很慢）</li>
+                <li><span class="text-blue-emph">1</span> 标准自适应量化，适合画面内容单调、快速编码、压缩优先场景用</li>
+                <li><span class="text-blue-emph">2</span> 方差自适应量化（AQ-Variance），自适应 <code>--aq-strength</code> 强度（录像~电影以及 crf&lt;17 推荐）</li>
+                <li><span class="text-blue-emph">3</span> 方差自适应量化、欠码时倾向保暗场画质（平面涂抹失真更明显）</li>
+                <li><span class="text-blue-emph">4</span> 方差自适应量化，欠码时倾向保纹理（接受平面上的涂抹失真，<span class="text-red-emph">实验性</span>，动漫和幻灯片录屏场景慎用，很慢）</li>
             </ul>
             <code class="code-bold">--aq-strength</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点&gt;自适应量化强度。搭配 aq-mode，如动漫 1:0.8，2:0.9，3:0.7 用。录像上可加 0.1~0.2，画面混乱/观众难以注意平面时可再增加。注意低成本动漫的平面居多，因此码率不足时反而要妥协纹理。</p>

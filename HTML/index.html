@@ -1446,8 +1446,8 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--cplxblur</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;由于第 -1 帧不存在，编码器无法算出第 0 帧的 cplxBlur，所以有保留默认值或手动指定的选择（但影响太小），如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
 
-            <h4>量化值缩限（Quantizer Parameter Compression）</h4>
-            <p>通过乘以一个函数（曲线）来整体缩限数据点的空间分布范围，使得数据点的变化更平稳。在视频编码中起到避免过早耗尽 GOP 码率“经费”——防止 GOP 末尾完全糊掉，以及维稳网络串流带宽波动——减少卡顿和丢包的作用。</p>
+            <h4>量化值缩限/量化值曲线压缩（Quantizer Curve Compression）</h4>
+            <p>这里的缩限代表<i>乘入一个函数（曲线）来压缩数据点整体的空间分布范围，使得数据点的变化更平稳</i>。视频编码中，“空间范围”实际上是前后帧的量化值波动（即时间范围），“压缩”实际做的是限制量化值的波动烈度，从而起到提高剧烈变化场景量化强度的作用——避免过早耗尽 GOP 码率“经费”，最终防止 GOP 末尾完全糊掉、维稳网络串流带宽波动——减少卡顿和丢包的作用。</p>
             <div class="align-items-center">
                 <table class="table-center">
                     <tr>

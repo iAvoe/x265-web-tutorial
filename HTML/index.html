@@ -1484,7 +1484,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                         <td class="px-1">ABR</td>
                         <td class="px-1">锁死（1）</td>
                         <td class="px-1">小/稳</td>
-                        <td class="px-1">极大/失控（与 CQP 模式效果相同）</td>
+                        <td class="px-1">混乱（隐藏暴力降噪、丢帧限码机制常态化）</td>
                     </tr>
                     <tr>
                         <td class="px-1">ABR</td>
@@ -1527,7 +1527,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                     </li>
                 </ul>
             </div>
-            
+
             <code class="code-bold">--qcomp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6 并使用自适应量化功能做上位替代&gt;量化强度范围曲线的抑制参数</p>
             <span class="text-blue-math">\[\text{CRF_rate_factor} = \frac{\text{cplxBase}^{1-\text{qcomp}}}{qScale \times (\text{crf} + \text{cutree} + \text{bframe_offset})}\]</span>
@@ -1545,7 +1545,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                     <ul><li>画面变化越大码率大一点，反之小一点</li></ul>
                 </li>
                 <li><span class="text-blue-emph">1</span>：<span class="text-blue-math">\(\text{cplxBase}^0 = 1\)</span>，抹除帧复杂度值，量化值仍然由 CRF 模式指定的值映射，但不再因为复杂度变化而改，形成 CQP 率控制模式
-                    <ul><li>量化值仍受 cutree、bframe_offset 偏移影响，但主导因素消失</li></ul>
+                    <ul><li>量化值仍受 cutree、bframe_offset 偏移影响，但主导因素消失，</li></ul>
                 </li>
             </ul>
             <div class="align-items-center">

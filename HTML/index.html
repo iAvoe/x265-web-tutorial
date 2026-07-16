@@ -1508,6 +1508,26 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <p class="text-gray-side mt-0">表：量化值缩限的影响。</p>
             </div>
             <p>只追求“抹平码率波动”容易产生“时而清晰时而糊”的画面——反而会破坏沉浸感，因此不推荐“锁死”。同时，考虑到量化值缩限是种局部快速处理，不管“该帧是否受到其它帧参考”的关系，因此会降低码率分配的均衡性，但也有着“提高暂停画质”的作用（前提是用户刚好在那一瞬间暂停）。</p>
+            
+            <button type="button" class="collapsible border-main rounded-3">点击展开/折叠内容：qComp 的计算</button>
+            <div class="coll-content">
+                <ol class="overflow-auto">
+                    <li>（ABR 模式）根据宏块的数量与 <code>--qcomp</code> 值设置初始复杂度百分比：
+                        <span class="text-blue-math">\[ \text{Complexity} = \left( \frac{\text{Count}_{MB}}{2} \right) ×700000^{\left( \frac{qcomp}{100} \right)} \div 100 \]</span>
+                    </li>
+                    <li>获取当前场景的长度 <span class="text-blue-math">\( \text{Duration}_{clip} \)</span></li>
+                    <li>当前帧与下一帧间的图像模糊后做 SATD，获得「模糊复杂度 <span class="text-blue-math">\( \text{Complexity}_{blurred} \)</span>」</li>
+                </ol>
+                <ul class="overflow-auto">
+                    <li>（关 MBTree 时）使用 <code>--qcomp</code> 缩放模糊复杂度，以换算出当前帧的 qScale：
+                        <span class="text-blue-math">\[ \text{qScale} = \left( \text{Complexity}_{blurred} \right)^{1-qcomp} \]</span>
+                    </li>
+                    <li>（开 MBTree 时）据 I 帧在当前片段的权重设单帧量化强度（基准单帧用时 ÷ 当前场景用时 × I 帧用时 ÷ 帧率）：
+                        <span class="text-blue-math">\[ \text{qScale} = Duration_{frame} \div Duration_{clip}\times Duration_{iframe} \div \text{fps} \]</span>
+                    </li>
+                </ul>
+            </div>
+            
             <code class="code-bold">--qcomp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6 并使用自适应量化功能做上位替代&gt;量化强度范围曲线的抑制参数</p>
             <span class="text-blue-math">\[\text{CRF_rate_factor} = \frac{\text{cplxBase}^{1-\text{qcomp}}}{qScale \times (\text{crf} + \text{cutree} + \text{bframe_offset})}\]</span>

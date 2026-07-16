@@ -1445,6 +1445,69 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，<code>--tune grain</code> 时开启&gt;通过抑制 cplxBlur 的累积，从而保证一定场景下，GOP 分配量化值呈跌势以保证整个视频的码率受控。如果视频中的大多数高频信号都是细节而非噪点，且策略为画质编码则关</p>
             <code class="code-bold">--cplxblur</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点 0~100，默认 20&gt;由于第 -1 帧不存在，编码器无法算出第 0 帧的 cplxBlur，所以有保留默认值或手动指定的选择（但影响太小），如果从第一帧开始就是复杂的动态画面（如花屏转场）则可以提高，但因为时间很短所以效果可能很不明显</p>
+
+            <h4>量化值缩限（Quantizer Parameter Compression）</h4>
+            <p>通过乘以一个函数（曲线）来整体缩限数据点的空间分布范围，使得数据点的变化更平稳。在视频编码中起到避免过早耗尽 GOP 码率“经费”——防止 GOP 末尾完全糊掉，以及维稳网络串流带宽波动——减少卡顿和丢包的作用。</p>
+            <div class="align-items-center">
+                <table class="table-center">
+                    <tr>
+                        <th class="px-3">编码模式</th>
+                        <th class="px-3">缩限（qcomp）设置</th>
+                        <th class="px-3">瞬时码率波动</th>
+                        <th class="px-3">画质波动</th>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">CRF</td>
+                        <td class="px-1">锁死（1）</td>
+                        <td class="px-1">小/稳</td>
+                        <td class="px-1">极大/失控（与 CQP 模式效果相同）</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">CRF</td>
+                        <td class="px-1">强（0.7~0.9）</td>
+                        <td class="px-1">小/稳</td>
+                        <td class="px-1">大/不稳</td>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">CRF</td>
+                        <td class="px-1">弱（0.2~0.4）</td>
+                        <td class="px-1">大/不稳</td>
+                        <td class="px-1">小/稳</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">CRF</td>
+                        <td class="px-1">关（0）</td>
+                        <td class="px-1">极大/失控</td>
+                        <td class="px-1">小/稳</td>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">ABR</td>
+                        <td class="px-1">锁死（1）</td>
+                        <td class="px-1">小/稳</td>
+                        <td class="px-1">极大/失控（与 CQP 模式效果相同）</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">ABR</td>
+                        <td class="px-1">强（0.7~0.9）</td>
+                        <td class="px-1">小/稳</td>
+                        <td class="px-1">大/不稳</td>
+                    </tr>
+                    <tr class="t-light-gray">
+                        <td class="px-1">ABR</td>
+                        <td class="px-1">弱（0.2~0.4）</td>
+                        <td class="px-1">极大/失控</td>
+                        <td class="px-1">极大/失控（前半段好，后半段糊）</td>
+                    </tr>
+                    <tr>
+                        <td class="px-1">ABR</td>
+                        <td class="px-1">关（0）</td>
+                        <td class="px-1">极大/失控</td>
+                        <td class="px-1">极大/失控（前半段好，后半段糊）</td>
+                    </tr>
+                </table>
+                <p class="text-gray-side mt-0">表：量化值缩限的影响。</p>
+            </div>
+            <p>只追求“抹平码率波动”容易产生“时而清晰时而糊”的画面——反而会破坏沉浸感，因此不推荐“锁死”。同时，考虑到量化值缩限是种局部快速处理，不管“该帧是否受到其它帧参考”的关系，因此会降低码率分配的均衡性，但也有着“提高暂停画质”的作用（前提是用户刚好在那一瞬间暂停）。</p>
             <code class="code-bold">--qcomp</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;浮点范围 0.5~1，推荐默认 0.6 并使用自适应量化功能做上位替代&gt;量化强度范围曲线的抑制参数</p>
             <span class="text-blue-math">\[\text{CRF_rate_factor} = \frac{\text{cplxBase}^{1-\text{qcomp}}}{qScale \times (\text{crf} + \text{cutree} + \text{bframe_offset})}\]</span>

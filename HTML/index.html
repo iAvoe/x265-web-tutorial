@@ -1996,7 +1996,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <h4>边界强度 Boundary strength</h4>
             <p>判断去块力度</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/deblocking-sao/Deblock-detection-visualization.png" alt="Deblock detection visualization" class="img-medium">
+                <img loading="lazy" src="files/deblocking-sao/Deblock-detection-visualization.png" alt="Deblock detection visualization" class="img-small">
                 <img loading="lazy" src="files/deblocking-sao/Deblock-edge-visualization.png" alt="Deblock edge visualization" class="img-medium">
                 <p class="text-gray-side">图：取最小 8x8 范围（两个 4x4 CU）间的界线举例。</p>
             </div>
@@ -2084,18 +2084,24 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <p class="text-gray-side">注：量化压缩削弱分块的高频信息分量系子后，除去当前分块的内容复杂凹凸外，分块会变成少量的低频分量系子和归零的中到高频分量系子。这本身就是明显的上下文规律。</p>
 
             <div class="align-items-center">
-                <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="CABAC Flow Chart" class="">
+                <img loading="lazy" src="files/entropy-coding/CABAC-Flow-Chart.png" alt="CABAC Flow Chart" class="img-medium">
                 <p class="text-gray-side">图：简化的上下文自适应二进制算数编码<a href="https://iphome.hhi.de/marpe/cabac.html">CABAC 流程</a>，分转二进制，出字概率统计和算数编码三步</p>
             </div>
 
             <h3>算数编码</h3>
             <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容</button>
             <div class="coll-content">
-                <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩</p>
+                <p>CABAC 的核心结构。将输入文本按字数多少分割 0~1 间的出字概率。优化是尽可能控制概率分布条上落点（得尽可能短的结果小数），以及通过降噪变换量化和游程编码以简化输入信号，实现尽可能高的无损压缩。</p>
                 <div class="align-items-center">
-                    <img loading="lazy" src="files/entropy-coding/Arithmetic-Coding.png" alt="Arithmetic Coding" class="">
-                    <p class="text-gray-side">图：编码即逐字按出字概率缩窄概率条到最后一个字的出字概率，取上/下区间为编码结果，解码照概率位置（蓝线）的落点反推实现。</p>
+                    <img loading="lazy" src="files/entropy-coding/Arithmetic-Coding-V2.png" alt="Arithmetic Coding (v2)" class="">
+                    <p class="text-gray-side">图：编码“劳烦劳烦您”的算数编码大致流程。该图解未必完全正确，但展示了具体的流程。</p>
                 </div>
+                <p class="text-gray-side">出字概率分别为 0.4（2/5）、0.4（2/5）、0.2（1/5）</p>
+                <ul class="text-gray-side">
+                    <li>'劳'：[0, 0.4)</li>
+                    <li>'烦'：[0.4, 0.8)</li>
+                    <li>'您'：[0.8, 1.0)</li>
+                </ul>
     
                 <h3>自适应 Adaptive 与对等 Uniform 概率</h3>
                 <p>预先统计出字概率（要读取全文）的特性限制了算数编码的用途，而解决方法是利用文本编码一次编一字的特性——以「编一字，一改出字概率」的推演，逐字地适配成合理的概率。添切换符 ⊗ 代表自适概率 0 的生字，以临时用对等概率编码（仅推演概率，编码部分以及 0~1 区间的概率分布变化结合上图）：</p>

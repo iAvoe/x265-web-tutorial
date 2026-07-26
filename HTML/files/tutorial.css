@@ -132,6 +132,11 @@ pre { overflow: auto; margin: 0; }
     font-family: var(--font-style-side);
     color: rgba(var(--rgb-light-gray), var(--no-opacity)) !important;
 }
+.text-red-side { 
+    font-family: var(--font-style-side);
+    color: rgba(var(--rgb-light-red), var(--no-opacity)) !important;
+}
+
 .text-blue-emph { color: rgba(var(--rgb-dark-blue), var(--no-opacity)) !important; }
 .text-red-emph  { color: rgba(var(--rgb-dark-red), var(--no-opacity)) !important; }
 .text-blue-math {
@@ -141,7 +146,6 @@ pre { overflow: auto; margin: 0; }
 .text-green-link { color: rgba(var(--rgb-light-green), var(--no-opacity)) !important; }
 .text-purple-resv { color: rgba(var(--rgb-dark-purple), var(--no-opacity)) !important; }
 .text-blue-side { color: rgba(var(--rgb-light-blue), var(--no-opacity)) !important; }
-.text-red-side { color: rgba(var(--rgb-light-red), var(--no-opacity)) !important; }
 .text-pink-cnsq { color: rgba(var(--rgb-bright-pink), var(--no-opacity)) !important; }
 .text-blue-cnsq { color: rgba(var(--rgb-bright-blue), var(--no-opacity)) !important; }
 .text-red-pure  { color: rgba(var(--rgb-pure-red), var(--no-opacity)) !important; }

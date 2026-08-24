@@ -1301,7 +1301,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </ol>
             <!-- x264 教程副本，更改需手动同步 { -->
             <code class="code-bold">--vbv-bufsize</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关（0），<span class="text-red-emph">需小于 <code>--vbv-maxrate</code> ÷ 帧率</span>&gt;虚构缓冲区的大小，当压缩视频数据流会超出这个大小时增加量化压缩强度。有以下几种设置方式：</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关（0），<span class="text-red-emph">需小于 <code>--vbv-maxrate</code> ÷ 帧率</span>，<span class="text-red-emph">杜比视界下必须开启</span>&gt;虚构缓冲区的大小，当压缩视频数据流会超出这个大小时增加量化压缩强度。有以下几种设置方式：</p>
             <ul class="font-monospace pl-5 text-smaller">
                 <li>互联网直播~串流：<span class="text-blue-math">\(\text{bufsize} = \left[\text{maxrate}, 2 \times \text{maxrate}\right]\)</span></li>
                 <li>低延迟直播（每帧都小于 maxrate）：<span class="text-blue-math">\(\text{bufsize} = \text{maxrate} / \text{fps}\)</span></li>
@@ -1309,7 +1309,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </ul>
             <p class="text-gray-side">注：在对解码缓冲速度有要求的应用里，需要同时确保解码 GOP 缓冲时长合规，时长 = <span class="text-blue-math">bufsize ÷ maxrate</span> 秒。</p>
             <code class="code-bold">--vbv-maxrate</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关（0）&gt;带宽条件（网速、池中加水速度），降低以限制带宽波峰（提高量化强度 + 强降噪）。主要限制了 I 帧的体积，直接影响 I 帧的可参考价值，反而会导致文件体积和总码率增加，画质降低（如 P 帧、B 帧内的 I 块数量增加的情况）；因此如果网络带宽能够承受波动，则不建议远低于 <code>--vbv-bufsize</code> 。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 kbps，默认关（0），<span class="text-red-emph">杜比视界下必须开启</span>&gt;带宽条件（网速、池中加水速度），降低以限制带宽波峰（提高量化强度 + 强降噪）。主要限制了 I 帧的体积，直接影响 I 帧的可参考价值，反而会导致文件体积和总码率增加，画质降低（如 P 帧、B 帧内的 I 块数量增加的情况）；因此如果网络带宽能够承受波动，则不建议远低于 <code>--vbv-bufsize</code> 。</p>
             <!-- } -->
             <code class="code-bold">--crf-max</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~51&gt;防止 vbv 把 crf 拉太高，但会导致码率失控。</p>
@@ -4559,11 +4559,11 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
             <code class="code-bold">--single-sei</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，推荐关&gt;只写一个装全部 SEI 信息的大 NALU 而非每 GOP 都写，提高一点点压缩率，降低兼容性。</p>
             <code class="code-bold">--hrd</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开 vbv</span>&gt;将假设对照解码参数（Hypothetical Reference Decoder Parameter）估计不丢包无延迟的瞬间码率，写在每段 SPS、SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开启 VBV</span>，<span class="text-red-emph">杜比视界下必须开启</span>&gt;将假想参考解码参数（Hypothetical Reference Decoder Parameter）估计不丢包无延迟的瞬间码率，写在每段 SPS、SEI 里，对专门配置了网络串流，NAS 播放自动缓冲的播放器有好处。</p>
             <code class="code-bold">--idr-recovery-sei</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关&gt;SEI 写进 idr 帧，串流时防止整个 GOP 都找不到参考帧的机制。</p>
             <code class="code-bold">--frame-dup</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，需<span class="text-red-emph">开 vbv 和 hrd，有 bug</span>&gt;直接将 2~3 面极近似的连续帧换成同一帧并用 SEI 告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">需开启 VBV、HRD</span>，<span class="text-red-emph">兼容性差</span>&gt;直接将 2~3 面极近似的连续帧换成同一帧并用 SEI 告知，理论上能在动漫和电脑录屏画面提高压缩率，但会降低兼容性。</p>
             <code class="code-bold">--dup-threshold</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 1~99，默认 70&gt;相似度判定值，默认达 70% 重复就判为相似。</p>
 
@@ -5330,12 +5330,12 @@ IO... yuva420p 4             20             8-8-8-8
                 <li>双视频流下，EL 可被一般的解码器丢弃而正常播放</li>
                 <li>单视频流下，使用专利色彩空间（ICtCp）的源应依法使用专利授权的解码器解码</li>
                 <li>存在假源和假设备，但没有办法验证</li>
-                <li>即使是样式为 7 时，EL 也可以为空，等效于仅 BL</li>
+                <li>即使是规格为 7 时，EL 也可以为空，等效于仅 BL</li>
             </ul>
             <table class="table-center text-smaller">
                 <thead>
                     <tr class="t-invert-dark">
-                        <th class="px-1">样式 Profile</th>
+                        <th class="px-1">Profile</th>
                         <th class="px-1">编码</th>
                         <th class="px-1">流标记</th>
                         <th class="px-1">BL 兼容 ID</th>
@@ -5539,7 +5539,7 @@ IO... yuva420p 4             20             8-8-8-8
             <p class="text-gray-side mt-0">数据流中表示 profile 和 level 的字串即 <code>[编码].[profile ID].[level ID]</code>。如 dvav.09.04 即 SDR 向后兼容的 8bit AVC，62208000pps（1920x1080 30fps）的视频</p>
             <p class="text-gray-side mt-0">注：HLS 代表 HTTP 网络播放协议 Http live streaming</p>
             <code class="code-bold">--dolby-vision-profile</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;选择 5/8.1（HDR10）/8.2（SDR）&gt;<span class="text-red-emph">大于 8.1 需 master-display 和 HDR10-opt</span>。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;选择 5/8.1（HDR10）/8.2（SDR），<span class="text-red-emph">需开启 VBV、HRD（假想参考解码器）</span>&gt;<span class="text-red-emph">大于 8.1 需 --master-display 和 HDR10-opt</span>。</p>
             <code class="code-bold">--dolby-vision-rpu</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;路径&gt;导入 RPU 二进制文件（.bin）。</p>
             <p class="text-gray-side pl-5 m-0">注：杜比视界 8.1 需要 <code>--dolby-vision-profile 5.0 --dolby-vision-rpu "元数据.bin" --vbv-bufsize 20000 --vbv-maxrate 20000</code>。</p>

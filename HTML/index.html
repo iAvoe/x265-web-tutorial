@@ -780,7 +780,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             </div>
 
             <code class="code-bold">--mcstf</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">建议只在最新版 x265 上使用（当前为 4.3）；可能会产生残影失真</span>&gt;运动补偿时域空域滤镜。使用三层 MCTF 低通子带，从低分辨率到高分辨率逐步细化动态向量，补偿（对齐）4 个相邻帧 <span class="text-blue-math">\(f_{-2}, f_{-1}, f_1, f_2\)</span>，将对齐后的多帧像素预测值与中心帧 <span class="text-blue-math">\(f_0\)</span> 的像素值进行双边滤镜加权平均（空间域提供画面类型制导、时间域降噪/平均），得到降噪结果。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">建议只在最新版 x265 上使用（当前为 4.3）；可能会产生残影失真</span>&gt;运动补偿时域空域滤镜。使用三层 MCTF 低通子带，从低分辨率到高分辨率逐步细化动态向量，补偿（对齐）4 个相邻帧 <span class="text-blue-math">\(f_{-2}, f_{-1}, f_1, f_2\)</span>，将对齐后的多帧像素预测值与中心帧 <span class="text-blue-math">\(f_0\)</span> 的像素值进行双边滤镜加权平均（空间域提供画面类型制导判断、时间域降噪/平均），得到降噪结果。</p>
             <code class="code-bold">--selective-mcstf</code>
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-blue-emph">开启后自动启用 <code>--mcstf</code></span>&gt;根据逐 GOP 噪点是否足够轻而自动跳过 MCSTF 降噪。</p>
 

@@ -33,7 +33,7 @@
                     <a class="toSelf" href="#h2-4">变换</a>，
                     <a class="toSelf" href="#h2-5">动态预测</a>，
                     <a class="toSelf" href="#h2-6">动态搜索</a>，
-                    <a class="toSelf" href="#h2-7">动态补偿</a>，
+                    <a class="toSelf" href="#h2-7">运动补偿</a>，
                     <a class="toSelf" href="#h2-8">时域架网搜索</a>，
                     <a class="toSelf" href="#h2-9">前瞻进程</a>，
                     <a class="toSelf" href="#h2-10">帧内预测</a>，
@@ -466,7 +466,7 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p>在连续帧间画面中，进行运动估计的整数像素精度动态信息搜索步骤，涵盖各式搜索算法与各样的信号处理用途。具体步骤是以被参考帧内的已编码块（Coded Block）为起点，尝试通过位移来匹配相邻帧的画面，从而找到一个失真最小的向量（Direction of minimal distortion、DMD），这个向量就是整数动态向量。</p>
             <p>为了找到可用的最小失真朝向，并且避免进行算力占用巨大的全搜索（Exhaustive Search），动态搜索演化出了多种匹配的图案和算法。其中，较为聪明的动态搜索算法是多级算法，它们首会先尝试在较大范围进行粗略搜索，再以大致最佳区域为中心进行精细搜索，从而（包括在噪点干扰下）多快好省地找到整数动态向量。在整数动态搜索之后，还会由子像素动态搜索（Sub-pel Motion Estimation）来进一步做对齐，最终，这个动态向量被用于冗余预测块，以及对高动态画面提高有损压缩强度，从而压缩体积并优化码率的分配。</p>
             <p>如果动态搜索的过程有缺失或不够理想，参考帧与分块的建立会变得低效，码率分配也会变得不够合理，导致画质的降低和码率的增加。</p>
-            <p class="text-gray-side">注：动态搜索的用途包括计算机视觉的目标跟踪（自动驾驶、监控与制导系统）、基于动态向量的分辨率超采样（如 DLSS）、视频驱动的 3D 建模与插帧、剪辑后期的视频去抖（如 Adobe Premiere 的变形稳定器效果）、智能电视内置的动态补偿画质增强（虽然大多情况下效果一般）等等。</p>
+            <p class="text-gray-side">注：动态搜索的用途包括计算机视觉的目标跟踪（自动驾驶、监控与制导系统）、基于动态向量的分辨率超采样（如 DLSS）、视频驱动的 3D 建模与插帧、剪辑后期的视频去抖（如 Adobe Premiere 的变形稳定器效果）、智能电视内置的运动补偿画质增强（虽然大多情况下效果一般）等等。</p>
             <!-- } -->
             <h3>动态搜索算法示例</h3>
 
@@ -703,40 +703,63 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
             <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关&gt;启用 B 条带的隐加权预测。注意光线变化和淡入淡出在公开课，电脑录屏，低成本/旧动漫等片源中几乎不存在，这种情况下打开只会浪费性能。</p>
 
             <h2 id="h2-8">帧间——时域架网搜索</h2>
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：一维小波变换 1D Wavelet Transform</button>
-            <div class="coll-content">
-                <p>让短波像拉链一样划过一维信号，短波所到的时间域与源信号匹配（波形重合）的程度会变化，而变化本身记为时间频域信息。支持更换波形以提取特征（如特征采样式音频降噪滤镜）。解决了傅里叶变换只有空间频域，无法描述信号随时间变化过程的原生缺陷，缺点是分辨率低。详见<a href="https://www.youtube.com/watch?v=jnxqHcObNK4">科普视频</a>。一般用于检测特征片段，如将小波本身塑性为需要的特征，然后划过源波形，得到这些特征的时间域分布和强度变化。</p>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/weighted-prediction/Wavelet-Transform-Example.png" alt="/Wavelet Transform Example" class="img-small" >
-                    <p class="text-gray-side mt-0">图：用蓝色小波划过红色信号的变换例子</p>
-                </div>
-            </div>
-
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：基于提升式小波变换的时域动态补偿 lifting-scheme temporal MC</button>
-            <div class="coll-content">
-                <p>类似于 CRF 或 ABR 模式推演量化值中，以前两帧之差累计复杂度。这个复杂度在此用以预测后两帧的差（帧 A-B 的差异预测 B-C 的差异），而<span class="text-blue-emph">预测对的记在 L 带“低频”中，有差错的更新到的高频 H 带中，下轮预测只预测 L 带，并不断推演</span>，最终得到足够精确的时域复杂度分布数据。</p>
-                <ul>
-                    <li>第一次推演得 0-1-2，2-3-4，4-5-6 等 L 带（prediction）以及其 H 带（update）的 0 层</li>
-                    <li>继续在 L<sub>1</sub>→L<sub>n</sub> 的 1 层向右迭代，分离出所有的 L，H 带，如此实现迭代 n 次即分离 2<sup>n</sup> 帧动静态，以及所有的预测与补偿</li>
-                    <li>迭代后的高低频用 LL<sub>1</sub> LL<sub>2</sub> LH<sub>1</sub> LH<sub>2</sub> 表示低到高频的顺序，字母位数代表迭代次数。</li>
-                </ul>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/weighted-prediction/Lifting-Scheme-Temporal-MC.png" alt="Lifting Scheme Temporal MC" class="">
-                    <p class="text-gray-side">图：基于提升式小波变换的时域动态补偿。</p>
-                </div>
-            </div>
-
-            <h3>高斯模糊（Gaussian blur）</h3>
-            <p>利用正态分布函数面积不变的特性，通过设定偏差程度 σ 决定正态分布钟型线的梯度：σ 大则钟扁——滤镜中心分到的权重/面积越被更多分到权/面积的旁像素冲淡模糊掉，设计行业常用。见<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A">维基百科</a>和<a href="https://www.desmos.com/calculator/jxzs8fz9qr">Desmos 互动例</a>。2D 高斯模糊写作“半径的散布（r^σ）”，其中半径 r 代表高斯内核的宽高；散布 σ 代表中心的高点向外扩散的程度：
-                <span class="text-blue-math text-larger">$$
-                    \displaystyle G(x,y)={\frac {1}{2\pi \sigma ^{2}}}e^{-{\frac {x^{2}+y^{2}}{2\sigma ^{2}}}}
-                $$</span>
-            </p>
+            <h3>小波变换（Wavelet Transform）</h3>
+            <p>一种一维变换操作，让短波像拉链一样划过信号，根据短波的选型，计算方法（加减乘除取平均等），起点终点不同，对源信号的影响也不同，因此只要选择合适的短波选型、数量、算法等，就可以起到压缩、特征采样式降噪、音频信号提取分离等作用。</p>
+            <p>小波变换解决了傅里叶变换无法描述信号随时间变化过程的原生缺陷，考虑到视频也有时间相关性，因此这种思想似乎有着压缩视频的潜力，例如一次性完成动态搜索和补偿之类的好处。于是出现了对<i>可伸缩视频编码 Scalable Video Coding（SVC）</i> 的研究，启发了后来的 x265 MCSTF（降噪）、AV1 TF（分层参考结构生成 ALTREF 帧提高效率）</p>
             <div class="align-items-center">
-                <img loading="lazy" src="files/bilateral-filter/2D-Gaussian-kernel.png" alt="Gaussian Kernel" class="img-medium">
-                <p class="text-gray-side">图：2D 高斯内核。来源：<a href="https://www.researchgate.net/figure/Distribution-of-2D-Gaussian-filter-kernel_fig7_357236614">ResearchGate/357236614</a></p>
-                <img loading="lazy" src="files/bilateral-filter/imagemagick-gaussian_blur.jpg" alt="Gaussian Blur" class="img-medium">
-                <p class="text-gray-side">图：高斯模糊滤镜中，使用不同宽高半径的模糊效果，来源：<a href="https://legacy.imagemagick.org/Usage/blur/">imagemagick 文档</a></p>
+                <img loading="lazy" src="files/weighted-prediction/Wavelet-Transform-Example.png" alt="/Wavelet Transform Example" class="img-small" >
+                <p class="text-gray-side mt-0">图：用蓝色小波划过红色信号的变换例子，详见<a href="https://www.youtube.com/watch?v=jnxqHcObNK4">科普视频</a></p>
+            </div>
+
+            <h3>提升式小波变换运动补偿（Lifting-Scheme MC）</h3>
+            <p>一种对小波变换在视频领域的实现，在 SVC 时期被重点研究。这种算法的特点有逐步构造出变换结果，不依赖频域操作，不依赖动态搜索等。一次变换由 3 个步骤组成：</p>
+            <ol>
+                <li><b>拆分（Split）：</b>
+                    <ul><li>按当前 GOP 帧的顺序分成奇数组和偶数组，从偶数 0 开始数</li></ul>
+                </li>
+                <li><b>预测（Predict）：</b>
+                    <ol>
+                        <li>偶数组所有相邻的两帧之间取残差
+                            <ul>
+                                <li>如 <span class="text-blue-math">\(P\left(f_0, f_2\right)\)</span> 代表帧 0、帧 2 之间的差异</li>
+                                <li>获取差异的花样很多，这里略作函数 <span class="text-blue-math">\(P\left(\right)\)</span></li>
+                            </ul>
+                        </li>
+                        <li>用偶数组残差预测与其同位的奇数帧，产生预测残差（高频 H 带）
+                            <ul>
+                                <li>如奇数组首帧的预测残差：<span class="text-blue-math">\(d_1 = f_1 - P\left(f_0, f_2\right)\)</span></li>
+                                <li>预测残差用减法表示（真实值减预测值）</li>
+                            </ul>
+                        </li>
+                    </ol>
+                <li><b>更新（Update）：</b>
+                    <ul>
+                        <li>避免先前两帧相隔采样弄丢细节的运动补偿修正，起到包括混叠消除（Aliasing Cancellation），频率一致性对齐（亮度与高频信号分布），动态信息对齐（时间平滑滤波）的作用</li>
+                        <li>用奇数帧的预测残差 <span class="text-blue-math">\(d_1, d_3, d_5, \cdots\)</span> 更新偶数帧，得到低频近似的补偿画面 <span class="text-blue-math">\(c_0 = f_0 + U(d_1), c_2 = f_1 + U(d_3), \cdots\)</span></li>
+                        <li>更新步骤不改动预测残差（高频 H 带）</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>经历三个步骤后得到一级分解“低频子带” L 带：<span class="text-blue-math">\(c_0, c_2, c_4, \cdots\)</span>，以及“高频子带” H 带：<span class="text-blue-math">\(d_1, d_3, d_5, \cdots\)</span>。同时，接下来的第 2、3 级分解只对低频子带继续，上级得出的高频子带不再参与下级分解</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/weighted-prediction/Lifting-Scheme-Temporal-MC.png" alt="Lifting Scheme Temporal MC" class="img-medium">
+                <p class="text-gray-side">图：基于提升式小波变换的时域运动补偿。</p>
+            </div>
+
+            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：高斯模糊（Gaussian blur）</button>
+            <div class="coll-content">
+                <h3>高斯模糊（Gaussian blur）</h3>
+                <p>利用正态分布函数面积不变的特性，通过设定偏差程度 σ 决定正态分布钟型线的梯度：σ 大则钟扁——滤镜中心分到的权重/面积越被更多分到权/面积的旁像素冲淡模糊掉，设计行业常用。见<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A">维基百科</a>和<a href="https://www.desmos.com/calculator/jxzs8fz9qr">Desmos 互动例</a>。2D 高斯模糊写作“半径的散布（r^σ）”，其中半径 r 代表高斯内核的宽高；散布 σ 代表中心的高点向外扩散的程度：
+                    <span class="text-blue-math text-larger">$$
+                        \displaystyle G(x,y)={\frac {1}{2\pi \sigma ^{2}}}e^{-{\frac {x^{2}+y^{2}}{2\sigma ^{2}}}}
+                    $$</span>
+                </p>
+                <div class="align-items-center">
+                    <img loading="lazy" src="files/bilateral-filter/2D-Gaussian-kernel.png" alt="Gaussian Kernel" class="img-medium">
+                    <p class="text-gray-side">图：2D 高斯内核。来源：<a href="https://www.researchgate.net/figure/Distribution-of-2D-Gaussian-filter-kernel_fig7_357236614">ResearchGate/357236614</a></p>
+                    <img loading="lazy" src="files/bilateral-filter/imagemagick-gaussian_blur.jpg" alt="Gaussian Blur" class="img-medium">
+                    <p class="text-gray-side">图：高斯模糊滤镜中，使用不同宽高半径的模糊效果，来源：<a href="https://legacy.imagemagick.org/Usage/blur/">imagemagick 文档</a></p>
+                </div>
             </div>
 
             <h3>中值滤镜（Median filter）</h3>
@@ -750,16 +773,16 @@ ffmpeg.exe &lt;串流方式导入视频&gt;	-thread_queue_size &lt;源平均码�
                 <p class="text-gray-side">图：基于中值滤镜原理的 DeSpeckle 滤镜（搭配前置轻模糊 + 后置轻锐化）效果，适合修复 JPEG 失真和印刷纹路。见 <a href="https://docs.gimp.org/3.0/en/plug-in-despeckle.html">GIMP 文档</a>、<a href="https://legacy.imagemagick.org/Usage/blur/">imagemagick 文档</a></p>
             </div>
 
-            <button type="button" class="collapsible border-main rounded-3 mt-3">点击展开/折叠内容：双边滤镜（Bilateral filter）</button>
-            <div class="coll-content">
-                <h3>双边滤镜（Bilateral filter）</h3>
-                <p>将中值滤镜输出作为（2D）高斯模糊的权重蒙版（通过矩阵点除实现动态干涉滤镜强度）；因此平面/斜面/线条本身会决定高斯模糊正态分布钟在对应位置被保留/干涉/隔断的程度</p>
-                <div class="align-items-center">
-                    <img loading="lazy" src="files/bilateral-filter/Bilateral-Filter.png" alt="Bilateral Filter" class="img-medium">
-                </div>
-                <code class="code-bold">--mcstf</code>
-                <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">仅支持单线程，有残影失真，推荐关</span>&gt;时域动态补偿滤镜 mctf 搭配双阈滤镜的自动降噪，理论上提高细节保真。</p>
+            <h3>双边滤镜（Bilateral filter）</h3>
+            <p>将中值滤镜输出作为（2D）高斯模糊的权重蒙版，动态地干涉滤镜强度，从而根据画面内容本身动态微调高斯模糊的强度。</p>
+            <div class="align-items-center">
+                <img loading="lazy" src="files/bilateral-filter/Bilateral-Filter.png" alt="Bilateral Filter" class="img-medium">
             </div>
+
+            <code class="code-bold">--mcstf</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-red-emph">建议只在最新版 x265 上使用（当前为 4.3）；可能会产生残影失真</span>&gt;运动补偿时域空域滤镜。使用三层 MCTF 低通子带，从低分辨率到高分辨率逐步细化动态向量，补偿（对齐）4 个相邻帧 <span class="text-blue-math">\(f_{-2}, f_{-1}, f_1, f_2\)</span>，将对齐后的多帧像素预测值与中心帧 <span class="text-blue-math">\(f_0\)</span> 的像素值进行双边滤镜加权平均，得到降噪结果。</p>
+            <code class="code-bold">--selective-mcstf</code>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;开关，默认关，<span class="text-blue-emph">开启后自动启用 <code>--mcstf</code></span>&gt;根据逐 GOP 噪点是否足够轻而自动跳过 MCSTF 降噪。</p>
 
             <h2 id="h2-9">前瞻进程（Lookahead）</h2>
             <p>最先启动，设立关键帧和参考帧，决定了 GOP 划分、I-P-B 帧类型确立、转场设立、逐帧量化强度等多项初始数据。</p>
@@ -1819,7 +1842,7 @@ x265.exe --abr-ladder 1440p8000_2160p11000_2160p16000.txt --fps 59.94 --input-de
                 <li><span class="text-blue-emph">7~12 搭配 psy-rd 3，tskip，tskip-fast，ipratio 1.2，no-sao</span>留噪。保的细节面积越小越高</li>
             </ul>
             <code class="code-bold">--nr-intra --nr-inter</code>
-            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2000，默认 0（关），<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080 不建议指定超过 250</a>&gt;依照动态补偿结果给量化前变换完的帧内编码（I）帧降噪。<code>--nr-intra</code> 不及第三方降噪精湛。但帧间/时域上降噪的 <code>--nr-inter</code> 可以让参考源和参考帧的差距（残差）减少，从而帮助 <code>--rc-grain</code> 兑现“稳定 QP 值波动”之用。</p>
+            <p class="font-monospace pl-5 m-0 overflow-auto">&lt;整数 0~2000，默认 0（关），<a href="http://forum.doom9.net/showthread.php?s=81cd7c04a679401fe7c4e689e67eaeb8&p=1947571#post1947571">1920x1080 不建议指定超过 250</a>&gt;依照运动补偿结果给量化前变换完的帧内编码（I）帧降噪。<code>--nr-intra</code> 不及第三方降噪精湛。但帧间/时域上降噪的 <code>--nr-inter</code> 可以让参考源和参考帧的差距（残差）减少，从而帮助 <code>--rc-grain</code> 兑现“稳定 QP 值波动”之用。</p>
             <ul class="font-monospace pl-5 list-dotless text-smaller">
                 <li>由于这种滤镜会在自带噪声的视频源中能做到“纹理未糊而先降噪”，因此同样具备临时顶替第三方降噪滤镜的空间</li>
             </ul>

@@ -1,0 +1,20 @@
+{"rule":"UPPERCASE_SENTENCE_START","sentence":"^\\Qhljs.highlightAll();\\E$"}
+{"rule":"GITHUB","sentence":"^\\Qiavoe.github.io\\E$"}
+{"rule":"NUMBERS_IN_WORDS","sentence":"^\\Qavs2yuv.exe &lt;源.avs&gt; -csp &lt;色彩空间&gt; -depth &lt;位深&gt; - | x265.exe --input-res &lt;宽 x 高&gt; --fps &lt;帧率&gt; --input - --output &lt;输出.hevc&gt; avs2pipemod.exe &lt;源.avs&gt; -dll &lt;avisynth.dll&gt; -y4mp | x265.exe --y4m --input - --output &lt;输出.hevc&gt;\\E$"}
+{"rule":"NUMBERS_IN_WORDS","sentence":"^\\Qavs2yuv.exe &lt;源.avs&gt; -csp &lt;色彩空间&gt; -depth &lt;位深&gt; - | x265.exe --input-res &lt;宽 x 高&gt; --fps &lt;帧率&gt; --input - --output &lt;输出.hevc&gt; avs2pipemod.exe &lt;源.avs&gt; -dll &lt;avisynth.dll&gt; -y4mp | x265.exe --y4m --input - --output &lt;输出.hevc&gt;\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Qffmpeg.exe -i &lt;源_HDR10_r2020_ST2084_UHD_24fps_1000nit.mov&gt; -vf \"format=yuv444p12le, zscale=rin=tv:r=full:tin=smpte2084:min=bt2020nc:pin=bt2020, zscale=transfer=linear,tonemap=hable:desat=3:peak=1000, zscale=transfer=bt709:matrix=bt709:primaries=bt709, format=yuv420p10le\" -color_primaries bt709 -color_trc bt709 -colorspace bt709 -c:v rawvideo -pix_fmt yuv420p10le -strict experimental &lt;导出无损_yuv444p10le_bt709.yuv&gt;\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QThreadPoolExecutor\\E$"}
+{"rule":"NON_STANDARD_WORD","sentence":"^\\Q国际电信联盟——电信标准化部门（ITU‑T） | ISO/IEC 占位留以后用\\E$"}
+{"rule":"EN_UNPAIRED_QUOTES","sentence":"^\\Q格式为：\"[压制名:analysis-load-reuse-level:analysis-load] &lt;参数 1+ 输出文件名 1&gt;\" 例：\\E$"}
+{"rule":"GERMAN_QUOTES","sentence":"^\\Q。视频编码中，“空间范围”实际上是前后帧的量化值波动（即时间范围），“压缩”实际做的是限制量化值的波动烈度，从而起到提高剧烈变化场景量化强度的作用——避免过早耗尽 GOP 码率 “经费”，最终防止 GOP 末尾完全糊掉、维稳网络串流带宽波动——减少卡顿和丢包的作用。\\E$"}
+{"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\Q4,4,4,4,4,4,4,4,4,4, 4, 4, 4, 4, 4, 4]\\E$"}
+{"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\Q0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q\\[R\\prime = \\begin{cases} \\text{turnc}(R) \\text{ in } (K-1) \\text{ bits,} & 0 \\leq R &lt; (2^K-M) \\\\ \\text{turnc}(R+2^K-M) \\text{ in } K \\text{ bits,} & R \\geq (2^K-M) \\end{cases}\\]\\E$"}
+{"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q\\[R\\prime = \\begin{cases} \\text{turnc}(R) \\text{ in } (K-1) \\text{ bits,} & 0 \\leq R &lt; (2^K-M) \\\\ \\text{turnc}(R+2^K-M) \\text{ in } K \\text{ bits,} & R \\geq (2^K-M) \\end{cases}\\]\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QX86_64 if (!PFX(cpu_cpuid_test)()) return 0; #endif PFX(cpu_cpuid)(0, &max_basic_cap, vendor + 0, vendor + 2, vendor + 1); if (max_basic_cap == 0) return 0; PFX(cpu_cpuid)(1, &eax, &ebx, &ecx, &edx); if (edx & 0x00800000) cpu |= X265_CPU_MMX; else return cpu; if (edx & 0x02000000) cpu |= X265_CPU_MMX2 | X265_CPU_SSE; if (edx & 0x04000000) cpu |= X265_CPU_SSE2; if (ecx & 0x00000001) cpu |= X265_CPU_SSE3; if (ecx & 0x00000200) cpu |= X265_CPU_SSSE3 | X265_CPU_SSE2_IS_FAST; if (ecx & 0x00080000) cpu |= X265_CPU_SSE4; if (ecx & 0x00100000) cpu |= X265_CPU_SSE42; if (ecx & 0x08000000) /* XGETBV supported and XSAVE enabled by OS */ { /* Check for OS support */ xcr0 = PFX(cpu_xgetbv)(0); if ((xcr0 & 0x6) == 0x6) /* XMM/YMM state */ { if (ecx & 0x10000000) cpu |= X265_CPU_AVX; if (ecx & 0x00001000) cpu |= X265_CPU_FMA3; } } if (max_basic_cap >= 7) { PFX(cpu_cpuid)(7, &eax, &ebx, &ecx, &edx); /* AVX2 requires OS support, but BMI1/2 don't.\\E$"}
+{"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\Q\\([0, 0.4)\\)\\E$"}
+{"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\Q\\([0.8, 1.0)\\)\\E$"}
+{"rule":"EN_UNPAIRED_BRACKETS","sentence":"^\\Q\\([0.4, 0.8)\\)\\E$"}
+{"rule":"DOUBLE_PUNCTUATION","sentence":"^\\Q6..8\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QR(…, …)WP(…, …)\\E$"}
+{"rule":"SENTENCE_WHITESPACE","sentence":"^\\QL(…, …)（绿，蓝，红，白点，光强）&gt;写进 SEI 信息里，告诉解码端色彩空间/色域信息用\\E$"}
